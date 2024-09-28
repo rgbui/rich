@@ -5,17 +5,25 @@ import { DataGridView } from "../view/base";
 import { CardFactory } from "./card/factory/factory";
 import { util } from "../../../util/util";
 import { BlockRenderRange } from "../../../src/block/enum";
+import { Block } from "../../../src/block";
 
 export async function onCreateDataGridTemplate(
     text: string,
-    block: DataGridView,
-    url: string
+    block: Block,
+    url: string,
+    options?: {
+        isOperator?: boolean
+    }
 ) {
     var g = CardFactory.getCardModel(url);
     var vs = typeof g.createViews == 'function' ? await g.createViews() : lodash.cloneDeep(g.views || []);
     vs.forEach(v => {
-        v.text = text + "-" + v.text;
+        if (text)
+            v.text = text + "-" + v.text;
     })
+    if (!text) {
+        text = vs[0].text;
+    }
     var r = await channel.put('/schema/create/define', {
         text: text,
         fields: g.props.map(pro => {
@@ -30,18 +38,15 @@ export async function onCreateDataGridTemplate(
         datas: typeof g.createDataList == 'function' ? await g.createDataList() : lodash.cloneDeep(g.dataList || [])
     });
     if (r.ok) {
+        var newDataGrid: Block;
         var schema = await TableSchema.cacheSchema(r.data.schema);
         await schema.cacPermissions();
         var autoCreateUrl = vs.find(c => c.autoCreate)?.url || schema.listViews.first().url;
         var view = schema.views.find(g => g.url == autoCreateUrl);
         var viewfields = schema.fields.findAll(c => g.props.some(pro => pro.types.includes(c.type))).map(c => schema.createViewField(c));
-        await block.page.onReplace(block, {
-            url: view.url,
-            schemaId: schema.id,
-            syncBlockId: view.id,
-            fields: viewfields,
-        }, async (newBlock) => {
-            if (typeof g.blockViewHandle == 'function') await g.blockViewHandle(block, g)
+
+        var cb = async (newBlock) => {
+            if (typeof g.blockViewHandle == 'function') await g.blockViewHandle(newBlock as DataGridView, g)
             else {
                 var ps = g.props.toArray(pro => {
                     var f = schema.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
@@ -74,8 +79,23 @@ export async function onCreateDataGridTemplate(
             if ((newBlock as DataGridView).dataGridTab) {
                 await (newBlock as DataGridView).dataGridTab.updateTabItems((newBlock as DataGridView))
             }
-        })
-        return view;
+            newDataGrid = newBlock;
+        };
+        if (options?.isOperator) {
+            await block.page.replace(block, {
+                url: view.url,
+                schemaId: schema.id,
+                syncBlockId: view.id,
+                fields: viewfields,
+            }, cb)
+        }
+        else await block.page.onReplace(block, {
+            url: view.url,
+            schemaId: schema.id,
+            syncBlockId: view.id,
+            fields: viewfields,
+        }, cb)
+        return { view, block: newDataGrid };
     }
 }
 

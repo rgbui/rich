@@ -21,6 +21,30 @@ CardModel('/voted', () => ({
     title: lst('投票'),
     forUrls: [BlockUrlConstant.DataGridList],
     image: Card1.default,
+    renderCover() {
+        return <div className="gap-h-5">
+
+            <div className="flex ">
+                <div className="flex-fixed gap-w-5 h-16" style={{ color: 'var(--bg)' }}>
+                    <Icon size={16} icon={{ name: "byte", code: 'thumbs-up' }}></Icon>
+                </div>
+                <div className="flex-auto  h-5 ">
+                    <div className="bg h-5 w80" ></div>
+                </div>
+            </div>
+
+            <div className="flex ">
+                <div className="flex-fixed gap-w-5  h-16" style={{ color: 'var(--bg)' }}>
+                    <Icon size={16} icon={{ name: "byte", code: 'thumbs-up' }}></Icon>
+                </div>
+                <div className="flex-auto  h-5 ">
+                    <div className="bg h-5 w80" ></div>
+                </div>
+            </div>
+
+
+        </div>
+    },
     props: [
         {
             name: 'title',

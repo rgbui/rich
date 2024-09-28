@@ -19,6 +19,28 @@ CardModel('/questions',
         url: '/questions',
         title: ('问答'),
         image: Card1.default,
+        renderCover() {
+            return <div className="r-gap-h-3 gap-w-5">
+                <div className="flex">
+                    <div className="flex-fixed  gap-r-5">
+                        <div className="size-10 circle bg"></div>
+                    </div>
+                    <div className="flex-auto bg h-5 w80 bg round">
+                    </div>
+                </div>
+                <div className="flex">
+                    <div className="flex-fixed gap-r-5"><div className="size-10 circle bg"></div></div>
+                    <div className="flex-auto bg h-5  bg round">
+                    </div>
+                </div>
+                <div className="flex">
+                    <div className="flex-fixed gap-r-5"><div className="size-10 circle bg"></div></div>
+                    <div className="flex-auto bg h-5 w60 bg round">
+
+                    </div>
+                </div>
+            </div>
+        },
         forUrls: [BlockUrlConstant.DataGridList],
         props: [
             {

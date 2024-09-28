@@ -23,8 +23,28 @@ import { UserAvatars } from "../../../../../component/view/avator/users";
  */
 CardModel('/events', () => ({
     url: '/events',
-    title: lst('事件活动'),
+    title: lst('事件'),
     image: Card1.default,
+    renderCover() {
+        return <div className="gap-h-5 flex flex-top">
+
+            <div className="flex-fixed w-6 round h-30 bg gap-w-5">
+
+            </div>
+
+            <div className="flex-auto">
+                <div className="h-20">
+                    <div className=" bg h-5  w40"></div>
+                    <div className=" bg h-5 gap-t-3  w80"></div>
+                </div>
+                <div className="h-20">
+                    <div className=" bg h-5  w40"></div>
+                    <div className=" bg h-5 gap-t-3  w80"></div>
+                </div>
+            </div>
+
+        </div>
+    },
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {

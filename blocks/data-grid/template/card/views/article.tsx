@@ -35,6 +35,19 @@ CardModel('/article', () => ({
     url: '/article',
     title: lst('图文'),
     image: Card1.default,
+    renderCover() {
+        return <div>
+            <div className="flex">
+                <div className="flex-fixed gap-l-5 gap-h-5 flex-center h-24" style={{ color: 'var(--bg)' }}>
+                    <Icon size={24} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+                <div className="flex-auto gap-w-5 gap-h-5">
+                    <div className="bg h-5 w70" ></div>
+                    <div className="gap-t-5 bg h-10"></div>
+                </div>
+            </div>
+        </div>
+    },
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
@@ -314,7 +327,7 @@ export class CardPin extends CardView {
                             onMouseDown={e => self.onUpdateCellInteractive(e, 'like')}
                             className={"cursor flex-center  padding-w-10 h-30 round  f-14" + (isLike ? " border-primary bg-primary text-white" : " border-0 bg-p-light text-p")}><Icon size={16} icon={LikeSvg}></Icon>{like?.count > 0 && <span className="gap-l-3">{like?.count}</span>}</span>
                         <span className="flex"><Icon size={16} icon={{ name: 'byte', code: 'message' }}></Icon><span className="gap-l-5 f-14">{comment.count}</span></span>
-                       
+
                         <span onMouseDown={e => self.onProperty(e)}
                             className="visible item-hover   flex-center size-24 cursor round">
                             <Icon size={18} icon={DotsSvg}></Icon>

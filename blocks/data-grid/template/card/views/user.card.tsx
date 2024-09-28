@@ -21,6 +21,43 @@ CardModel('/user/story', () => ({
     url: '/user/story',
     title: lst('用户卡'),
     image: Card1.default,
+    renderCover() {
+        return <div>
+            <div className=" flex gap-5 r-gap-w-3">
+
+                <div>
+                    <div className="h-16" style={{ color: 'var(--bg)' }}>
+                        <Icon size={16} icon={{ name: "byte", code: 'me' }}></Icon>
+                    </div>
+                    <div>
+                        <div className="flex-center"><div className="bg h-5 w70" ></div></div>
+                        <div className="gap-t-5 bg h-5"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div className="h-16" style={{ color: 'var(--bg)' }}>
+                        <Icon size={16} icon={{ name: "byte", code: 'me' }}></Icon>
+                    </div>
+                    <div>
+                        <div className="flex-center"><div className="bg h-5 w70" ></div></div>
+                        <div className="gap-t-5 bg h-5"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div className="h-16" style={{ color: 'var(--bg)' }}>
+                        <Icon size={16} icon={{ name: "byte", code: 'me' }}></Icon>
+                    </div>
+                    <div>
+                        <div className="flex-center"><div className="bg h-5 w70" ></div></div>
+                        <div className="gap-t-5 bg h-5"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    },
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
         { name: 'user', text: lst('用户'), types: [FieldType.user, FieldType.creater], required: true },

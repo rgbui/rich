@@ -1,6 +1,4 @@
 
-
-
 import React from "react";
 import { DotsSvg, LoveFillSvg, LoveSvg, UploadSvg } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
@@ -26,6 +24,35 @@ CardModel('/card/pinterest', () => ({
     url: '/card/pinterest',
     title: lst('图片库'),
     image: Card1.default,
+    renderCover() {
+        return <div className="col-3-g5 flex-top overflow-hidden h-40 gap-l-10" style={{ color: 'var(--bg)' }}>
+
+            <div >
+                <div className="bg flex-center round h-30 gap-t-5">
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+                <div className="bg flex-center round h-30 gap-t-5">
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+            </div>
+
+            <div >
+                <div className="bg flex-center round h-20  gap-t-5">
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+                <div className="bg flex-center round h-20  gap-t-5">
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+            </div>
+
+            <div >
+                <div className="bg flex-center round h-40 gap-t-5">
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+            </div>
+            
+        </div>
+    },
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
         { name: 'pic', text: lst('图片'), types: [FieldType.image, FieldType.video], required: true },

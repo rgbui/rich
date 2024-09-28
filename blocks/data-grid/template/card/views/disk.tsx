@@ -19,6 +19,26 @@ import { S } from "../../../../../i18n/view";
 CardModel('/list/disk', () => ({
     url: '/list/disk',
     title: lst('文件'),
+    renderCover() {
+        return <div className="gap-5">
+            <div className="flex">
+                <div className="flex-fixed h-16" style={{ color: 'var(--bg)' }}>
+                    <Icon size={16} icon={{ name: "byte", code: 'word' }}></Icon>
+                </div>
+                <div className="flex-auto bg h-8 gap-w-5"></div>
+                <div className="flex-fixed size-10 round bg " style={{ color: 'var(--bg)' }}>
+                </div>
+            </div>
+            <div className="flex">
+                <div className="flex-fixed h-16" style={{ color: 'var(--bg)' }}>
+                    <Icon size={16} icon={{ name: "byte", code: 'file-gif' }}></Icon>
+                </div>
+                <div className="flex-auto bg h-8 gap-w-5"></div>
+                <div className="flex-fixed size-10 round bg " style={{ color: 'var(--bg)' }}>
+                </div>
+            </div>
+        </div>
+    },
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [

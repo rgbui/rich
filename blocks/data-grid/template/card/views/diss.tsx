@@ -25,6 +25,18 @@ import { useImageViewer } from "../../../../../component/view/image.preview";
 CardModel('/list/tizhi', () => ({
     url: '/list/tizhi',
     title: '讨论',
+    renderCover() {
+        return <div className="gap-h-5">
+            <div className="flex gap-w-5 gap-b-3">
+                <div className="flex-fixed size-16 circle bg " style={{ color: 'var(--bg)' }}></div>
+                <div className="flex-auto bg h-5  round gap-l-5 w80"></div>
+            </div>
+            <div className="gap-w-5">
+                <div className=" bg h-5 round gap-b-3"></div>
+                <div className=" bg h-5  round w70"></div>
+            </div>
+        </div>
+    },
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridList],
     props: [

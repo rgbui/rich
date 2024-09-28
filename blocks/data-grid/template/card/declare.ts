@@ -25,6 +25,7 @@ export type CardPropsType = {
     abled?: boolean,
     remark?: string,
     image?: any,
+    renderCover?: () => JSX.Element,
     /**
      * 自定义菜单显示时使用
      * @param g 

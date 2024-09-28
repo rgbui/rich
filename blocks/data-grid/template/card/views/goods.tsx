@@ -23,6 +23,51 @@ CardModel('/goods', () => ({
     title: lst('商品'),
     forUrls: [BlockUrlConstant.DataGridGallery],
     image: Card1.default,
+    renderCover() {
+        return <div className="flex flex-center r-gap-w-5">
+
+            <div className="flex-fixed">
+                <div className="flex-center gap-t-5  h-20 bg  round" style={{ color: 'var(--bg)' }}>
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+                <div className="flex  h-12 l-12">
+
+                    <div className="flex-auto h-10 bg gap-r-3">
+                    </div>
+                    <div className="flex-fixed remark f-12" style={{ color: 'var(--bg)' }}>
+                        ￥
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex-fixed">
+                <div className="flex-center gap-t-5  h-20 bg round" style={{ color: 'var(--bg)' }}>
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+                <div className="flex h-12 l-12">
+                    <div className="flex-auto h-10 bg gap-r-3">
+                    </div>
+                    <div className="flex-fixed remark f-12" style={{ color: 'var(--bg)' }}>
+                        ￥
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex-fixed">
+                <div className="flex-center gap-t-5 h-20 bg round" style={{ color: 'var(--bg)' }}>
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
+                <div className="flex  h-12 l-12">
+                    <div className="flex-auto h-10 bg gap-r-3">
+                    </div>
+                    <div className="flex-fixed remark f-12" style={{ color: 'var(--bg)' }}>
+                        ￥
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    },
     props: [
         { name: 'author', text: lst('用户'), types: [FieldType.creater] },
         { name: 'title', text: lst('商品名'), types: [FieldType.title, FieldType.text], required: true },

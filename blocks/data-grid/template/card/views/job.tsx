@@ -21,6 +21,24 @@ CardModel('/job', () => ({
     url: '/job',
     title: lst('招聘'),
     image: Card9.default,
+    renderCover() {
+        return <div>
+            <div className="flex">
+                <div className="flex-auto h-5 gap-w-5 bg"></div>
+                <div className="flex-fixed remark f-12 h-12 l-12" style={{ color: 'var(--bg)' }}>
+                    ￥
+                </div>
+            </div>
+            <div className="h-10 bg gap-w-5  round gap-h-3">
+
+            </div>
+            <div className="flex h-10 gap-w-5">
+
+                <div className="flex-fixed size-10 circle bg"></div>
+                <div className="flex-auto bg w60  round h-5 gap-l-5"></div>
+            </div>
+        </div>
+    },
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
         { name: 'jobTitle', text: lst('职位名称'), types: [FieldType.title, FieldType.text, FieldType.option], required: true },
