@@ -22,7 +22,7 @@ export async function parseMarkdownContent(md: string) {
     // var html = converter.makeHtml(md);
 
     var html = marked.parse(md);
-    // console.log(md, html);
+    console.log(md, html);
     var blocks = await parseHtml(html);
     return blocks;
 }

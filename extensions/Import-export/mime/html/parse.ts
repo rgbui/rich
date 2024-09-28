@@ -256,6 +256,7 @@ function parsePreCode(element: HTMLElement) {
     return null;
 }
 function parseBlock(element: HTMLElement) {
+
     var name = element?.tagName?.toLowerCase();
     var textBlockUrl = getTextBlock(element);
     /**
@@ -285,7 +286,8 @@ function parseBlock(element: HTMLElement) {
         if (element?.children?.length > 0) {
             var lineElements: HTMLElement[] = [];
             for (let i = 0; i < element.childNodes.length; i++) {
-                var ele = element.childNodes[i] as HTMLElement;
+                var ele = element.childNodes[i] as HTMLElement; 
+                if (ele.nodeType == 3 && ele.textContent == '\n') continue;
                 if (isLineElement(ele)) lineElements.push(ele);
                 else {
                     if (lineElements.length > 0) {
