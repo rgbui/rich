@@ -835,36 +835,7 @@ export class Page$Operator {
     async onMovePage(this: Page, event: React.MouseEvent) {
         await channel.act('/current/page/move', { event: event } as any);
     }
-    async onToggleFieldView(this: Page, field: Field, checked: boolean) {
-        await this.onAction('onToggleFieldView', async () => {
-            if (checked) {
-                var b = GetFieldFormBlockInfo(field);
-                if (b) {
-                    var view = this.views[0];
-                    var at = view.childs.length;
-                    if (this.schemaView?.formType == 'doc-add') {
-                        var bf = this.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true);
-                        if (field.type != FieldType.title) {
-                            if (bf) at = bf.at;
-                        }
-                        else {
-                            var pageTitle = this.find(g => g.url == BlockUrlConstant.Title);
-                            if (pageTitle) {
-                                at = pageTitle.at + 1;
-                            }
-                        }
-                    }
-                    var newBlock = await this.createBlock(b.url, b, view, at);
-                    if (this.formRowData)
-                        await newBlock.updateProps({ value: field.getValue(this.formRowData) }, BlockRenderRange.self)
-                }
-            }
-            else {
-                var f = this.find(c => (c instanceof OriginFormField) && c.field.id == field.id);
-                if (f) await f.delete()
-            }
-        });
-    }
+
     async onTurnToPPT(this: Page) {
         await this.onAction('onTrunToPPT', async () => {
 

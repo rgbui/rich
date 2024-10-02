@@ -67,8 +67,9 @@ export class OpenPageCommandView extends FlowCommandView<OpenPageCommand> {
             if (isUpdate) this.forceUpdate()
         }
     }
-
     async openSelectPage(event: React.MouseEvent) {
+        event.stopPropagation();
+        console.log('openSelectPage', event);
         var r = await useSelectWorkspacePage({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
         });

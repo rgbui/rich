@@ -242,17 +242,32 @@ export class TableSchema {
     }
     getFormFields(isTemplate: boolean, formType: "doc" | "doc-add" | "doc-detail") {
         var fs = this.fields.findAll(g => g.visible !== false && !DisabledFormFieldTypes.includes(g.type))
-        var ns = fs.findAll(g => !SysFieldTypes.includes(g.type));
-        fs = fs.findAll(g => SysFieldTypes.includes(g.type));
         fs.sort((x, y) => {
             if (x.type === FieldType.title) return -1;
             else return 1;
         })
-        fs.splice(1, 0, ...ns);
-        if (formType != 'doc-add')
-            lodash.remove(fs, g => g.type == FieldType.title)
+        if (formType == 'doc-add' || formType == 'doc') {
+            lodash.remove(fs, g => [
+                FieldType.formula,
+                FieldType.rollup,
+                FieldType.modifyDate,
+                FieldType.modifyer,
+                FieldType.createDate,
+                FieldType.creater,
+                FieldType.emoji,
+                FieldType.like,
+                FieldType.love,
+                FieldType.vote
+            ].includes(g.type))
+        }
         if (formType == 'doc-add') {
-            lodash.remove(fs, g => SysFieldTypes.includes(g.type) && g.type !== FieldType.title);
+            lodash.remove(fs, g => [].includes(g.type))
+        }
+        if (formType == 'doc') {
+            lodash.remove(fs, g => [FieldType.title].includes(g.type))
+        }
+        if (formType == 'doc-detail') {
+            lodash.remove(fs, g => [FieldType.rollup, FieldType.title].includes(g.type))
         }
         return fs;
     }
@@ -748,7 +763,7 @@ export class TableSchema {
     static isOnlyFieldTypes(field: Field) {
         return OnlyFieldTypes.includes(field.type)
     }
-    
+
 }
 
 

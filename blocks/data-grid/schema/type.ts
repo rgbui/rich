@@ -337,11 +337,11 @@ export var DisabledSortFieldTypes: FieldType[] = [
  * 禁用表单的字段
  */
 export var DisabledFormFieldTypes: FieldType[] = [
-    FieldType.formula,
+    // FieldType.formula,
     FieldType.parentId,
     // FieldType.rollup,
-    FieldType.modifyDate,
-    FieldType.modifyer,
+    // FieldType.modifyDate,
+    // FieldType.modifyer,
     // FieldType.createDate,
     // FieldType.creater,
     FieldType.cover,
@@ -357,10 +357,10 @@ export var DisabledFormFieldTypes: FieldType[] = [
     FieldType.deleted,
     FieldType.pageContentPreview,
 
-    FieldType.emoji,
-    FieldType.like,
-    FieldType.love,
-    FieldType.vote
+    // FieldType.emoji,
+    // FieldType.like,
+    // FieldType.love,
+    // FieldType.vote
 ]
 
 /**

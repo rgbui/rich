@@ -15,6 +15,11 @@ import { lst } from "../../../i18n/store";
 import { Block } from "../../block";
 import { BlockRenderRange } from "../../block/enum";
 import { util } from "../../../util/util";
+import { Field } from "../../../blocks/data-grid/schema/field";
+import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
+import { useSelectMenuItem } from "../../../component/view/menu";
+import { MenuItemType } from "../../../component/view/menu/declare";
+import { Rect } from "../../common/vector/point";
 
 export class Page$Schema {
     /**
@@ -486,5 +491,139 @@ export class Page$Schema {
         if (view) {
             this.schema.onSchemaOperate([{ name: 'updateSchemaView', id: view.id, data: props }], "Page.onChangeSchemaView")
         }
+    }
+    async onOpenFormMenu(this: Page, event: React.MouseEvent) {
+        var self = this;
+        var view = this.schema.recordViews.find(g => g.id == this.pe.id1)
+        var viewType = this.getPageSchemaRecordType();
+        if (!view.formType) view.formType = 'doc';
+        var r = await useSelectMenuItem(
+            { roundArea: Rect.fromEvent(event) },
+            [
+                {
+                    icon: { name: 'bytedance-icon', code: 'one-key' },
+                    name: 'disabledUserMultiple',
+                    text: lst('仅允许提交一次'),
+                    type: MenuItemType.switch,
+                    checked: view?.disabledUserMultiple,
+                    visible: view?.formType == 'doc-add' ? true : false
+                },
+                {
+                    name: 'editForm',
+                    icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
+                    text: lst('编辑模板'),
+                    visible: view?.formType == 'doc' && !this.isSchemaRecordViewTemplate
+                },
+                {
+                    type: MenuItemType.gap,
+                    visible: view?.formType == 'doc-add' || view?.formType == 'doc' && !this.isSchemaRecordViewTemplate ? true : false
+                },
+                { text: lst('显示字段'), type: MenuItemType.text },
+                ...this.schema.getFormFields(viewType == 'template' ? true : false, view?.formType || 'doc').toArray(uf => {
+                    return {
+                        icon: GetFieldTypeSvg(uf),
+                        name: uf.id,
+                        text: uf.text,
+                        type: MenuItemType.switch,
+                        checked: this.exists(c => (c instanceof OriginFormField) && c.field?.id == uf.id)
+                    }
+                }),
+                { type: MenuItemType.divide },
+                {
+                    name: 'hidePropTitle',
+                    type: MenuItemType.switch,
+                    visible: view?.formType == 'doc' ? false : true,
+                    checked: this.findAll(g => g instanceof OriginFormField).every(c => (c as OriginFormField).hidePropTitle == true),
+                    icon: { name: 'bytedance-icon', code: 'tag-one' },
+                    text: lst('隐藏字段文本')
+                },
+                {
+                    name: 'hideAllFields',
+                    icon: { name: 'byte', code: 'clear-format' },
+                    text: lst('隐藏所有字段')
+                },
+                { type: MenuItemType.divide },
+                {
+                    text: lst('了解如何设置数据表记录页面'),
+                    type: MenuItemType.help,
+                    url: window.shyConfig?.isUS ? "https://help.shy.red/page/42#vQh5qaxCEC3aPjuFisoRh5" : "https://help.shy.live/page/1870#3Fgw3UNGQErf8tZdJnhjru"
+                }
+            ],
+            {
+                input: async (newItem) => {
+                    if (['disabledUserMultiple', 'allowAnonymous'].includes(newItem.name)) {
+                        self.onChangeSchemaView(view.id, { [newItem.name]: newItem.checked })
+                    }
+                    else if (newItem.name == 'hidePropTitle') {
+                        self.onAction('hideAllFields', async () => {
+                            var fs = self.findAll(c => (c instanceof OriginFormField));
+                            var isHide = (fs[0] as OriginFormField)?.hidePropTitle ? false : true
+                            for (let f of fs) {
+                                await f.updateProps({ hidePropTitle: isHide }, BlockRenderRange.self)
+                            }
+                        })
+                    }
+                    else self.onToggleFieldView(this.schema.allowFormFields.find(g => g.id == newItem.name), newItem.checked)
+                }
+            }
+        )
+        if (r) {
+            if (r.item.name == 'editForm') {
+                self.onPageViewTurn('template');
+            }
+            else if (r.item.name == 'hideAllFields') {
+                self.onAction('hideAllFields', async () => {
+                    var fs = self.findAll(c => (c instanceof OriginFormField));
+                    for (let f of fs) {
+                        await f.delete()
+                    }
+                })
+            }
+            else if (r.item.name == 'hidePropTitle') {
+                self.onAction('hideAllFields', async () => {
+                    var fs = self.findAll(c => (c instanceof OriginFormField));
+                    for (let f of fs) {
+                        await f.updateProps({ hidePropTitle: true }, BlockRenderRange.self)
+                    }
+                })
+            }
+            else if (r.item.name == 'viewDisplay') {
+                await this.onTurnForm(r.item.value);
+            }
+            else if (this.schema.fields.some(s => s.id == r.item.name)) {
+                var sf = this.schema.fields.find(s => s.id == r.item.name);
+                this.onToggleFieldView(sf, r.item.checked)
+            }
+        }
+    }
+    async onToggleFieldView(this: Page, field: Field, checked: boolean) {
+        await this.onAction('onToggleFieldView', async () => {
+            if (checked) {
+                var b = GetFieldFormBlockInfo(field);
+                if (b) {
+                    var view = this.views[0];
+                    var at = view.childs.length;
+                    if (this.schemaView?.formType == 'doc-add') {
+                        var bf = this.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true);
+                        if (field.type != FieldType.title) {
+                            if (bf) at = bf.at;
+                        }
+                        else {
+                            var pageTitle = this.find(g => g.url == BlockUrlConstant.Title);
+                            if (pageTitle) {
+                                at = pageTitle.at + 1;
+                            }
+                        }
+                    }
+                    var newBlock = await this.createBlock(b.url, b, view, at);
+                    if (this.formRowData)
+                        await newBlock.updateProps({ value: field.getValue(this.formRowData) }, BlockRenderRange.self)
+                }
+            }
+            else {
+                var f = this.find(c => (c instanceof OriginFormField) && c.field.id == field.id);
+                if (f) await f.delete()
+            }
+        });
     }
 }

@@ -3,7 +3,7 @@ import React from "react";
 import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
-import { BlockDirective, BlockRenderRange } from "../../block/enum";
+import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
 import {
@@ -32,8 +32,6 @@ import { ShyAlert } from "../../../component/lib/alert";
 import { channel } from "../../../net/channel";
 import { Confirm } from "../../../component/lib/confirm";
 import { BlockUrlConstant } from "../../block/constant";
-import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
-import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { ElementType } from "../../../net/element.type";
 import { util } from "../../../util/util";
 import { lst } from "../../../i18n/store";
@@ -569,110 +567,7 @@ export class Page$ContextMenu {
                 await blocks.eachAsync(async (block) => { await block.onClickContextMenu(item, event, { merge: true }); })
         }
     }
-    async onOpenFormMenu(this: Page, event: React.MouseEvent) {
-        var self = this;
-        var view = this.schema.recordViews.find(g => g.id == this.pe.id1)
-        var viewType = this.getPageSchemaRecordType();
-        if (!view.formType) view.formType = 'doc';
-        var r = await useSelectMenuItem(
-            { roundArea: Rect.fromEvent(event) },
-            [
-                {
-                    icon: { name: 'bytedance-icon', code: 'one-key' },
-                    name: 'disabledUserMultiple',
-                    text: lst('仅允许提交一次'),
-                    type: MenuItemType.switch,
-                    checked: view?.disabledUserMultiple,
-                    visible: view?.formType == 'doc-add' ? true : false
-                },
-                {
-                    name: 'editForm',
-                    icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
-                    text: lst('编辑模板'),
-                    visible: view?.formType == 'doc' && !this.isSchemaRecordViewTemplate
-                },
-                {
-                    type: MenuItemType.gap,
-                    visible: view?.formType == 'doc-add' || view?.formType == 'doc' && !this.isSchemaRecordViewTemplate ? true : false
-                },
-                { text: lst('显示字段'), type: MenuItemType.text },
-                ...this.schema.getFormFields(viewType == 'template' ? true : false, view?.formType || 'doc').toArray(uf => {
-                    return {
-                        icon: GetFieldTypeSvg(uf),
-                        name: uf.id,
-                        text: uf.text,
-                        type: MenuItemType.switch,
-                        checked: this.exists(c => (c instanceof OriginFormField) && c.field?.id == uf.id)
-                    }
-                }),
-                { type: MenuItemType.divide },
-                {
-                    name: 'hidePropTitle',
-                    type: MenuItemType.switch,
-                    visible: view?.formType == 'doc' ? false : true,
-                    checked: this.findAll(g => g instanceof OriginFormField).every(c => (c as OriginFormField).hidePropTitle == true),
-                    icon: { name: 'bytedance-icon', code: 'tag-one' },
-                    text: lst('隐藏字段文本')
-                },
-                {
-                    name: 'hideAllFields',
-                    icon: { name: 'byte', code: 'clear-format' },
-                    text: lst('隐藏所有字段')
-                },
-                { type: MenuItemType.divide },
-                {
-                    text: lst('了解如何设置数据表记录页面'),
-                    type: MenuItemType.help,
-                    url: window.shyConfig?.isUS ? "https://help.shy.red/page/42#vQh5qaxCEC3aPjuFisoRh5" : "https://help.shy.live/page/1870#3Fgw3UNGQErf8tZdJnhjru"
-                }
-            ],
-            {
-                input: async (newItem) => {
-                    if (['disabledUserMultiple', 'allowAnonymous'].includes(newItem.name)) {
-                        self.onChangeSchemaView(view.id, { [newItem.name]: newItem.checked })
-                    }
-                    else if (newItem.name == 'hidePropTitle') {
-                        self.onAction('hideAllFields', async () => {
-                            var fs = self.findAll(c => (c instanceof OriginFormField));
-                            var isHide = (fs[0] as OriginFormField)?.hidePropTitle ? false : true
-                            for (let f of fs) {
-                                await f.updateProps({ hidePropTitle: isHide }, BlockRenderRange.self)
-                            }
-                        })
-                    }
-                    else self.onToggleFieldView(this.schema.allowFormFields.find(g => g.id == newItem.name), newItem.checked)
-                }
-            }
-        )
-        if (r) {
-            if (r.item.name == 'editForm') {
-                self.onPageViewTurn('template');
-            }
-            else if (r.item.name == 'hideAllFields') {
-                self.onAction('hideAllFields', async () => {
-                    var fs = self.findAll(c => (c instanceof OriginFormField));
-                    for (let f of fs) {
-                        await f.delete()
-                    }
-                })
-            }
-            else if (r.item.name == 'hidePropTitle') {
-                self.onAction('hideAllFields', async () => {
-                    var fs = self.findAll(c => (c instanceof OriginFormField));
-                    for (let f of fs) {
-                        await f.updateProps({ hidePropTitle: true }, BlockRenderRange.self)
-                    }
-                })
-            }
-            else if (r.item.name == 'viewDisplay') {
-                await this.onTurnForm(r.item.value);
-            }
-            else if (this.schema.fields.some(s => s.id == r.item.name)) {
-                var sf = this.schema.fields.find(s => s.id == r.item.name);
-                this.onToggleFieldView(sf, r.item.checked)
-            }
-        }
-    }
+  
 }
 
 
