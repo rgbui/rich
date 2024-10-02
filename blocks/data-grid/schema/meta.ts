@@ -592,6 +592,7 @@ export class TableSchema {
             viewUrl = cm.forUrls[0];
             var ps = cm.props.toArray(pro => {
                 var f = this.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
+                if (!f && pro.required) f = this.fields.find(g => pro.types.includes(g.type));
                 if (f) {
                     return {
                         name: pro.name,
@@ -615,7 +616,7 @@ export class TableSchema {
                 }
             });
         }
-        var actions: any[] = [{ name: 'createSchemaView', text: text, url: url }];
+        var actions: any[] = [{ name: 'createSchemaView', text: text, url: viewUrl }];
         if (url == '/data-grid/board' && !this.fields.some(f => f.type == FieldType.option || f.type == FieldType.options)) {
             actions.push({
                 name: 'addField',

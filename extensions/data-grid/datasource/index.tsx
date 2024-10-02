@@ -209,7 +209,8 @@ export class DataSourceView extends EventsComponent {
                         tableId: sh.id,
                         viewUrl: sv.view.url,
                         type: 'view',
-                        viewId: sv.view.id
+                        viewId: sv.view.id,
+                        props: sv.props
                     });
                 }
             }
@@ -281,7 +282,7 @@ export async function useDataSourceView(pos: PopoverPosition,
     let popover = await PopoverSingleton(DataSourceView, { mask: true });
     let fv = await popover.open(pos);
     fv.open(option, pos);
-    return new Promise((resolve: (data: string | { tableId: string, viewId: string, type: 'view' | 'form', viewUrl?: string }) => void, reject) => {
+    return new Promise((resolve: (data: string | { tableId: string, viewId: string, type: 'view' | 'form',props?:Record<string,any>, viewUrl?: string }) => void, reject) => {
         fv.only('close', () => {
             popover.close();
             resolve(undefined);

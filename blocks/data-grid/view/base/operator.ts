@@ -283,12 +283,12 @@ export class DataGridViewOperator {
     }
     async onTurnField(this: DataGridView, field: Field, type: FieldType, options: { text?: string, config?: Record<string, any> }) {
 
-       // debugger
+        // debugger
         var r = await this.schema.turnField({ fieldId: field.id, data: { text: options.text, type: type, config: options.config } }, this.id);
 
         if (r.ok) {
-            this.fields.forEach(f=>{
-                f.schema=this.schema;
+            this.fields.forEach(f => {
+                f.schema = this.schema;
             })
             await this.onReloadData();
             // console.log(this.schema.fields.find(g => g.id == field.id),this.fields);
@@ -462,6 +462,7 @@ export class DataGridViewOperator {
             at,
             pk
         ) as DataGridView;
+        console.log('viewProps', viewProps);
         if (viewProps && Object.keys(viewProps).length > 0) {
             await newBlock.updateProps(viewProps, BlockRenderRange.self);
         }
@@ -705,7 +706,7 @@ export class DataGridViewOperator {
             if (typeof g != 'string' && g.type == 'view') {
                 this.onDataGridTurnView(
                     g.viewId,
-                    {},
+                    g.props || {},
                     g.tableId
                 )
             }

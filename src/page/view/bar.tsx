@@ -225,8 +225,7 @@ export class PageBar extends React.Component<{ page: Page }> {
         if (window.shyConfig.isDev) location.href = '/home'
         else location.href = 'https://shy.live/home'.replace('shy.live', window.shyConfig.isUS ? "shy.red" : "shy.live")
     }
-    renderPropertys()
-    {
+    renderPropertys() {
         if (this.props.page.openSource == 'snap') return <></>
         if (this.props.page?.ws?.accessWorkspace == 'embed') return <></>
         var user = this.props.page.user;
@@ -258,10 +257,9 @@ export class PageBar extends React.Component<{ page: Page }> {
             isSearch = false;
         }
         if (this.props.page.pe.type == ElementType.SchemaData) {
-            isField = true;
-            if (!isCanEdit) { isField = false; isPublish = false; }
             if (this.props.page.isSchemaRecordViewTemplate) isPublish = true;
             else isPublish = false;
+            if (!isCanEdit) { isField = false; isPublish = false; }
         }
         if (this.props.page.schemaView?.formType == 'doc-detail') {
             isField = true;

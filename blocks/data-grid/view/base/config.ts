@@ -396,6 +396,7 @@ export class DataGridViewConfig {
             if (g) {
                 if (typeof g != 'string' && g.type == 'view') {
                     var s = await TableSchema.loadTableSchema(g.tableId, this.page.ws);
+                    await s.cacPermissions();
                     var sv = s.listViews.find(c => c.id == (g as any).viewId)
                     var viewData = {
                         url: BlockUrlConstant.DataGridTab,
@@ -436,7 +437,8 @@ export class DataGridViewConfig {
                                             {
                                                 url: sv.url,
                                                 schemaId: g.tableId,
-                                                syncBlockId: g.viewId
+                                                syncBlockId: g.viewId,
+                                                ...(g.props||{})
                                             }
                                         ]
                                     }

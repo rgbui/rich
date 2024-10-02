@@ -23,11 +23,10 @@ import { DataGridChart } from "../statistic/charts";
 import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { util } from "../../../../util/util";
-import "./style.less";
 import { TextEle } from "../../../../src/common/text.ele";
 import { ObserverWidth } from "../../../../src/common/observer.width";
 import { PageLayoutType } from "../../../../src/page/declare";
-
+import "./style.less";
 
 @url('/data-grid/tab')
 export class DataGridTab extends Block {
@@ -141,7 +140,8 @@ export class DataGridTab extends Block {
                                     {
                                         url: view.url,
                                         schemaId: s.id,
-                                        syncBlockId: view.id
+                                        syncBlockId: view.id,
+                                        ...((g as any).props || {})
                                     }
                                 ]
                             }
