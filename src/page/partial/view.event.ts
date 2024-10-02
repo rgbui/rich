@@ -334,6 +334,7 @@ export class Page$ViewEvent {
         var cs = this.views.first().childs;
         var bs = cs.map(c => {
             var size = c.fixedSize;
+            if (!size) return;
             var rect = new Rect(0, 0, size.width, size.height);
             // var gm = this.matrix.appended(c.currentMatrix);
             rect = rect.transformToBound(c.currentMatrix);
@@ -459,19 +460,36 @@ export class Page$ViewEvent {
             await this.onUpdatePageData({ icon })
         }
     }
-    async onUpdatePageTitle(this: Page,
+    async onUpdatePageTitle(
+        this: Page,
         text: string,
         locationId?: PageLocation
     ) {
-        // console.log(text, locationId, 'textl');
         if (!this.isSchemaRecordViewTemplate && [
             ElementType.SchemaRecordView,
             ElementType.SchemaRecordViewData,
             ElementType.SchemaData
         ].includes(this.pe.type)) {
-            this.formRowData.title = text;
-            await this.onUpdatePageData({ title: text }, locationId || PageLocation.pageUpdateInfo);
-            if (this.view.pageBar) this.view.pageBar.forceUpdate()
+            if (this.pe.type == ElementType.SchemaRecordView && this.isForm('doc-add')) {
+                await this.schema.onSchemaOperate([{
+                    name: 'updateSchemaView',
+                    id: this.pe.id1,
+                    data: { text }
+                }], locationId || PageLocation.pageUpdateInfo)
+                if (this.isFormPageItem()) {
+                    await channel.air('/page/update/info', {
+                        elementUrl: this.elementUrl,
+                        pageInfo: {
+                            text: text
+                        }
+                    }, { locationId: locationId || PageLocation.pageUpdateInfo })
+                }
+            }
+            else {
+                this.formRowData.title = text;
+                await this.onUpdatePageData({ title: text }, locationId || PageLocation.pageUpdateInfo);
+                if (this.view.pageBar) this.view.pageBar.forceUpdate()
+            }
         }
         else if (this.isSchemaRecordViewTemplate) {
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
@@ -526,7 +544,6 @@ export class Page$ViewEvent {
         description: {
             abled: boolean,
             text: string
-
         }
     } {
         if ([
@@ -536,7 +553,7 @@ export class Page$ViewEvent {
         ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
             if (this.pe.type == ElementType.SchemaRecordView) {
                 var sr = this.schema.views.find(g => g.id == this.pe.id1);
-                if (sr && sr.formType == 'doc-add') {
+                if (sr && (sr.formType == 'doc-add' || sr.formType == 'doc-detail')) {
                     return {
                         id: sr.id,
                         text: sr.text,
@@ -575,7 +592,6 @@ export class Page$ViewEvent {
         }
     }
     async loadPageParents(this: Page) {
-
         var c = await channel.get('/page/query/parents',
             {
                 ws: this.ws,
@@ -623,6 +639,7 @@ export class Page$ViewEvent {
                  * 互联网是否公开，如果公开的权限是什么
                  */
                 netPermissions: sv.netPermissions,
+                netCopy: sv.netCopy,
                 /**
                  * 外部邀请的用户权限
                  */
@@ -634,23 +651,27 @@ export class Page$ViewEvent {
                 memberPermissions: sv.memberPermissions
             }
         }
-        else if ([ElementType.SchemaData].includes(this.pe.type)) {
+        else if ([
+            ElementType.SchemaData,
+            ElementType.SchemaRecordViewData
+        ].includes(this.pe.type)) {
             return {
-                share: this.formRowData.confg.share,
+                share: this.formRowData?.config?.share,
 
                 /**
                  * 互联网是否公开，如果公开的权限是什么
                  */
-                netPermissions: this.formRowData.confg.netPermissions,
+                netPermissions: this.formRowData?.config?.netPermissions,
+                netCopy: this.formRowData?.config?.netCopy,
                 /**
                  * 外部邀请的用户权限
                  */
-                inviteUsersPermissions: this.formRowData.confg.inviteUsersPermissions,
+                inviteUsersPermissions: this.formRowData?.config?.inviteUsersPermissions,
                 /**
                  * 空间成员权限，
                  * 可以指定角色，也可以指定具体的人
                  */
-                memberPermissions: this.formRowData.confg.memberPermissions
+                memberPermissions: this.formRowData?.config?.memberPermissions
             }
         }
         return {
@@ -660,6 +681,7 @@ export class Page$ViewEvent {
              * 互联网是否公开，如果公开的权限是什么
              */
             netPermissions: this._pageItem.netPermissions,
+            netCopy: this._pageItem.netCopy,
             /**
              * 外部邀请的用户权限
              */

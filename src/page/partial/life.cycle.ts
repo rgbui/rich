@@ -36,7 +36,6 @@ export class Page$Cycle {
         this.emit(PageDirective.init);
         await ls.import()
     }
-
     /**
      * 标记当前页面是否加载的是默认的数据
      */
@@ -93,14 +92,12 @@ export class Page$Cycle {
             else {
                 this.requireSelectLayout = false;
             }
-
         }
         catch (ex) {
             this.onError(ex);
             console.error(ex);
             console.log(JSON.stringify(data));
         }
-
     }
     async loadViews(this: Page, data?: Record<string, any>) {
         this.views = [];
@@ -129,11 +126,6 @@ export class Page$Cycle {
             }
         }
         if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout, { type: PageLayoutType.doc });
-        // if ([
-        //     PageLayoutType.recordView,
-        // ].some(s => s == this.pageLayout.type)) {
-        //     this.requireSelectLayout = false;
-        // }
         if (this.pe && [ElementType.SchemaRecordView, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
             this.requireSelectLayout = false;
             await this.loadPageSchema();
@@ -715,7 +707,7 @@ export class Page$Cycle {
         }
         if (typeof this.queue == 'undefined') this.queue = new QueueHandle();
         try {
-            await this.queue.create(willAction,10000);
+            await this.queue.create(willAction, 10000);
             if (window.shyConfig?.isDev)
                 console.log('success action', actionName);
         }

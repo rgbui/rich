@@ -30,6 +30,11 @@ import { Head } from "../../../../blocks/general/head";
 import { BlockRenderRange } from "../../../block/enum";
 import { onceAutoScroll } from "../../../common/scroll";
 import { getTemplateInstance } from "../../../../extensions/ai/prompt";
+import { BlockButton } from "../../../../blocks/interaction/button";
+import { FieldType } from "../../../../blocks/data-grid/schema/type";
+import React from "react";
+import { PopoverPosition } from "../../../../component/popover/position";
+import { useWsPicker } from "../../../../extensions/ws";
 
 
 
@@ -85,6 +90,7 @@ export class Page$Operator {
                 var view = this.views[0];
                 if (this.pageLayout.type == PageLayoutType.ppt) {
                     view = view.childs.last();
+                    if ((view as any)?.board == true) view = null;
                     if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
                 }
                 await this.createBlock(BlockUrlConstant.RefLinks, { url: BlockUrlConstant.RefLinks }, view, view.childs.length, 'childs');
@@ -102,6 +108,7 @@ export class Page$Operator {
                     var view = this.views[0];
                     if (this.pageLayout.type == PageLayoutType.ppt) {
                         view = view.childs.last();
+                        if ((view as any)?.board == true) view = null;
                         if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
                     }
                     await this.createBlock(BlockUrlConstant.Comment, {}, view);
@@ -130,8 +137,10 @@ export class Page$Operator {
                     else {
                         if (this.pageLayout.type == PageLayoutType.ppt) {
                             view = view.childs.last();
+                            if ((view as any)?.board == true) view = null;
                             if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
-                        } await this.createBlock(BlockUrlConstant.PageAuthor, {}, view);
+                        }
+                        await this.createBlock(BlockUrlConstant.PageAuthor, {}, view);
                     }
                 }
                 else if (cs.length > 1) {
@@ -181,6 +190,7 @@ export class Page$Operator {
                     var view = this.views[0];
                     if (this.pageLayout.type == PageLayoutType.ppt) {
                         view = view.childs.last();
+                        if ((view as any)?.board == true) view = null;
                         if (!view) view = await this.createBlock(BlockUrlConstant.CardBox, { url: BlockUrlConstant.CardBox }, view);
                     }
                     await this.createBlock(BlockUrlConstant.PagePreOrNext, {}, view);
@@ -610,7 +620,7 @@ export class Page$Operator {
                     await block.replaceTextContent(text);
                 }
             }
-        })  
+        })
     }
     async onAIMind(this: Page, blocks: Block[], command: string) {
         await this.onAction('onAiText', async () => {
@@ -647,6 +657,7 @@ export class Page$Operator {
     async onOpenPublish(this: Page, event: React.MouseEvent) {
         await usePagePermission({ roundArea: Rect.fromEvent(event) }, this)
     }
+
     async onOpenMember(this: Page, event: React.MouseEvent) {
         this.showMembers = this.showMembers ? false : true;
         this.forceUpdate()
@@ -775,6 +786,20 @@ export class Page$Operator {
                         if (r.ok) {
                             var ts = (rf.tags || '').split(/,|，|\s/).filter(c => c);
                             lodash.remove(ts, c => c == ' ');
+                            var childs = this._pageItem ? await this._pageItem.getSubItems() : [];
+                            var newChilds = childs.arrayJsonToArray('childs', g => {
+                                return {
+                                    wsId: ws.id,
+                                    pageId: g.id,
+                                    mime: g.mime,
+                                    pageType: g.pageType,
+                                    sn: g.sn,
+                                    text: g.text,
+                                    icon: g.icon,
+                                    elementUrl: g.elementUrl
+                                }
+                            });
+                            console.log('newChilds', newChilds);
                             await channel.post('/create/workspace/template', {
                                 wsId: ws.id,
                                 pageId: this.pageInfo?.id,
@@ -785,6 +810,8 @@ export class Page$Operator {
                                 description: rf.description,
                                 file: r.data.file,
                                 icon: this.pageInfo?.icon,
+                                childs: newChilds,
+                                pageType: this.pageInfo?.pageType,
                                 config: {
                                     classify: rf.classify,
                                     tags: ts
@@ -814,7 +841,20 @@ export class Page$Operator {
                 var b = GetFieldFormBlockInfo(field);
                 if (b) {
                     var view = this.views[0];
-                    var newBlock = await this.createBlock(b.url, b, view, view.childs.length);
+                    var at = view.childs.length;
+                    if (this.schemaView?.formType == 'doc-add') {
+                        var bf = this.find(g => g.url == BlockUrlConstant.Button && (g as BlockButton).isFormSubmit() == true);
+                        if (field.type != FieldType.title) {
+                            if (bf) at = bf.at;
+                        }
+                        else {
+                            var pageTitle = this.find(g => g.url == BlockUrlConstant.Title);
+                            if (pageTitle) {
+                                at = pageTitle.at + 1;
+                            }
+                        }
+                    }
+                    var newBlock = await this.createBlock(b.url, b, view, at);
                     if (this.formRowData)
                         await newBlock.updateProps({ value: field.getValue(this.formRowData) }, BlockRenderRange.self)
                 }
@@ -1035,5 +1075,33 @@ export class Page$Operator {
                 this.kit.picker.onPicker([newBlock], { disabledOpenTool: false, merge: true })
             })
         })
+    }
+    async onCopyPageTemplate(this: Page, event: React.MouseEvent) {
+        var pos: PopoverPosition;
+        if (!this.pageInfo) {
+            ShyAlert(lst('无法复制模板'), 'warn');
+            return;
+        }
+        pos = { center: true, centerTop: 100 };
+        var r = await useWsPicker(pos);
+        if (r) {
+            ShyAlert(lst('正在复制拷贝中...'), 'warn', 1000 * 60 * 5);
+            var g = await channel.post('/create/template', {
+                wsId: this.ws?.id,
+                config: { pageId: this.pageInfo?.id }
+            })
+            if (g.ok) {
+                var rr = await channel.post('/import/page', {
+                    text: this.pageInfo?.text,
+                    templateUrl: g.data.file.url,
+                    wsId: r.id
+                });
+                if (rr.ok) {
+                    ShyAlert(lst('复制拷贝成功'))
+                    return;
+                }
+            }
+            CloseShyAlert();
+        }
     }
 }

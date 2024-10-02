@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { Page } from "..";
 
 import {
+    AiStartSvg,
     ArrowZoomSvg,
     ChevronLeftSvg,
     ChevronRightSvg,
@@ -34,6 +35,8 @@ import { IconArguments } from "../../../extensions/icon/declare";
 import { Rect } from "../../common/vector/point";
 import { UA } from "../../../util/ua";
 import { useSelectMenuItem } from "../../../component/view/menu";
+import { useAISearchBox } from "../../../extensions/search/ai";
+import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 
 export class PageBar extends React.Component<{ page: Page }> {
     preTip: Tip;
@@ -111,6 +114,7 @@ export class PageBar extends React.Component<{ page: Page }> {
             </div>
         }
         else if ([ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
+            var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
             return <div className="flex-auto flex desk-drag">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose(true)} className="desk-no-drag item-hover  round cursor flex-center size-24  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
                 {this.props.page.openSource == 'page' && this.props.page?.openPageData?.pre && <><span onMouseDown={e => this.props.page.onPrev()} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5 ">
@@ -119,9 +123,10 @@ export class PageBar extends React.Component<{ page: Page }> {
                 </span>
                     <span className="flex-center desk-no-drag gap-w-2 remark"><Icon className={'text-1'} icon={ChevronRightSvg} size={18}></Icon></span></>
                 }
-                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page?.formRowData?.title, icon: this.props.page?.formRowData?.icon, defaultIcon: { name: 'byte', code: 'table' } }) }} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5 gap-r-10">
-                    <Icon size={18} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
-                    <span className="gap-l-5">{this.props.page?.formRowData?.title || lst('新页面')}</span>
+                <span onMouseDown={e => { this.onRenamePage(e, { text: this.props.page.isForm('doc') ? this.props.page?.formRowData?.title : sv?.text || '', icon: this.props.page.isForm('doc') ? this.props.page?.formRowData?.icon || PageSvg : getSchemaViewIcon(sv), defaultIcon: { name: 'byte', code: 'table' } }) }} className="desk-no-drag item-hover round flex cursor padding-h-3 padding-w-5 gap-r-10">
+                    <Icon size={18} icon={(this.props.page.isForm('doc') ? this.props.page?.formRowData?.icon || PageSvg : getSchemaViewIcon(sv))}></Icon>
+                    {this.props.page.isForm('doc') && <span className="gap-l-5">{this.props.page?.formRowData?.title || lst('新页面')}</span>}
+                    {!this.props.page.isForm('doc') && <span className="gap-l-5">{sv?.text || ''}</span>}
                 </span>
                 {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center visible size-24 gap-r-10 item-hover cursor round gap-r-10">
                     <Icon size={18} icon={LockSvg}></Icon>
@@ -134,7 +139,7 @@ export class PageBar extends React.Component<{ page: Page }> {
             return <div className="flex-auto flex desk-drag">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onPageClose(true)} className="desk-no-drag item-hover size-24 round cursor flex-center  gap-r-10"><Icon size={18} icon={{ name: 'byte', code: 'double-right' }}></Icon></span>}
                 <span onMouseDown={e => { this.onRenamePage(e, { text: sv?.text, icon: sv?.icon, defaultIcon: { name: 'byte', code: 'table' } }) }} className="desk-no-drag item-hover round flex  cursor padding-h-3 padding-w-5 gap-r-10">
-                    <Icon className={'text-1'} size={18} icon={sv?.icon || PageSvg}></Icon>
+                    <Icon className={'text-1'} size={18} icon={getSchemaViewIcon(sv)}></Icon>
                     <span className="gap-l-5">{sv?.text || ''}</span>
                 </span>
                 {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="desk-no-drag flex-center visible size-24 item-hover cursor round gap-r-10">
@@ -220,7 +225,8 @@ export class PageBar extends React.Component<{ page: Page }> {
         if (window.shyConfig.isDev) location.href = '/home'
         else location.href = 'https://shy.live/home'.replace('shy.live', window.shyConfig.isUS ? "shy.red" : "shy.live")
     }
-    renderPropertys() {
+    renderPropertys()
+    {
         if (this.props.page.openSource == 'snap') return <></>
         if (this.props.page?.ws?.accessWorkspace == 'embed') return <></>
         var user = this.props.page.user;
@@ -240,7 +246,11 @@ export class PageBar extends React.Component<{ page: Page }> {
         var isSearch: boolean = true;
         var isPublish: boolean = true;
         var isContextMenu: boolean = true;
-        // var isAi: boolean = this.props.page.ws?.aiConfig?.aiSearch;
+        var isAi: boolean = this.props.page.ws?.aiConfig?.aiSearch;
+        var pr = this.props.page ? this.props.page?.getPermissions() : undefined;
+        var isCopyButton = pr?.netCopy ? true : false;
+        if (ws.isOwner) isCopyButton = false;
+
         if (!this.props.page.isSign) {
             isPublish = false;
         }
@@ -253,6 +263,10 @@ export class PageBar extends React.Component<{ page: Page }> {
             if (this.props.page.isSchemaRecordViewTemplate) isPublish = true;
             else isPublish = false;
         }
+        if (this.props.page.schemaView?.formType == 'doc-detail') {
+            isField = true;
+            if (!isCanEdit) isField = false;
+        }
         if (this.props.page.pe.type == ElementType.SchemaRecordView) {
             isField = true;
             if (!isCanEdit) isField = false;
@@ -261,10 +275,11 @@ export class PageBar extends React.Component<{ page: Page }> {
             isMember = true;
         }
         if (this.props.page.isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-l-10 text-1 gap-r-20">
+            {isCopyButton && <Tip placement="bottom" text='复制拷贝页面'><span style={{ width: 'auto', height: 'auto' }} ><Button ghost onClick={e => this.props.page.onCopyPageTemplate(e)}><S>复制拷贝页面</S></Button></span></Tip>}
             {isField && <Tip placement="bottom" text='页面字段设置'><span onMouseDown={e => this.props.page.onOpenFormMenu(e)} ><Icon size={18} icon={{ name: 'bytedance-icon', code: 'setting-one' }}></Icon></span></Tip>}
             {isMember && <Tip placement="bottom" text='在线成员'><span onMouseDown={e => this.props.page.onOpenMember(e)} ><Icon size={18} icon={MemberSvg}></Icon></span></Tip>}
             {isSearch && <Tip placement="bottom" text='空间搜索'><span onMouseDown={async e => { await useSearchBox({ ws: this.props.page.ws }) }}><Icon size={18} icon={SearchSvg}></Icon></span></Tip>}
-            {/* {isAi && <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon  size={18} icon={AiStartSvg}></Icon></span>} */}
+            {isAi && <span onMouseDown={async e => { await useAISearchBox({ ws: this.props.page.ws }) }}><Icon size={18} icon={AiStartSvg}></Icon></span>}
             {isPublish && <Tip placement="bottom" text='页面权限协作与分享'><span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span></Tip>}
             {isContextMenu && isCanEdit && <Tip placement="bottom" text='页面设置'><span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span></Tip>}
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}
@@ -281,8 +296,10 @@ export class PageBar extends React.Component<{ page: Page }> {
     }
     render(): React.ReactNode {
         if (this.isNotRenderBar) return <></>
-
         var style: CSSProperties = { zIndex: 1 }
+        var ts = <S>编辑模板</S>;
+        if (this.props.page?.schemaView?.formType == 'doc-add') ts = <S>编辑表单</S>;
+        else if (this.props.page?.schemaView?.formType == 'doc-detail') ts = <S>编辑清单</S>;
         return <div style={style} className={"shy-page-bar flex visible-hover relative " + (isMobileOnly ? "" : "padding-l-10")}>
             {isMobileOnly && <span onClick={e => this.props.page.onSpreadMenu()} className="flex-fixed size-24 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
@@ -295,7 +312,12 @@ export class PageBar extends React.Component<{ page: Page }> {
             {this.renderTitle()}
             <div className="flex-fixed flex">{this.renderUsers()}{this.renderPropertys()}</div>
             {this.props.page.isSchemaRecordViewTemplate && <div className="pos-center padding-w-10 h-30 bg flex-center round f-12">
-                <S>编辑模板</S><span>[{this.props.page.schema.views.find(c => c.id == this.props.page.pe.id1)?.text}]</span>
+                {this.props.page.isForm("doc", true) && <ToolTip overlay={<S>返回</S>}>
+                    <span className="flex-center size-20 cursor" onMouseDown={e => {
+                        this.props.page.onPageViewTurn('template-back');
+                    }}><Icon icon={{ name: 'byte', code: 'arrow-left' }}></Icon></span>
+                </ToolTip>}
+                {ts}<span>[{this.props.page.schema.views.find(c => c.id == this.props.page.pe.id1)?.text}]</span>
             </div>}
         </div>
     }

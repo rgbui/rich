@@ -117,12 +117,12 @@ export class Page$Operator2 {
                 });
             })
     }
-    async onTurn(this: Page, block: Block, url: string,  callback?: (newBlock: Block, oldBlock: Block) => Promise<void>) {
+    async onTurn(this: Page, block: Block, url: string, callback?: (newBlock: Block, oldBlock: Block) => Promise<void>) {
         await this.onAction(ActionDirective.onTurn, async () => {
             var oldBlock = block;
             var newBlock = await block.turn(url);
-            if(typeof callback=='function')
-           await callback(newBlock, oldBlock);
+            if (typeof callback == 'function')
+                await callback(newBlock, oldBlock);
         });
     }
     async replace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[]), action?: (block: Block) => Promise<void>) {
@@ -281,19 +281,70 @@ export class Page$Operator2 {
             // if (isUpdate) this.notifyActionPageUpdate();
         });
     }
-    async onUpdatePageData(this: Page, data: Record<string, any>, locationId?: PageLocation) {
-
+    async onUpdatePageData(this: Page,
+        data: Record<string, any>,
+        locationId?: PageLocation) {
         for (let n in data) {
             if (lodash.isUndefined(data[n])) {
                 delete data[n];
             }
         }
-        if ([
+
+        if (this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate) {
+            if (this.isForm('doc-add')) {
+                var sr = this.schema.views.find(g => g.id == this.pe.id1);
+                if (sr) {
+                    await this.schema.onSchemaOperate([{
+                        name: 'updateSchemaView',
+                        data: data,
+                        id: this.pe.id1,
+                    }], 'Page.onUpdatePageData')
+                    await channel.air('/page/update/info', {
+                        elementUrl: this.elementUrl,
+                        pageInfo: data
+                    }, { locationId: locationId || PageLocation.pageUpdateInfo })
+                    this.forceUpdate();
+                }
+            }
+            else {
+                if (typeof data.text == 'string') {
+                    data.title = data.text;
+                    delete data.text;
+                }
+                Object.assign(this.formRowData, data);
+                this.forceUpdate();
+                this.view.pageBar?.forceUpdate();
+                if (locationId != PageLocation.pageEditTitle) {
+                    var tb = this.find(c => c.url == BlockUrlConstant.Title);
+                    if (tb) {
+                        await (tb as Title).loadPageInfo();
+                        tb.forceManualUpdate()
+                    }
+                }
+            }
+        }
+        else if (this.pe.type == ElementType.SchemaRecordView && this.isSchemaRecordViewTemplate) {
+            var sr = this.schema.views.find(g => g.id == this.pe.id1);
+            if (sr) {
+                await this.schema.onSchemaOperate([{
+                    name: 'updateSchemaView',
+                    data: data,
+                    id: this.pe.id1,
+                }], 'Page.onUpdatePageData')
+                if (sr.formType == 'doc-add') {
+                    await channel.air('/page/update/info', {
+                        elementUrl: this.elementUrl,
+                        pageInfo: data
+                    }, { locationId: locationId || PageLocation.pageUpdateInfo })
+                }
+                this.forceUpdate();
+            }
+        }
+        else if ([
             ElementType.SchemaData,
-            ElementType.SchemaRecordView,
             ElementType.SchemaView,
             ElementType.SchemaRecordViewData
-        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+        ].includes(this.pe.type)) {
             if (typeof data.text == 'string') {
                 data.title = data.text;
                 delete data.text;
@@ -309,23 +360,10 @@ export class Page$Operator2 {
                     tb.forceManualUpdate()
                 }
             }
-
-
             if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
                 if (this.formRowData?.id) {
                     await this.schema.rowUpdate({ dataId: this.formRowData?.id, data: this.formRowData }, 'Page.onUpdatePageData')
                 }
-            }
-        }
-        else if (this.isSchemaRecordViewTemplate) {
-            var sr = this.schema.views.find(g => g.id == this.pe.id1);
-            if (sr) {
-                await this.schema.onSchemaOperate([{
-                    name: 'updateSchemaView',
-                    data: data,
-                    id: this.pe.id1,
-                }], 'Page.onUpdatePageData')
-                this.forceUpdate();
             }
         }
         else {
@@ -336,6 +374,7 @@ export class Page$Operator2 {
                 'text',
                 'share',
                 'netPermissions',
+                "netCopy",
                 'inviteUsersPermissions',
                 'memberPermissions'
             ])

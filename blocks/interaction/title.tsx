@@ -204,10 +204,9 @@ export class TitleView extends BlockView<Title> {
         if (!this.block.page.isCanEdit) isAdd = false;
         var pd = this.block.page.getPageDataInfo();
         var placeholder = getPageText({ pageType: this.block?.pageInfo?.pageType })
-        var isAddForm = false;
+       
         if (this.block.page.pe.type == ElementType.SchemaRecordView) {
-            var sv = this.block.page.schema.recordViews.find(x => x.id == this.block.page.pe.id1);
-            if (sv.formType == 'doc-add' && !this.block.page.isSchemaRecordViewTemplate) isAddForm = true;
+            var sv = this.block.page.schema.recordViews.find(x => x.id == this.block.page.pe.id1); 
             if (this.block.page.isSchemaRecordViewTemplate) {
                 placeholder = lst('数据模板名')
             }
@@ -246,7 +245,6 @@ export class TitleView extends BlockView<Title> {
                     placeholderEmptyVisible
                     plain
                     html={pd?.text || ''}
-                    canEdit={isAddForm ? false : undefined}
                 ></TextArea></span>
             </div>}
             {this.renderComment()}

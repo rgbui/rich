@@ -16,12 +16,16 @@ import { Block } from "../../block";
 import { BlockRenderRange } from "../../block/enum";
 import { util } from "../../../util/util";
 
-
 export class Page$Schema {
     /**
      * 表示数据已提交
      */
     dataSubmitId: string;
+    submitedSpread: boolean;
+    /**
+     * 已经提交的数据总量
+     */
+    dataSumitTotal: number;
     formRowData: Record<string, any>;
     formUserEmojis: Record<string, string[]> = {};
     formPreRow: Record<string, any>;
@@ -50,14 +54,14 @@ export class Page$Schema {
             }
             else {
                 if (this.loadedDefaultData == true) {
-                    var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
-                        if (field?.type == FieldType.title && (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordView || this.pe.type == ElementType.SchemaRecordViewData)) return undefined;
+                    var cs: Record<string, any>[] = this.schema.getFormFields(this.isSchemaRecordViewTemplate, this.schemaView?.formType || 'doc').toArray(field => {
                         var r = GetFieldFormBlockInfo(field);
                         if (r) return Object.assign({
                             fieldMode: 'detail'
                         }, r);
                     })
-                    cs.splice(0, 0, { url: BlockUrlConstant.Title })
+                    if (!cs.includes(g => g.url == BlockUrlConstant.Title))
+                        cs.splice(0, 0, { url: BlockUrlConstant.Title, align: this.isForm('doc-add') ? "center" : 'left' })
                     this.views = [];
                     await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
                     this.loadedDefaultData = false;
@@ -90,13 +94,13 @@ export class Page$Schema {
                             lodash.remove(r.parentBlocks, g => g == r);
                         }
                     }
-                    if (this.user?.id) {
-
+                    if (this.user?.id && sv.formType == 'doc-add') {
                         if (sv.disabledUserMultiple == true) {
                             var re = await this.schema.checkSubmit(this);
                             if (re.ok && re.data.data) {
                                 this.formRowData = re.data.data;
                                 this.dataSubmitId = this.formRowData.id;
+                                this.submitedSpread = false;
                                 this.each(g => {
                                     if (g instanceof OriginFormField) {
                                         var f = g.field;
@@ -105,6 +109,13 @@ export class Page$Schema {
                                         }
                                     }
                                 })
+                            }
+                        }
+                        else {
+                            var re = await this.schema.checkSubmit(this);
+                            if (re.ok) {
+                                this.dataSumitTotal = re.data.total;
+                                this.submitedSpread = true;
                             }
                         }
                     }
@@ -123,7 +134,9 @@ export class Page$Schema {
                                         commands: [{ url: '/form/submit' }]
                                     }
                                 }, rf.parent);
-                                rf.parentBlocks.insertAt(rf.at + 1, dc);
+                                var sp = await BlockFactory.createBlock(BlockUrlConstant.TextSpan, this, {}, rf.parent);
+                                rf.parentBlocks.insertAt(rf.at + 1, sp);
+                                rf.parentBlocks.insertAt(rf.at + 2, dc);
                             }
                         }
                     }
@@ -149,7 +162,6 @@ export class Page$Schema {
                 if (es.length > 0) {
                     var rgc = await channel.get('/user/interactives',
                         {
-
                             schemaId: this.schema?.id,
                             ids: [this.formRowData.id],
                             ws: this.ws,
@@ -178,16 +190,17 @@ export class Page$Schema {
 
         var isAddView = !this.isSchemaRecordViewTemplate && [ElementType.SchemaRecordView].includes(this.pe.type)
         if (isAddView) {
-            var title = this.find(c => c.url == BlockUrlConstant.Title) as Title;
-            if (title) row.title = title.pageInfo.text;
-            row.icon = this.formRowData.icon;
-            row.cover = this.formRowData.cover;
-            row.description = this.formRowData.description;
+            if (this.schemaView?.formType != 'doc-add') {
+                var title = this.find(c => c.url == BlockUrlConstant.Title) as Title;
+                if (title) row.title = title.pageInfo.text;
+                row.icon = this.formRowData.icon;
+                row.cover = this.formRowData.cover;
+                row.description = this.formRowData.description;
+            }
         }
 
         util.clearObjectUndefined(row);
         util.clearObjectUndefined(this.formRowData);
-
 
         /**
          * 比较初始值，如果一样，说明没有任何修改，返回null
@@ -197,39 +210,122 @@ export class Page$Schema {
         }
 
         var plain = await this.getPlain();
-        row.plain = plain.slice(0, 200);
-        row.thumb = await this.getThumb();
-        row.pageContentPreview = await this.getPreviewContent();
+        if (!(isAddView && this.schemaView?.formType == 'doc-add')) {
+            row.plain = plain.slice(0, 200);
+            row.thumb = await this.getThumb();
+            row.pageContentPreview = await this.getPreviewContent();
+        }
         return row;
+    }
+    clearFormData(this: Page) {
+        this.each(g => {
+            if (g instanceof OriginFormField) {
+                var f = g.field;
+                if (f) {
+                    // g.value = g.field.getValue(this.formRowData);
+                    if (f.type == FieldType.text || f.type == FieldType.title) {
+                        g.value = ''
+                    }
+                    else if ([FieldType.option, FieldType.options].includes(f.type)) {
+                        g.value = [];
+                    }
+                    else if ([FieldType.date].includes(f.type)) {
+                        g.value = null;
+                    }
+                    else if ([FieldType.number, FieldType.price].includes(f.type)) {
+                        g.value = null;
+                    }
+                    else if ([FieldType.bool].includes(f.type)) {
+                        g.value = null;
+                    }
+                    else if ([FieldType.relation].includes(f.type)) {
+                        g.value = [];
+                    }
+                    else if ([FieldType.image, FieldType.file, FieldType.audio, FieldType.video].includes(f.type)) {
+                        g.value = [];
+                    }
+                    g.forceManualUpdate();
+                    this.formRowData[f.name] = g.value;
+                }
+            }
+        })
+    }
+    /**
+     * 说明当前表单是基于页面，打开的
+     * @param this 
+     * @returns 
+     */
+    isFormPageItem(this: Page) {
+        if (this.pe?.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate) {
+            var sv = this.schema.views.find(v => v.id == this.pe.id1);
+            if (sv) {
+                if (sv.formType == 'doc-add') {
+                    if (this.pageInfo?.mime == 110) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    /**
+     * 判断是否为表单
+     * @param this 
+     * @param doc  表单类型为：doc, doc-add, doc-detail
+     * @returns 
+     */
+    isForm(this: Page, doc: "doc" | "doc-add" | "doc-detail", isTemplate: boolean = false
+    ) {
+        if (this.pe?.type == ElementType.SchemaRecordView && (isTemplate == false && !this.isSchemaRecordViewTemplate || isTemplate == true && this.isSchemaRecordViewTemplate)) {
+            var sv = this.schema.views.find(v => v.id == this.pe.id1);
+            if (sv) {
+                if (sv.formType == doc || !sv.formType && doc == 'doc') {
+                    return true;
+                }
+            }
+        }
     }
     /**
     * 
     * @param this 
     *  
+    * @param status
+    * 1. button-save 表示保存数据
+    * 2. close-save 表示关闭页面时自动保存数据
     *  
     */
-    async onSubmitForm(this: Page) {
+    async onSubmitForm(this: Page, status: 'button-save' | 'close-save') {
         if (this.isCanEdit) {
             if (this.pe.type == ElementType.SchemaData || this.pe.type == ElementType.SchemaRecordViewData) {
                 var newRow = await this.getSchemaRow()
                 if (newRow && Object.keys(newRow).length > 0) {
                     await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow }, 'Page.onSubmitForm')
+                    this.submitedSpread = false;
+                    this.views[0].forceManualUpdate();
                 }
             }
             else if (this.pe.type == ElementType.SchemaRecordView) {
                 var newRow = await this.getSchemaRow();
-                console.log('newRow', newRow);
                 if (this.dataSubmitId) {
                     if (newRow && Object.keys(newRow).length > 0) {
-                        await this.schema.rowUpdate({ dataId: this.dataSubmitId, data: newRow }, 'Page.onSubmitForm')
+                        await this.schema.rowUpdate({
+                            dataId: this.dataSubmitId,
+                            data: newRow
+                        }, 'Page.onSubmitForm')
                     }
                 }
                 else if (newRow) {
+                    if (status == 'close-save' && this.schemaView?.formType == 'doc-add') return;
                     var r = await this.schema.rowAdd({ data: newRow, pos: { id: undefined, pos: 'after' } }, 'Page.onSubmitForm');
                     if (r) {
                         newRow = r.data;
+                        if (this.schemaView?.formType == 'doc-add') {
+                            this.dataSumitTotal = (this.dataSumitTotal || 0) + 1;
+                            this.submitedSpread = false;
+                            this.clearFormData();
+                            this.views[0].forceManualUpdate();
+                        }
                         var sv = this.schema.views.find(g => g.id == this.pe.id1);
-                        if (this.isCanEdit && sv.formType != 'doc-add')
+                        if (this.isCanEdit && sv.formType == 'doc')
                             await channel.act('/view/snap/store',
                                 {
                                     elementUrl: getElementUrl(ElementType.SchemaData,
@@ -257,7 +353,7 @@ export class Page$Schema {
      * @param this 
      * @param source 
      */
-    async onPageViewTurn(this: Page, source: Page['openSource'] | 'next' | 'prev' | 'template') {
+    async onPageViewTurn(this: Page, source: Page['openSource'] | 'next' | 'prev' | 'template' | 'template-back') {
         /**
          * 这个表示将当前对话框模式，
          * 转变成页面模板
@@ -279,6 +375,15 @@ export class Page$Schema {
                 config: { wait: false, force: true, isTemplate: true }
             })
         }
+        else if (source == 'template-back') {
+            var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog'
+            if (this.openSource == 'page') url = '/page/open'
+            else if (this.openSource == 'slide') url = '/page/slide'
+            await channel.act(url, {
+                elementUrl: this.elementUrl,
+                config: { wait: false, force: true }
+            })
+        }
         else {
             /**
              * 这个表示当前数据记录的上一条，下一条
@@ -287,12 +392,20 @@ export class Page$Schema {
             if (this.openSource == 'page') url = '/page/open'
             else if (this.openSource == 'slide') url = '/page/slide'
             if (source == 'prev') {
+                var eurl = getElementUrl(ElementType.SchemaData, this.schema?.id, this.formPreRow.id)
+                if (this.pe.type == ElementType.SchemaRecordViewData) {
+                    eurl = getElementUrl(ElementType.SchemaRecordViewData, this.schema?.id, this.pe.id1, this.formPreRow.id)
+                }
                 if (this.formPreRow)
-                    await channel.act(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formPreRow.id), config: { wait: false, force: true } })
+                    await channel.act(url, { elementUrl: eurl, config: { wait: false, force: true } })
             }
             else if (source == 'next') {
+                var eurl = getElementUrl(ElementType.SchemaData, this.schema?.id, this.formNextRow.id)
+                if (this.pe.type == ElementType.SchemaRecordViewData) {
+                    eurl = getElementUrl(ElementType.SchemaRecordViewData, this.schema?.id, this.pe.id1, this.formNextRow.id)
+                }
                 if (this.formNextRow)
-                    await channel.act(url, { elementUrl: getElementUrl(ElementType.SchemaData, this.schema?.id, this.formNextRow.id), config: { wait: false, force: true } })
+                    await channel.act(url, { elementUrl: eurl, config: { wait: false, force: true } })
             }
         }
     }

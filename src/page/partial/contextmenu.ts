@@ -573,53 +573,27 @@ export class Page$ContextMenu {
         var self = this;
         var view = this.schema.recordViews.find(g => g.id == this.pe.id1)
         var viewType = this.getPageSchemaRecordType();
+        if (!view.formType) view.formType = 'doc';
         var r = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [
-                {
-                    name: 'viewDisplay',
-                    type: MenuItemType.buttonOptions,
-                    value: view?.formType || 'doc',
-                    visible: viewType == 'template' ? true : false,
-                    options: [
-                        {
-                            text: lst('默认'),
-                            value: 'doc',
-                            icon: { name: 'bytedance-icon', code: 'editor' },
-                            overlay: lst('编辑数据单')
-                        },
-                        {
-                            text: lst('表单'),
-                            value: 'doc-add',
-                            icon: { name: 'bytedance-icon', code: 'doc-add' },
-                            overlay: lst('收集数据表单')
-                        },
-                        {
-                            text: lst('清单'),
-                            value: 'doc-detail',
-                            icon: { name: 'bytedance-icon', code: 'doc-detail' },
-                            overlay: lst('展示数据')
-                        }
-                    ]
-                },
-                { type: MenuItemType.divide, visible: viewType == 'template' ? true : false },
                 {
                     icon: { name: 'bytedance-icon', code: 'one-key' },
                     name: 'disabledUserMultiple',
                     text: lst('仅允许提交一次'),
                     type: MenuItemType.switch,
                     checked: view?.disabledUserMultiple,
-                    visible: viewType == 'template' && view?.formType == 'doc-add' ? true : false
+                    visible: view?.formType == 'doc-add' ? true : false
                 },
                 {
                     name: 'editForm',
                     icon: { name: 'bytedance-icon', code: 'arrow-right-up' },
                     text: lst('编辑模板'),
-                    visible: viewType == 'add-data' || viewType == 'data-template-edit'
+                    visible: view?.formType == 'doc' && !this.isSchemaRecordViewTemplate
                 },
                 {
                     type: MenuItemType.gap,
-                    visible: viewType == 'data-origin-edit' ? false : true
+                    visible: view?.formType == 'doc-add' || view?.formType == 'doc' && !this.isSchemaRecordViewTemplate ? true : false
                 },
                 { text: lst('显示字段'), type: MenuItemType.text },
                 ...this.schema.getFormFields(viewType == 'template' ? true : false, view?.formType || 'doc').toArray(uf => {
@@ -635,7 +609,8 @@ export class Page$ContextMenu {
                 {
                     name: 'hidePropTitle',
                     type: MenuItemType.switch,
-                    checked: this.findAll(g => g instanceof OriginFormField).every(c => (c as OriginFormField).hidePropTitle !== true),
+                    visible: view?.formType == 'doc' ? false : true,
+                    checked: this.findAll(g => g instanceof OriginFormField).every(c => (c as OriginFormField).hidePropTitle == true),
                     icon: { name: 'bytedance-icon', code: 'tag-one' },
                     text: lst('隐藏字段文本')
                 },

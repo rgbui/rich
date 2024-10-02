@@ -15,11 +15,11 @@ export class ConfirmCommand extends FlowCommand {
     async excute() {
         if (this.flow.buttonBlock) {
             var page = this.flow.buttonBlock.page;
-            await page.onSubmitForm();
+            await page.onSubmitForm('button-save');
             if (page.openSource == 'dialog' || page.openSource == 'slide')
                 await page.onPageClose();
             else {
-                ShyAlert(lst('数据已保存'))
+                ShyAlert(lst('数据已提交'))
             }
         }
     }

@@ -24,16 +24,18 @@ import { S } from "../../i18n/view";
 import { PageLink } from "../../extensions/link/declare";
 import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 import { useLinkPicker } from "../../extensions/link/picker";
-import { MenuPanel } from "../../component/view/menu";
-import "./style.less";
+import { MenuPanel } from "../../component/view/menu"; 
 import { UA } from "../../util/ua";
+import "./style.less";
 
 @url('/image')
 export class Image extends Block {
     @prop()
     src: ResourceArguments;
+
     @prop()
     imageWidthPercent: number = 70;
+    
     @prop()
     imageSizeMode: "none" | '100%' | '50%' | '150%' = 'none'
     @prop()

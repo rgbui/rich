@@ -17,9 +17,8 @@ import "./style.less";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { PopoverPosition } from "../../component/popover/position";
 import { CopyAlert } from "../../component/copy";
-import { getImageSize } from "../../component/file";
 import { closeBoardEditTool } from "../../extensions/board.edit.tool";
-import { useImagePicker } from "../../extensions/image/picker";
+
 
 /*
  * https://howlerjs.com/
