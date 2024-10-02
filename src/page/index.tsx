@@ -57,6 +57,13 @@ export class Page extends Events<PageDirective> {
     get schema(): TableSchema {
         return TableSchema.getTableSchema(this.pe.id)
     }
+    get schemaView() {
+        if (this.schema && [
+            ElementType.SchemaRecordView,
+            ElementType.SchemaRecordViewData
+        ].includes(this.pe.type))
+            return this.schema?.views.find(v => v.id == this.pe.id1)
+    }
     constructor(options?: {
         id?: string,
         readonly?: boolean
@@ -590,6 +597,7 @@ export class Page extends Events<PageDirective> {
         userid: string
     }
     snapLoadLocker: { date: number, url: string, count: number }[] = [];
+
 }
 
 export interface Page {

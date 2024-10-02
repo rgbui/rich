@@ -6,6 +6,8 @@ import { ResourceArguments } from "../icon/declare";
 import { util } from "../../util/util";
 import { lst } from "../../i18n/store";
 import { OpenFileDialoug } from "../../component/file";
+import { PlusSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
 
 export class UploadView extends React.Component<{
     mine: 'image' | 'file' | 'audio' | 'video',
@@ -108,10 +110,15 @@ export class UploadView extends React.Component<{
         else if (this.props.mine == 'video') { text = lst('上传视频'); mineText = mineText = lst('拖放视频或粘贴视频或粘贴视频网址'); }
         else if (this.props.mine == 'audio') { text = lst('上传音频'); mineText = mineText = lst('拖放音频或粘贴音频或粘贴音频网址'); }
         return <div className='shy-upload'>
-            <div className="dashed gap-h-10 cursor round flex-center min-h-80  padding-10" onClick={e => this.onOpenFile()} tabIndex={1} onPaste={this.onPaste} onDragOverCapture={e => { e.preventDefault() }} onDrop={this.onDrop}>
-                <span className="remark">
+            <div className="dashed gap-h-10 cursor round flex-center flex-col min-h-80  padding-10" tabIndex={1} onPaste={this.onPaste} onDragOverCapture={e => { e.preventDefault() }} onDrop={this.onDrop}>
+                <span className="remark f-14">
                     {mineText}
                 </span>
+                {this.props.button == false && <div >
+                    <div onClick={e => this.onOpenFile()} className="circle remark border-light cursor  flex flex-center size-30 item-hover-light-foucs item-hover">
+                        <Icon size={20} icon={PlusSvg}></Icon>
+                    </div>
+                </div>}
             </div>
             {this.props.button !== false && <Button onClick={e => this.onOpenFile()} ref={e => this.button = e} block>{text}</Button>}
             {this.progress && <div className="remark">{this.progress}</div>}

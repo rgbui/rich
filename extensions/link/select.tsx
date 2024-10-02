@@ -72,24 +72,24 @@ class SelectWorkspacePage extends EventsComponent {
     async onOpen() {
         if (!this.currentLinks) {
             this.currentLinks = await channel.query('/ws/current/pages');
-            this.forceUpdate(() => {
-                this.emit('update')
-            });
         }
+        this.forceUpdate(() => {
+            this.emit('update', { width: 250, height: 300 })
+        });
     }
 }
 
 export async function useSelectWorkspacePage(pos: PopoverPosition) {
     var popover = await PopoverSingleton(SelectWorkspacePage, {});
     var picker = await popover.open(pos);
+    picker.on('update', (c) => {
+        popover.updateLayout(c);
+    })
     await picker.onOpen();
     return new Promise((resolve: (link: LinkPageItem) => void, reject) => {
         picker.on('change', (link: LinkPageItem) => {
             resolve(link);
             popover.close();
-        })
-        picker.on('update', () => {
-            popover.updateLayout();
         })
         popover.on('close', () => resolve(null))
     })

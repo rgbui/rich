@@ -42,6 +42,7 @@ import { BlockSelectorItem } from "../../../extensions/block/delcare";
 import { BlockRenderRange } from "../../block/enum";
 import { TextCommand } from "../../../extensions/text.tool/text.command";
 import { GetTextCacheFontColor } from "../../../extensions/color/data";
+import { onCreateDataGridTemplate } from "../../../blocks/data-grid/template/create";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -625,7 +626,6 @@ export class PageWrite {
         ) => {
 
             await InputForceStore(this.inputPop.aa, async () => {
-
                 var aa = this.inputPop.aa;
                 var newBlock: Block;
                 var bd = lodash.cloneDeep(blockData.data || {});
@@ -655,6 +655,7 @@ export class PageWrite {
                     newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                 }
                 else {
+                    console.log(bd?.templateUrl, bd, blockData.url);
                     if (['/2', '/3', '/4', '/5'].includes(blockData.url)) {
                         var rb = aa.block.closest(x => x.isContentBlock);
                         newBlock = await rb.createBlockCol(parseInt(blockData.url.slice(1)));
@@ -682,6 +683,15 @@ export class PageWrite {
                         else if (blockData.url == '/delete') {
                             await block.onDelete();
                         }
+                    }
+                    else if (blockData.url == BlockUrlConstant.DataGridTable && bd?.templateUrl) {
+                        var block = aa.block.closest(x => x.isContentBlock);
+                        if (!block.isContentEmpty) {
+                            block = await block.visibleDownCreateBlock(BlockUrlConstant.TextSpan, { createSource: 'InputBlockSelector' });
+                        }
+                        console.log('bbbb', block.url, block.parent);
+                        var dc = await onCreateDataGridTemplate('', block, bd?.templateUrl, { isOperator: true })
+                        newBlock = dc.block;
                     }
                     else {
                         /**

@@ -161,7 +161,7 @@ export class AIWriteAssistant extends EventsComponent {
                             {([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <div className=" gap-h-10 flex remark  flex"><S>AI正在写作</S><Loading1></Loading1></div>}
                             {(![AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <DivInput
                                 value={this.ask}
-                                rf={e => this.textarea = e}
+                                ref={e => this.textarea = e}
                                 onInput={this.onInput}
                                 onEnter={this.onEnter}
                                 className='padding-h-10 min-h-20 l-20'
@@ -169,8 +169,8 @@ export class AIWriteAssistant extends EventsComponent {
                         </div>
                         <span className="gap-h-5 h-30 flex-center flex-fixed gap-l-10 gap-r-10">
                             {([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <div className="h-24 flex-center">
-                                <span className="gap-r-10 cursor f-14 remark" onMouseDown={e => this.onTry()}><S>重试</S><em className="remark gap-l-5">R</em></span>
-                                <span className="cursor f-14 remark" onMouseDown={e => this.onEsc()}><S>取消</S><em className="remark gap-l-5">ESC</em></span>
+                                <span className="gap-r-10 cursor f-14 text-1" onMouseDown={e => this.onTry()}><S>重试</S><em className="remark gap-l-5">R</em></span>
+                                <span className="cursor f-14 text-1" onMouseDown={e => this.onEsc()}><S>取消</S><em className="remark gap-l-5">ESC</em></span>
                             </div>}
                             {(![AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) && <ToolTip overlay={<div>
                                 <div className="flex"><span style={{ color: '#bbb' }}>Enter</span><span className="gap-l-5"><S>发送</S></span></div>
@@ -332,6 +332,7 @@ export class AIWriteAssistant extends EventsComponent {
             switch (item.name) {
                 case 'replace':
                     var blockDatas = await parseMarkdownContent(this.anwser);
+
                     var bs = this.options.blocks || [];
                     var b = this.page.visibleSearchBlocks(bs, 'last');
                     if (b) {
@@ -570,7 +571,7 @@ export class AIWriteAssistant extends EventsComponent {
         if (this.mv) this.mv.forceUpdateItems(this.getItems())
         this.forceUpdate(callback)
     }
-    textarea: HTMLElement;
+    textarea: DivInput;
     ask: string = '';
     status: AIWriteStatus = AIWriteStatus.none;
     anwser: string = '';
@@ -610,7 +611,7 @@ export class AIWriteAssistant extends EventsComponent {
         this.anwser = '';
         this.options = options;
         this.page.setPaddingBottom(500);
-        if (this.textarea) this.textarea.innerText = '';
+        if (this.textarea) this.textarea.setValue('')
         this.updateView(async () => {
             await this.focusTextarea();
             if (options.isRun) {
@@ -631,7 +632,6 @@ export class AIWriteAssistant extends EventsComponent {
         this.error = '';
         this.updateView()
         var scope = '';
-
         self.writer.ms = [];
         self.writer.ready(async bs => {
             if (bs.length > 0) {
@@ -653,7 +653,7 @@ export class AIWriteAssistant extends EventsComponent {
         await channel.post('/text/ai/stream', {
             question: options?.prompt,
             model: options?.model,
-            async callback(str, done, contoller) {
+            async callback(str, done, contoller, abort) {
                 if (contoller) { self.controller = contoller; return }
                 // console.log(str, done);
                 if (typeof str == 'string') {
@@ -670,7 +670,6 @@ export class AIWriteAssistant extends EventsComponent {
                 else self.writer.accept(scope, done);
             }
         });
-
     }
     async aiSelection(options: { prompt?: string, model?: WsConsumeType, isNotFound?: boolean }) {
         this.controller = null;
@@ -693,7 +692,7 @@ export class AIWriteAssistant extends EventsComponent {
             await channel.post('/text/ai/stream', {
                 question: options.prompt,
                 model: options.model,
-                callback(str, done, contoller) {
+                callback(str, done, contoller, abort) {
                     if (contoller) { self.controller = contoller; return }
                     if (typeof str == 'string') {
                         self.anwser += str;
@@ -776,11 +775,13 @@ export class AIWriteAssistant extends EventsComponent {
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
         document.removeEventListener('keydown', this.onKeydown, true);
     }
-    onKeydown = (event: KeyboardEvent) => {
+    onKeydown = async (event: KeyboardEvent) => {
         if (this.visible == false) return;
-        if (event.key != KeyboardCode.Esc && [AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) return;
-        if (event.key == KeyboardCode.Esc) {
+        if ((event.key.toLowerCase() != KeyboardCode.Esc.toLowerCase() && event.key.toLowerCase() != KeyboardCode.R.toLowerCase()) && [AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) return;
+        if (event.key.toLowerCase() == KeyboardCode.Esc.toLowerCase()) {
             if ([AIWriteStatus.asking, AIWriteStatus.selectionAsking].includes(this.status)) {
+                event.stopPropagation();
+                event.preventDefault();
                 this.onEsc();
                 if (this.status == AIWriteStatus.asking)
                     this.status = AIWriteStatus.asked;
@@ -792,33 +793,74 @@ export class AIWriteAssistant extends EventsComponent {
                 })
             }
             else if ([AIWriteStatus.willAsk, AIWriteStatus.asked, AIWriteStatus.selectionAsked, AIWriteStatus.selectionWillAsk].includes(this.status)) {
+                event.stopPropagation();
+                event.preventDefault();
                 this.close()
             }
         }
-        else if (event.key == KeyboardCode.Delete || event.key == KeyboardCode.Backspace) {
+        else if (event.key.toLowerCase() == KeyboardCode.Delete.toLowerCase() || event.key.toLowerCase() == KeyboardCode.Backspace.toLowerCase()) {
             if ([AIWriteStatus.willAsk, AIWriteStatus.asked, AIWriteStatus.selectionAsked, AIWriteStatus.selectionWillAsk].includes(this.status)) {
-                if (!this.ask)
+                if (!this.ask) {
+                    event.stopPropagation();
+                    event.preventDefault();
                     this.close()
+                }
             }
         }
-        else if (event.key == KeyboardCode.R) {
-            if ([AIWriteStatus.asked, AIWriteStatus.selectionAsked].includes(this.status)) {
+        else if (event.key.toLowerCase() == KeyboardCode.R.toLowerCase()) {
+            if ([AIWriteStatus.selectionAsking, AIWriteStatus.selectionAsked].includes(this.status)) {
+                event.stopPropagation();
+                event.preventDefault();
+                this.onEsc();
+
+                this.page.kit.anchorCursor.onSelectBlocks(this.options.blocks, { render: true, scroll: 'top' })
+                await this.open({ blocks: this.options.blocks, ask: this.ask });
                 this.onTry();
+            }
+            if ([AIWriteStatus.asked, AIWriteStatus.asking].includes(this.status)) {
+                event.stopPropagation();
+                event.preventDefault();
+                this.onEsc();
+
+                var blocks = this.writer.writedBlocks;
+                var block = this.options.block;
+                if (blocks.includes(block)) block = block.prev;
+                await this.writer.page.onBatchDelete(blocks);
+                if (block) {
+                    this.page.kit.anchorCursor.onFocusBlockAnchor(block, { last: true, render: true })
+                    await this.open({ block: block });
+                    this.onTry();
+                }
             }
         }
         else if (event.key.toLowerCase() == KeyboardCode.ArrowDown.toLowerCase()) {
             console.log('down focus item', this.mv);
-            if (this.mv) this.mv.onDownFocusItem()
+            if (this.mv) {
+                event.stopPropagation();
+                event.preventDefault(); this.mv.onDownFocusItem()
+            }
         }
         else if (event.key.toLowerCase() == KeyboardCode.ArrowUp.toLowerCase()) {
             console.log('up focus item...');
-            if (this.mv) this.mv.onUpFocusItem()
+            if (this.mv) {
+                event.stopPropagation();
+                event.preventDefault();
+                this.mv.onUpFocusItem()
+            }
         }
         else if (event.key.toLowerCase() == KeyboardCode.ArrowLeft.toLowerCase()) {
-            if (this.mv) this.mv.onLeftFocusItem();
+            if (this.mv) {
+                event.stopPropagation();
+                event.preventDefault();
+                this.mv.onLeftFocusItem();
+            }
         }
         else if (event.key.toLowerCase() == KeyboardCode.ArrowRight.toLowerCase()) {
-            if (this.mv) this.mv.onRightFocusItem()
+            if (this.mv) {
+                event.stopPropagation();
+                event.preventDefault();
+                this.mv.onRightFocusItem()
+            }
         }
     }
     close() {
@@ -834,15 +876,16 @@ export class AIWriteAssistant extends EventsComponent {
         }
     }
     onTry() {
-        try {
-            if (this.controller) {
-                this.controller.abort()
-                this.controller = null;
-            }
-        }
-        catch (ex) {
-            console.error(ex);
-        }
+        // console.log('onTry', this.controller);
+        // try {
+        //     if (this.controller) {
+        //         this.controller.abort()
+        //         this.controller = null;
+        //     }
+        // }
+        // catch (ex) {
+        //     console.error(ex);
+        // }
         if (this.lastCommand) {
             switch (this.lastCommand.command) {
                 case 'image':
@@ -861,10 +904,8 @@ export class AIWriteAssistant extends EventsComponent {
         try {
             if (this.controller) {
                 this.controller.abort()
-
                 this.controller = null;
             }
-
         }
         catch (ex) {
             console.error(ex)
@@ -885,8 +926,7 @@ export class AIWriteAssistant extends EventsComponent {
         await util.delay(100);
         this.autoScrollPage();
         if (this.textarea) {
-            var sel = window.getSelection();
-            sel.collapse(this.textarea, 0);
+            this.textarea.focus()
         }
         if (isSelectMenu) {
             if (this.mv) this.mv.onDownFocusItem()

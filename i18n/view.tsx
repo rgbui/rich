@@ -53,7 +53,7 @@ export class Sp extends React.Component<{
         return ps;
     }
     render() {
-        var text = lst(this.props.text, this.props.data || undefined, true);
+        var text = lst(this.props.text, this.props.data || undefined,false);
         console.log('text', text);
 
         if (!text && lodash.isObject(this.props.view)) text = this.props.text;

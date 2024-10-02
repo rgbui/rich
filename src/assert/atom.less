@@ -465,8 +465,9 @@ each(@cols, {
     -webkit-backdrop-filter: blur(2rem);
     backdrop-filter        : blur(2rem);
     background-color       : rgba(255, 255, 255, 0.8);
-    border                 : 0.1rem solid transparent; 
-    box-shadow: 0 1.8rem 3.6rem -0.6rem rgba(0, 0, 0, 0.06), 0 0.6rem 1.2rem -0.6rem rgba(0, 0, 0, 0.06);
+    border                 : 0.1rem solid transparent;
+    box-shadow             : 0 1.8rem 3.6rem -0.6rem rgba(0, 0, 0, 0.06), 0 0.6rem 1.2rem -0.6rem rgba(0, 0, 0, 0.06);
+
     &:hover {
         border    : 0.1rem solid rgba(0, 0, 0, 0.12);
         box-shadow: 0 1.8rem 3.6rem -0.6rem rgba(0, 0, 0, 0.06), 0 0.6rem 1.2rem -0.6rem rgba(0, 0, 0, 0.06);
@@ -822,6 +823,7 @@ body {
     --text             : var(--text-color);
     --text-color-1     : rgba(55, 53, 47, 0.8);
     --text-color-remark: rgba(55, 53, 47, 0.6);
+    --text-light       : rgba(25, 23, 17, 0.65);
     --remark           : var(--text-color-remark);
     --text-remark      : var(--text-color-remark);
     --text-purple      : rgb(189, 115, 232);
@@ -836,7 +838,7 @@ body {
     --text-g-color   : #21af5a;
     --hight-red-color: #ff76ad;
 
-    --bg  : var(--white);
+    --bg  : rgba(55, 53, 47, 0.08) !important;
     --bg-1: var(--white-1);
     --bg-2: rgb(246, 245, 244);
     --bg-3: rgb(235, 237, 239);
@@ -862,6 +864,10 @@ body {
 
 .text-1 {
     color: var(--text-color-1);
+}
+
+.text-light {
+    color: var(--text-light);
 }
 
 .text-p1-color {
@@ -901,6 +907,11 @@ body {
 .link-hover {
     &:hover {
         color: var(--text-b-color);
+    }
+}
+.link-line-hover{
+    &:hover {
+        text-decoration: underline;
     }
 }
 
@@ -1707,7 +1718,8 @@ each(@ops, {
 .bg-3 {
     background-color: var(--bg-3);
 }
-.bg-4{
+
+.bg-4 {
     background-color: var(--bg-4);
 }
 
@@ -1836,9 +1848,9 @@ each(@ops, {
     }
 }
 
-.bg {
-    background-color: rgba(55, 53, 47, 0.08) !important;
-}
+// .bg {
+//     background-color: rgba(55, 53, 47, 0.08) !important;
+// }
 
 .bg-light {
     background-color: rgba(55, 53, 47, 0.04) !important;

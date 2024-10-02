@@ -1,4 +1,4 @@
-import { PageSvg, TopicSvg, DocCardsSvg } from "../../component/svgs";
+import { PageSvg, TopicSvg, DocCardsSvg, FormSvg } from "../../component/svgs";
 import { IconValueType } from "../../component/view/icon";
 import { IconArguments, ResourceArguments } from "../../extensions/icon/declare";
 import { lst } from "../../i18n/store";
@@ -45,7 +45,7 @@ export interface LinkPageItem<T = {}> {
     text?: string;
     icon?: IconArguments,
     sn?: number,
-    description?: {abled:boolean, text: string},
+    description?: { abled: boolean, text: string },
     pageType?: PageLayoutType,
     elementUrl?: string,
     url?: string,
@@ -64,6 +64,7 @@ export interface LinkPageItem<T = {}> {
       * 互联网是否公开，如果公开的权限是什么
       */
     netPermissions?: AtomPermission[];
+    netCopy?: boolean,
     /**
      * 外部邀请的用户权限
      */
@@ -111,7 +112,7 @@ export interface LinkWs {
     icon: IconArguments
     cover: IconArguments
     datasource: 'private-cloud' | 'public-cloud' | 'private-local';
-    datasourceClientId:string;
+    datasourceClientId: string;
     accessWorkspace?: 'none' | 'embed';
     /**
      * 0:不公开 
@@ -207,23 +208,22 @@ export type WorkspaceNavMenuItem = {
 
 export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     if (item?.icon) return item.icon;
-    if (!item) return defaultIcon || PageSvg
+    if (!item) return defaultIcon || PageSvg;
+    if (item?.mime == 110) return FormSvg;
     if (item.pageType == PageLayoutType.board) {
-        // return { name: 'bytedance-icon', code: 'chopping-board' } as IconValueType
         return { name: 'bytedance-icon', code: 'enter-the-keyboard' } as IconValueType
     }
     else if (item.pageType == PageLayoutType.doc) {
-        return PageSvg
+        return PageSvg;
     }
     else if (item.pageType == PageLayoutType.ppt) {
-        return DocCardsSvg
+        return DocCardsSvg;
     }
     else if (item.pageType == PageLayoutType.textChannel) {
         return { name: 'byte', code: 'pound' } as IconValueType
         return TopicSvg
     }
     else if (item.pageType == PageLayoutType.db) {
-        // return { name: 'byte', code: 'table-file' } as IconValueType
         return { name: 'byte', code: 'table' } as IconValueType
     }
     return defaultIcon || PageSvg
@@ -232,6 +232,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
 export function getPageText(item: LinkPageItem) {
     if (item?.text) return item.text;
     if (!item) return lst('新页面')
+    if (item?.mime == 110) return lst('表单')
     if (item.pageType == PageLayoutType.doc) {
         return lst('新页面')
     }

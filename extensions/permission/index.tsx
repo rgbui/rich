@@ -129,6 +129,10 @@ class PagePermission extends EventsComponent {
         else if (this.page.pe.type == ElementType.SchemaRecordView || this.page.pe.type == ElementType.SchemaData || this.page.pe.type == ElementType.SchemaRecordViewData) {
             permissonType = 'db';
         }
+        var isAllowCopy = true;
+        if (this.page.pe.type == ElementType.SchemaRecordView || this.page.pe.type == ElementType.SchemaData || this.page.pe.type == ElementType.SchemaRecordViewData) {
+            isAllowCopy = false;
+        }
         function showPermissonsSource() {
             if (cp.source == 'wsOwner') return <span><S>权限继承超级管理员</S></span>
             if (cp.source == 'wsAllUser') return <span><S>权限继承空间所有人</S></span>
@@ -246,11 +250,22 @@ class PagePermission extends EventsComponent {
                                 <SelectBox
                                     border
                                     options={getAtomPermissionOptions(permissonType).slice(1, -1)}
-                                    value={pr.netPermissions[0]}
+                                    value={pr.netPermissions[0] || getAtomPermissionOptions(permissonType).slice(1, -1)[0]}
                                     onChange={e => { setGlobalShare({ 'netPermissions': [e] }) }}
                                 ></SelectBox>
                             </div>
                         </div>
+                        {isAllowCopy && <div className="flex item-hover gap-5 min-h-28 padding-w-5   padding-h-5  round">
+                            <div className="flex-auto text-overflow">
+                                <S>允许复制拷贝</S>
+                            </div>
+                            <div className="flex-fixed f-12">
+                                <Switch checked={pr.netCopy ? true : false} onChange={e => {
+                                    var props = { netCopy: e } as any;
+                                    setGlobalShare(props)
+                                }}></Switch>
+                            </div>
+                        </div>}
                     </>}
                 </>
             }

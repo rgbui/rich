@@ -7,7 +7,7 @@ import { DataGridView } from "../../../blocks/data-grid/view/base";
 
 export async function cacFormulaValue(page: Page, dataGrid: DataGridView, field: Field, row: Record<string, any>) {
     try {
-        var schema = dataGrid.schema;
+        var schema = dataGrid?.schema || page.schema;
         if (field?.config?.formula?.jsCode) {
             var funCode = `async function(row,sys){ 
 ${schema.fields.map(r => {
@@ -46,7 +46,7 @@ return ${field.config.formula.jsCode}
                     if (field.type == FieldType.relation) {
                         var value = row[field.name];
                         var vs = Array.isArray(value) ? value : (value ? [value] : []);
-                        var rs = (dataGrid.relationDatas.get(field.config?.relationTableId) || []).filter(g => vs.includes(g.id));
+                        var rs = (dataGrid?.relationDatas?.get(field.config?.relationTableId) || []).filter(g => vs.includes(g.id));
 
                         return rs.map(g => g.title);
                     }
@@ -55,8 +55,8 @@ return ${field.config.formula.jsCode}
                         if (rf) {
                             var value = row[rf.name];
                             var vs = Array.isArray(value) ? value : (value ? [value] : []);
-                            var rs = (dataGrid.relationDatas.get(rf.config?.relationTableId) || []).filter(g => vs.includes(g.id));
-                            var rff = dataGrid.relationSchemas.find(g => g.id == rf.config?.relationTableId)?.fields.find(g => g.id == field.config?.rollupFieldId);
+                            var rs = (dataGrid?.relationDatas?.get(rf.config?.relationTableId) || []).filter(g => vs.includes(g.id));
+                            var rff = dataGrid?.relationSchemas?.find(g => g.id == rf.config?.relationTableId)?.fields.find(g => g.id == field.config?.rollupFieldId);
                             if (field.config?.rollupStatistic == 'origin') {
                                 return rs.map(g => g[rff.name]);
                             }

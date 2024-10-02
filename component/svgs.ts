@@ -133,6 +133,7 @@ import FontSvg from "../src/assert/svg/font.svg";
 import FontawesomeSvg from "../src/assert/svg/fontawesome.svg";
 import FontcolorSvg from "../src/assert/svg/fontcolor.svg";
 import ForbidSvg from "../src/assert/svg/forbid.svg";
+import FormSvg from "../src/assert/svg/form.svg";
 import FourLeavesSvg from "../src/assert/svg/four.leaves.svg";
 import FriendsSvg from "../src/assert/svg/friends.svg";
 import FxSvg from "../src/assert/svg/fx.svg";
@@ -396,6 +397,7 @@ FontSvg,
 FontawesomeSvg,
 FontcolorSvg,
 ForbidSvg,
+FormSvg,
 FourLeavesSvg,
 FriendsSvg,
 FxSvg,

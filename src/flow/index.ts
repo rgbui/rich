@@ -73,7 +73,7 @@ export class Flow {
             { type: MenuItemType.divide },
             { text: lst('打开页面'), value: '/openPage', icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
             { text: lst('页面跳转'), value: '/openPage/url', icon: LinkSvg },
-            { text: lst('表单提交'), value: '/form/submit', icon: { name: 'bytedance-icon', code: 'form-one' }, visible: [ElementType.SchemaRecordView, ElementType.SchemaData, ElementType.SchemaRecordViewData].includes(this.buttonBlock.page.pe.type) ? true : false },
+            { text: lst('表单提交'), value: '/form/submit', icon: { name: 'bytedance-icon', code: 'form-one' }, visible: [ElementType.SchemaRecordView].includes(this.buttonBlock.page.pe.type)&&this.buttonBlock.page.isForm('doc-add') ? true : false },
         ]);
         if (r) {
             var data: Record<string, any> = {};

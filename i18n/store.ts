@@ -58,7 +58,7 @@ export class LangStore {
         for (let sp of this.sps) sp.forceUpdate()
     }
     t(key: string, content?: string | Record<string, any>, checkExists?: boolean) {
-        console.log(key,content,'key content');
+        
 
         var d;
         if (typeof window.shyConfig.isUS) {

@@ -79,7 +79,10 @@ export function getChatHtml(html, isQuote) {
         pc = pc.replace(/(\<br\/?\>)+$/g, '');
         return '<pre><code>' + pc + '</code></pre>'
     })
-    html = html.replace(/https?:\/\/[^\s]+/g, (url) => {
+    var urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+
+
+    html = html.replace(urlRegex, (url) => {
         return `<a href="${url}" target="_blank">${url}</a>`
     });
     // console.log('after', html);
@@ -104,3 +107,4 @@ export function getChatText(html) {
     html = html.replace(/<a[^>]+>([^<]+)<\/a>/g, '$1 ');
     return html;
 }
+

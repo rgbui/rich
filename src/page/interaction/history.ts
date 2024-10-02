@@ -13,7 +13,6 @@ import {
 } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
 import { ElementType } from "../../../net/element.type";
-
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.on('history', (action) => {
         /**
@@ -25,10 +24,10 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             page.emit(PageDirective.change);
         }
         /**
-        * 如果是表单视图，且不是模板，那么就不应该保存快照 ，
-        * 只要做为模板时，才保存快照
+        * 如果是数据模板，只是添加数据，那么就不应该保存快照 ，
+        *  如果是表单就正常保存，但注意权限控制
         */
-        if (page.pe.type == ElementType.SchemaRecordView && !page.isSchemaRecordViewTemplate) {
+        if (page.pe.type == ElementType.SchemaRecordView && page.isForm('doc') && !page.isSchemaRecordViewTemplate) {
             return
         }
         console.log('action', action);
@@ -215,7 +214,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
 
     });
     snapshoot.registerOperator(OperatorDirective.pageTurnLayout, async (operator, source) => {
-      
+
         if (!page.pageLayout) page.pageLayout = { type: operator.data.new };
         else page.pageLayout.type = operator.data.new;
         if (operator.data.new_page_data) {

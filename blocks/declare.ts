@@ -92,6 +92,7 @@ import "./data-grid/element/form/image";
 import "./data-grid/element/form/file";
 import "./data-grid/element/form/relation";
 import "./data-grid/element/form/emoji";
+import "./data-grid/element/form/formula"
 
 import "./data-grid/element/filter/check";
 import "./data-grid/element/filter/date";

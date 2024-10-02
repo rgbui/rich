@@ -403,9 +403,13 @@ export class Block$Event {
                 }
             }
         );
+        await this.onContextMenuAfter(ms)
         if (re) {
             await this.onClickContextMenu(re.item, re.event);
         }
+    }
+    async onContextMenuAfter(this: Block, items: MenuItem<BlockDirective | string>[]) {
+
     }
     async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>, options?: { merge?: boolean }) {
         if (item?.name == 'text-center') {

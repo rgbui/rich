@@ -7,10 +7,9 @@ import { ChildsArea } from '../view/appear';
 import { PageLayoutType } from '../../page/declare';
 import { isMobileOnly } from 'react-device-detect';
 import { PageCover } from '../../page/view/cover';
-import { S } from '../../../i18n/view';
+import { S, Sp } from '../../../i18n/view';
 import { ToolTip } from '../../../component/view/tooltip';
 import { lst } from '../../../i18n/store';
-
 
 
 import { BlockChildKey, BlockUrlConstant } from '../constant';
@@ -23,7 +22,6 @@ export class View extends Block {
     get isView() {
         return true;
     }
-
 }
 
 /*** 在一个页面上，从视觉上有多个视图块，
@@ -32,8 +30,6 @@ export class View extends Block {
  */
 @view('/view')
 export class ViewComponent extends BlockView<View> {
-
-    submitedSpread = false;
     renderView() {
         var isMainView = this.block.page.views[0] == this.block ? true : false;
         var layoutStyle = this.block.page.getScreenStyle();
@@ -41,6 +37,7 @@ export class ViewComponent extends BlockView<View> {
         var WrapperStyle: CSSProperties = {};
         var isTextChannel = this.block.page.pageLayout?.type == PageLayoutType.textChannel;
         var isDocCard = this.block.page.pageLayout?.type == PageLayoutType.ppt;
+        var isAddForm = this.props.block.page?.schemaView?.formType == 'doc-add';
         if (isMainView) {
             WrapperStyle.paddingTop = 50;
         }
@@ -97,8 +94,8 @@ export class ViewComponent extends BlockView<View> {
                 <div className={'sy-block-view-wrapper'} style={layoutStyle}>
                     {this.block.page.pageTheme?.coverStyle?.display == 'inside-cover' && <PageCover page={this.block.page}></PageCover>}
                     <div style={WrapperStyle}>
-                        {this.block.page.dataSubmitId && this.submitedSpread == false && <div onMouseDown={e => {
-                            this.submitedSpread = true;
+                        {isAddForm && this.block.page.dataSubmitId && this.block.page.submitedSpread == false && <div onMouseDown={e => {
+                            this.block.page.submitedSpread = true;
                             this.block.forceManualUpdate()
                         }} className='flex-center'>
                             <div className='w-400 padding-h-10 flex-center round bg-white shadow-s border-light'>
@@ -106,8 +103,17 @@ export class ViewComponent extends BlockView<View> {
                                 <span className='cursor link'>重新编辑</span>
                             </div>
                         </div>}
+                        {isAddForm && !this.block.page.dataSubmitId && this.block.page.submitedSpread == false && <div onMouseDown={e => {
+                            this.block.page.submitedSpread = true;
+                            this.block.forceManualUpdate()
+                        }} className='flex-center'>
+                            <div className='w-400 padding-h-10  flex-center flex-col  round bg-white shadow-s border-light'>
+                                <span className='gap-r-3'><Sp text={'您已提交过{count}份数据'} data={{ count: this.block.page.dataSumitTotal }} ></Sp></span>
+                                <span className='cursor link'><S>再添加一份</S></span>
+                            </div>
+                        </div>}
                         <div style={{
-                            display: this.block.page.dataSubmitId && this.submitedSpread == false ? "none" : "block"
+                            display: isAddForm && this.block.page.submitedSpread == false ? "none" : "block"
                         }}>
                             <ChildsArea childs={this.block.childs}></ChildsArea>
                         </div>
@@ -122,10 +128,12 @@ export class ViewComponent extends BlockView<View> {
                 layoutStyle.width = '100%';
             }
             layoutStyle = {}
+
+
             return <div className='sy-block-view' style={layoutStyle} >
                 <div style={WrapperStyle}>
-                    {this.block.page.dataSubmitId && this.submitedSpread == false && <div onMouseDown={e => {
-                        this.submitedSpread = true;
+                    {isAddForm && this.block.page.dataSubmitId && this.block.page.submitedSpread == false && <div onMouseDown={e => {
+                        this.block.page.submitedSpread = true;
                         this.block.forceManualUpdate()
                     }} className='flex-center'>
                         <div className='w-400 padding-h-10 flex-center round bg-white shadow-s border-light'>
@@ -133,8 +141,18 @@ export class ViewComponent extends BlockView<View> {
                             <span className='cursor link'>重新编辑</span>
                         </div>
                     </div>}
+                    {isAddForm && !this.block.page.dataSubmitId && this.block.page.submitedSpread == false && <div onMouseDown={e => {
+                        this.block.page.submitedSpread = true;
+                        this.block.forceManualUpdate()
+                    }} className='flex-center'>
+                        <div className='w-400 padding-h-10 flex-center flex-col round bg-white shadow-s border-light'>
+                            <span className='gap-r-3'><Sp text={'您已提交过{count}份数据'} data={{ count: this.block.page.dataSumitTotal }} ></Sp></span>
+
+                            <span className='cursor link'><S>再添加一份</S></span>
+                        </div>
+                    </div>}
                     <div style={{
-                        display: this.block.page.dataSubmitId && this.submitedSpread == false ? "none" : "block"
+                        display: isAddForm && this.block.page.submitedSpread == false ? "none" : "block"
                     }}>
                         <ChildsArea childs={this.block.childs}></ChildsArea>
                         {isDocCard && this.block.childs.length == 0 && <div>

@@ -74,7 +74,7 @@ interface Array<T> {
     arrayJsonRemoveAll(arrayJsonName: string, fn: (item: T, index?: number, arr?: T[]) => boolean): void
     arrayJsonToArray(arrayJsonName: string,
         fn: (item: T, index?: number, arr?: T[]) => any,
-        toArrayJsonName?: string): void
+        toArrayJsonName?: string): any[]
 
     arrayJsonClosest(arrayJsonName: string, item: T, fn: (t: T) => boolean): T
     arrayJsonParents(arrayJsonName: string, item: T, fn: (t: T) => boolean): T[]

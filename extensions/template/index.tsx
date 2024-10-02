@@ -3,10 +3,10 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { SearchListType } from "../../component/types";
 import { Button } from "../../component/view/button";
 import { Icon } from "../../component/view/icon";
-import { PageTemplateTypeGroups } from "../../src/page/declare";
+import { getPageIcon, getPageText, PageLayoutType, PageTemplateTypeGroups } from "../../src/page/declare";
 import { IconArguments, ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../../component/popover/popover";
-import { ChevronDownSvg, PageSvg, SearchSvg } from "../../component/svgs";
+import { ChevronDownSvg, DotSvg, PageSvg, SearchSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { S } from "../../i18n/view";
 import { Input } from "../../component/view/input";
@@ -32,6 +32,17 @@ export interface PageTemplateType {
     sourceWorkspaceId?: string,
     sourcePageId?: string,
     sourceElementUrl?: string
+}
+
+export interface PageTemplateSubType {
+    id: string,
+    text: string,
+    icon: IconArguments,
+    mime: number;
+    pageType: PageLayoutType;
+    elementUrl: string;
+    pageId: string,
+    wsId: string
 }
 
 export class TemplateView extends EventsComponent {
@@ -89,23 +100,13 @@ export class TemplateView extends EventsComponent {
                         </div>
                         {this.tagSpread.get(tg) !== false && <div>
                             {ts.map((tl, j) => {
-                                return <div onMouseDown={e => {
-                                    this.onSetTemplate(tl);
-                                }} className={"h-30 gap-h-3 flex round cursor item-hover-light gap-w-5 padding-w-5 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
-                                    <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span>
-                                    <span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
-                                </div>
+                                return this.renderItem(tl, 0, tl);
                             })}
                         </div>}
                     </div>
                 })}
                 {this.templateList.word && this.getSearchList().map((tl, i) => {
-                    return <div onMouseDown={e => {
-                        this.onSetTemplate(tl);
-                    }} className={"h-30 gap-h-3 flex round cursor item-hover-light gap-w-5 padding-w-5 " + (this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
-                        <span className="flex-center size-24 rounc cursor flex-fixed"><Icon size={18} icon={tl.icon || PageSvg}></Icon></span>
-                        <span className="gap-l-5 text-overflow flex-auto">{tl.text}</span>
-                    </div>
+                    return this.renderItem(tl, 0, tl);
                 })}
             </div>
             <div className="border-top padding-10">
@@ -117,7 +118,24 @@ export class TemplateView extends EventsComponent {
             </div>
         </div>
     }
-    // typeGroups = PageTemplateTypeGroups;
+    renderItem(tl, deep = 0, pa) {
+        return <div>
+            <div onMouseDown={e => {
+                this.onSetTemplate(pa, deep > 0 ? tl : null);
+            }} className={"h-30 gap-h-3 flex round cursor item-hover-light gap-w-5 padding-w-5 " + (this.subPageTemplate && this.subPageTemplate == tl || !this.subPageTemplate && this.currentPageTemplate === tl ? " item-hover-focus" : "")} key={tl.id}>
+
+                <span style={{ marginLeft: deep * 20 }} onMouseDown={e => { tl.spread = tl.spread == true ? false : true; this.forceUpdate() }} className={"size-20 round flex-center  flex-fixed  ts " + (tl.spread ? " " : " angle-90-") + (Array.isArray(tl.childs) && tl.childs.length > 0 ? " item-hover" : "")}>
+                    {Array.isArray(tl.childs) && tl.childs.length > 0 && <Icon className={'remark'} size={16} icon={ChevronDownSvg}></Icon>}
+                    {!(Array.isArray(tl.childs) && tl.childs.length > 0) && <Icon className={'remark'} size={16} icon={DotSvg}></Icon>}
+                </span>
+                <span className="flex-center size-24 rounc cursor flex-fixed text-light"><Icon size={18} icon={getPageIcon(tl)}></Icon></span>
+                <span className="gap-l-5 text-overflow flex-auto">{getPageText(tl)}</span>
+            </div>
+            {Array.isArray(tl.childs) && tl.childs.length > 0 && tl.spread == true && <div>
+                {tl.childs.map(c => this.renderItem(c, deep + 1, pa))}
+            </div>}
+        </div>
+    }
     templateList: SearchListType<PageTemplateType, { mime: string, tags: string[], type: string }> = { type: '个人', mime: 'page', loading: false, tags: [], total: 0, list: [], page: 1, size: 20 }
     getSearchList() {
         return this.templateList.list.filter(c => {
@@ -138,58 +156,6 @@ export class TemplateView extends EventsComponent {
                 size: this.templateList.size
             });
             if (rs) {
-                if (window.shyConfig.isDev)
-                    rs.data = {
-                        "list": [
-                            {
-                                "text": "网盘",
-                                "url": "https://api-s2.shy.live/file?id=8d952b655f2f4961a3b34b96ef0d2aca",
-                                "description": null,
-                                "type": "page",
-                                "sourceWorkspaceId": "4JXQ8D3y-3",
-                                "file": {
-                                    "ext": "",
-                                    "id": "8d952b655f2f4961a3b34b96ef0d2aca",
-                                    "filePath": "D:\\files\\store\\service2\\2023_11_13_0\\8d952b655f2f4961a3b34b96ef0d2aca",
-                                    "relativeFilePath": "\\service2\\2023_11_13_0\\8d952b655f2f4961a3b34b96ef0d2aca",
-                                    "size": 5453,
-                                    "md5": "1419D5D6BADB849BD4A1B8D21B3839A3",
-                                    "url": "https://api-s2.shy.live/file?id=8d952b655f2f4961a3b34b96ef0d2aca",
-                                    "mime": "unknow",
-                                    "filename": "file",
-                                    "creater": "4EFGvb8P-2",
-                                    "source": "download",
-                                    "downloadUrl": "https://api-w1.shy.live/ws/file?id=d1471725c1574fbcb7d835dfb1e715e1",
-                                    "isRobotGenerated": false,
-                                    "createDate<d>": 1699807473077
-                                },
-                                "icon": {
-                                    "name": "bytedance-icon",
-                                    "code": "file-cabinet",
-                                    "color": "rgb(217,115,13)"
-                                },
-                                "classify": [
-                                    "个人"
-                                ],
-                                "tags": [
-                                    "个人工作"
-                                ],
-                                "sourcePageId": "kTrzarZ5PrFcA2LfMVXEpy",
-                                "sourceElementUrl": "/PageItem/kTrzarZ5PrFcA2LfMVXEpy",
-                                "creater": "4EFGvb8P-2",
-                                "userid": "4EFGvb8P-2",
-                                "approve": false,
-                                "id": "30b3f97a79d24b7e9adfd6ddb87696a6",
-                                "useCount": 8,
-                                "previewCover": null,
-                                "isSysAutoCreateWorkspaceTemplate": false,
-                                "createDate<d>": 1699807439734
-                            },
-                        ],
-                        "total": 12,
-                        "page": 1,
-                        "size": 20
-                    }
                 this.templateList.list = rs.data.list;
                 this.templateList.page = rs.data.page;
                 this.templateList.size = rs.data.size;
@@ -205,10 +171,11 @@ export class TemplateView extends EventsComponent {
         }
     }
     iframe: HTMLIFrameElement;
-    async onSetTemplate(pageTemplate: PageTemplateType) {
+    async onSetTemplate(pageTemplate: PageTemplateType, sub: PageTemplateSubType = null) {
         this.currentPageTemplate = pageTemplate;
+        this.subPageTemplate = sub;
         if (!this.iframe.getAttribute('src')) {
-            var su = pageTemplate.sourceElementUrl;
+            var su = sub?.elementUrl || pageTemplate.sourceElementUrl;
             if (!su) su = getElementUrl(ElementType.PageItem, this.currentPageTemplate.sourcePageId)
             var url = `/ws/${this.currentPageTemplate.sourceWorkspaceId}/r?url=` + encodeURIComponent(su);
             url = url + "&accessWorkspace=embed";
@@ -218,7 +185,7 @@ export class TemplateView extends EventsComponent {
             this.iframe.setAttribute('src', url);
         }
         else {
-            this.iframe.contentWindow.postMessage(JSON.stringify({ name: 'openPageByTemplate', data: pageTemplate }), "*");
+            this.iframe.contentWindow.postMessage(JSON.stringify({ name: 'openPageByTemplate', data: sub || pageTemplate }), "*");
         }
         this.forceUpdate();
     }
@@ -265,6 +232,7 @@ export class TemplateView extends EventsComponent {
 
     }
     currentPageTemplate: PageTemplateType = null;
+    subPageTemplate: PageTemplateSubType = null;
     componentDidMount(): void {
         this.load();
     }

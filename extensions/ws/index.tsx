@@ -70,8 +70,7 @@ export class WsPicker extends EventsComponent {
 }
 
 
-export async function useWsPicker(pos: PopoverPosition)
-{
+export async function useWsPicker(pos: PopoverPosition) {
     var popover = await PopoverSingleton(WsPicker, { mask: true });
     var picker = await popover.open(pos);
     picker.only('update', (r: Rect) => popover.updateLayout(r))

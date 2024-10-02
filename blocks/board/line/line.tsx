@@ -351,10 +351,16 @@ export class Line extends Block {
         var w = this.pattern.getSvgStyle()?.strokeWidth || 1;
         var segs = this.segments;
         var rect = Segment.getBound(segs);
-        var re = rect.extend(Math.max(30, w * 6, 100));
-        return {
-            width: re.width,
-            height: re.height
+        if (rect) {
+            var re = rect.extend(Math.max(30, w * 6, 100));
+            return {
+                width: re.width,
+                height: re.height
+            }
+        }
+        else {
+            console.log('rect is null', segs);
+            return null
         }
     }
     get contentMatrix() {
