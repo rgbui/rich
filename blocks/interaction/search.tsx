@@ -4,7 +4,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { Input } from "../../component/view/input";
 import { S } from "../../i18n/view";
-import { SearchListType } from "../../component/types";
+import { assyDiv, assyDivPanel, SearchListType } from "../../component/types";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { channel } from "../../net/channel";
 import lodash from "lodash";
@@ -12,11 +12,13 @@ import { Icon } from "../../component/view/icon";
 import { lst } from "../../i18n/store";
 import { Spin } from "../../component/view/spin";
 import { util } from "../../util/util";
-import { CloseSvg, SearchSvg } from "../../component/svgs";
+import {  SearchSvg } from "../../component/svgs";
 import { MenuItem } from "../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../src/block/enum";
 import { Point, Rect } from "../../src/common/vector/point";
 import "./style.less";
+import ReactDOM from "react-dom";
+import { popoverLayer } from "../../component/lib/zindex";
 
 @url('/search')
 export class SearchWorkspace extends Block {
@@ -28,7 +30,6 @@ export class SearchWorkspace extends Block {
         });
     }
     async didUnmounted(): Promise<void> {
-
         document.removeEventListener('mousedown', this.otherClick)
     }
     otherClick = (event: MouseEvent) => {
@@ -38,7 +39,7 @@ export class SearchWorkspace extends Block {
         (this.view as any).searchList = { editDate: -1, isOnlySearchTitle: false, loading: false, list: [], pages: [], total: 0, page: 1, size: 20 }
     }
     @prop()
-    searchStyle: 'primary' | 'ghost' | 'dark' | 'green' | 'blue' | 'purple' = 'primary'
+    searchStyle: 'primary' | 'ghost' | 'dark' | 'green' | 'blue' | 'purple' = 'ghost'
     async onGetContextMenus() {
         var rs = await super.onGetContextMenus();
         var rg = rs.find(g => g.name == 'text-center');
@@ -79,12 +80,14 @@ export class SearchWorkspace extends Block {
                 text: lst('主题'),
                 icon: { name: 'bytedance-icon', code: 'link-four' },
                 childs: [
+
+                    { name: 'searchStyle', text: lst('白色'), value: 'ghost', checkLabel: this.searchStyle == 'ghost' },
                     { name: 'searchStyle', text: lst('红色'), value: 'primary', checkLabel: this.searchStyle == 'primary' },
                     { name: 'searchStyle', text: lst('蓝色'), value: 'blue', checkLabel: this.searchStyle == 'blue' },
                     { name: 'searchStyle', text: lst('绿色'), value: 'green', checkLabel: this.searchStyle == 'green' },
                     { name: 'searchStyle', text: lst('紫色'), value: 'purple', checkLabel: this.searchStyle == 'purple' },
                     { name: 'searchStyle', text: lst('黑色'), value: 'dark', checkLabel: this.searchStyle == 'dark' },
-                    { name: 'searchStyle', text: lst('白色'), value: 'ghost', checkLabel: this.searchStyle == 'ghost' },
+
                 ]
             })
             rs.splice(pos + 1, 0, ...ns)
@@ -132,6 +135,7 @@ export class SearchWorkspaceView extends BlockView<SearchWorkspace> {
         if (this.block.align == 'left') style.justifyContent = 'flex-start';
         else if (this.block.align == 'right') style.justifyContent = 'flex-end';
         else style.justifyContent = 'center';
+
         return <div style={this.block.visibleStyle}>
             <div className="flex" style={style}>
                 <div className="relative"
@@ -139,7 +143,7 @@ export class SearchWorkspaceView extends BlockView<SearchWorkspace> {
                     onMouseDown={e => {
                         e.stopPropagation();
                         if (this.dropEle?.style.display == 'none' && this.searchList.word)
-                            this.dropEle.style.display = 'block';
+                            this.showDrop(true)
                     }}>
                     <div className={"flex round-8 sy-search-block " + ("sy-search-block-" + this.block.searchStyle)}
                         style={{
@@ -160,67 +164,118 @@ export class SearchWorkspaceView extends BlockView<SearchWorkspace> {
                                 size='larger'
                                 onClear={() => {
                                     this.searchList.word = '';
-                                    if (this.dropEle) this.dropEle.style.display = 'none';
+                                    if (this.dropEle) this.showDrop(false)
                                     this.onForceSearch()
                                 }}
                                 placeholder={lst('在{text}中搜索', { text: this.block.page.ws?.text || lst('空间') })}
                                 value={this.searchList.word}
                                 onEnter={e => {
-                                    this.searchList.word = e;
-                                    this.onForceSearch()
+                                    if (this.searchList.word == e) {
+                                        var item = this.searchList.list[this.focusIndex];
+                                        if (item) {
+                                            this.onSelect(item)
+                                        }
+                                        else {
+                                            this.searchList.word = e;
+                                            this.onForceSearch()
+                                        }
+                                    }
+                                    else {
+                                        this.searchList.word = e;
+                                        this.onForceSearch()
+                                    }
+                                }}
+                                onKeydown={e => {
+                                    console.log(e.key);
+                                    if (e.key == 'ArrowDown') {
+                                        this.focusIndex++;
+                                        if (this.searchList.list.length == 0 && this.focusIndex >= this.searchList.pages.length) {
+                                            this.focusIndex = 0;
+                                        }
+                                        this.forceUpdate();
+                                    }
+                                    if (e.key == 'ArrowUp') {
+                                        this.focusIndex--;
+                                        if (this.searchList.list.length == 0 && this.focusIndex < 0) {
+                                            this.focusIndex = this.searchList.pages.length - 1;
+                                        }
+                                        this.forceUpdate();
+                                    }
                                 }}
                                 onChange={e => {
                                     this.searchList.word = e;
-                                    if (this.searchList.word) this.dropEle.style.display = 'block';
-                                    else this.dropEle.style.display = 'none';
+                                    this.showDrop(this.searchList.word ? true : false)
                                     this.onSearch()
-                                }} className={'flex-auto'} />
+                                }}
+                                className={'flex-auto'} />
                         </div>
-                        <span className={"flex-fixed flex f-14 gap-w-5 cursor" + (this.block.searchStyle == 'ghost' ? " remark" : "")}
-                            style={{
-
-                            }}
+                        <span className={"flex-fixed flex f-14 size-24 round flex-center gap-w-5 cursor" + (this.block.searchStyle == 'ghost' ? " remark item-hover" : "")}
                             onMouseDown={e => this.onForceSearch()}>
                             <Icon size={16} icon={SearchSvg}></Icon>
-                            <span className="gap-l-3"><S>搜索</S></span>
                         </span>
                     </div>
-                    <div className="pos bg-white shadow round" ref={e => this.dropEle = e} style={{ display: 'none', top: 50, left: 0, right: 0 }}>
-                        <div className="pos size-20 flex-center round item-hover" style={{ top: 0, right: 0 }} onMouseDown={e => {
-                            e.stopPropagation();
-                            this.dropEle.style.display = 'none';
-                        }} >
-                            <Icon size={16} icon={CloseSvg}></Icon>
-                        </div>
-                        <div className="padding-h-10 overflow-y max-h-300">
-                            {this.searchList.loading && <Spin block></Spin>}
-                            {!this.searchList.loading && this.renderList()}
-                        </div>
-                    </div>
+                    {this.renderDrops()}
                 </div>
             </div>
             {this.renderComment()}
         </div>
     }
+    showDrop(visible: boolean) {
+        if (visible) {
+            this.dropEle.style.display = 'block';
+            var rect = Rect.fromEle(this.block.el.querySelector('.sy-search-block') as HTMLElement);
+            this.dropEle.style.top = rect.bottom + 10 + 'px';
+            this.dropEle.style.left = rect.left + 'px';
+            this.dropEle.style.width = rect.width + 'px';
+        }
+        else {
+            this.dropEle.style.display = 'none';
+        }
+    }
+    renderDrops() {
+        if (!this.dropContainer) {
+            this.dropContainer = document.createElement('div');
+            assyDivPanel().appendChild(this.dropContainer);
+        }
+        return ReactDOM.createPortal(
+            <div className="pos bg-white shadow-s border-light round"
+                ref={e => this.dropEle = e}
+                style={{
+                    display: 'none',
+                    top: 50,
+                    left: 0,
+                    zIndex: popoverLayer.zoom(this),
+                    maxHeight: 300
+                }}>
+                <div className="padding-h-10 overflow-y max-h-300">
+                    {this.searchList.loading && <Spin block></Spin>}
+                    {!this.searchList.loading && this.renderList()}
+                </div>
+            </div>,
+            this.dropContainer);
+    }
+    dropContainer: HTMLElement;
     dropEle: HTMLElement;
+    focusIndex: number = 0;
     async onSelect(item: LinkPageItem) {
         channel.act('/page/open', { item: item.id });
+        this.showDrop(false)
     }
     renderList() {
         if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div className="h-30 flex-center remark"><S>没有搜到相关的内容</S></div>
         if (this.searchList.pages?.length > 0 && this.searchList.list.length == 0) {
-            return this.searchList.pages.map(r => {
-                return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
-                    <div className="flex">
-                        <span className="flex-fixed flex-line flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
-                        <span className="text f-14 flex-auto">{getPageText(r)}</span>
+            return this.searchList.pages.map((r, i) => {
+                return <div key={r.id} className={"gap-w-5 padding-w-5   round cursor " + (this.focusIndex == i ? "item-hover-focus" : "item-hover")} onMouseDown={e => this.onSelect(r)}>
+                    <div className="flex h-30">
+                        <span className="flex-fixed flex-line flex-center size-20 round remark gap-r-5"><Icon size={18} icon={getPageIcon(r)}></Icon></span>
+                        <span className="text f-16 flex-auto text-overflow">{getPageText(r)}</span>
                         <span className="flex-fixed remark f-14">{util.showTime(r.editDate || r.createDate)}</span>
                     </div>
                 </div>
             })
         }
-        return this.searchList.list.map(r => {
-            return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
+        return this.searchList.list.map((r, i) => {
+            return <div key={r.id} className={"padding-10 item-hover round cursor " + (this.focusIndex == i ? "item-hover-focus" : "item-hover")} onMouseDown={e => this.onSelect(r)}>
                 <div className="flex">
                     <span className="flex-line flex-center size-20 round remark gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
                     <span className="text f-14">{getPageText(r)}</span>
