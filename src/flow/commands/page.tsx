@@ -143,6 +143,15 @@ export class OpenPageUrlCommand extends FlowCommand {
                         var email = this.page.formRowData[fe.name];
                         if (email) this.pageUrl = 'mailto:' + email;
                     }
+                    else if (fe.type == FieldType.image || fe.type == FieldType.video || fe.type == FieldType.audio) {
+                        var files = this.page.formRowData[fe.name];
+                        if (files) {
+                            var file = Array.isArray(files) ? files[0] : files;
+                            if (file.url) {
+                                this.pageUrl = file.url;
+                            }
+                        }
+                    }
                     else if (fe.type == FieldType.file) {
                         var files = this.page.formRowData[fe.name];
                         if (files) {
@@ -160,7 +169,7 @@ export class OpenPageUrlCommand extends FlowCommand {
                 if (this.target == '_blank') window.open(this.pageUrl, '_blank')
                 else window.location.href = this.pageUrl;
             }
-            else ShyAlert(lst('网址为空')); 
+            else ShyAlert(lst('网址为空'));
         }
     }
 }
