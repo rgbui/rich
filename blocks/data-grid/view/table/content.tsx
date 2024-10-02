@@ -29,6 +29,7 @@ export class DataGridTableContent extends React.Component<{
     get block() {
         return this.props.block as TableStore
     }
+
     async onOpenFieldStat(e: React.MouseEvent, f: ViewField) {
         var items = getFieldStatItems(f.field?.type);
         if (items.length == 0) return;

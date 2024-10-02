@@ -61,7 +61,46 @@ class FormFieldRelation extends OriginFormField {
 
 @view('/form/relation')
 class FormFieldRelationView extends BlockView<FormFieldRelation> {
-    renderList() {
+    renderView() {
+        return <FieldView block={this.block} className={'visible-hover'}>
+            {this.block.fromType == 'doc-detail' && this.renderDetail()}
+            {this.block.fromType == 'doc-add' && this.renderForm()}
+            {this.block.fromType == 'doc' && this.renderField()}
+        </FieldView>
+    }
+    renderDetail() {
+        var rs = this.block.relationSchema;
+        if (!rs) return <></>
+        var f = rs?.fields?.find(g => g.type == FieldType.title);
+        var icon = rs?.fields.find(g => g.type == FieldType.icon);
+        if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
+        var textStyle: CSSProperties = {
+
+        }
+        textStyle.textDecoration = 'underline';
+        textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
+        return <div>
+            {this.block.relationList?.length > 0 && <div className="gap-b-5 ">
+                {this.block.relationList?.map(r => {
+                    return <div className={"h-30  round  cursor flex  visible-hover  item-hover-light"}
+                        onClick={e => e.preventDefault()}
+                        key={r.id}
+                    >
+                        <span className="flex-fixed size-20  remark flex-center flex-inline cursor">
+                            <Icon size={18} icon={getPageIcon({ icon: r[icon.name] })}></Icon>
+                        </span>
+                        <span className={"f-14 gap-l-3 text-overflow  " + "flex-auto "}>
+                            <span className="b-500" style={textStyle}>{getPageText({ text: r[f?.name] })}</span>
+                        </span>
+                    </div>
+                })}
+            </div>}
+            {this.block.relationList.length == 0 && <div
+                className={"f-14 min-h-30 cursor f-14 flex  remark"}><S>空内容</S></div>
+            }
+        </div>
+    }
+    renderForm() {
         var rs = this.block.relationSchema;
         if (!rs) return <></>
         var f = rs?.fields?.find(g => g.type == FieldType.title);
@@ -82,7 +121,7 @@ class FormFieldRelationView extends BlockView<FormFieldRelation> {
                         <span className="flex-fixed size-20  text-1 flex-center flex-inline cursor">
                             <Icon size={18} icon={getPageIcon({ icon: r[icon.name] })}></Icon>
                         </span>
-                        
+
                         <span className={"f-14 gap-l-3 text-overflow " + (this.block.fromType == 'doc-add' ? " gap-r-10 flex-auto" : "flex-auto ")}>
                             <span className="b-500" style={textStyle}>{getPageText({ text: r[f?.name] })}</span>
                         </span>
@@ -101,9 +140,44 @@ class FormFieldRelationView extends BlockView<FormFieldRelation> {
                 className={"f-14 min-h-30 cursor f-14 flex  remark" + (this.block.fromType == 'doc' ? " item-hover-light padding-w-10" : (this.block.fromType == 'doc-add' ? " round item-hover inline-flex padding-w-5 cursor" : ""))}>{this.block.fromType == 'doc-add' ? <S>添加记录</S> : <S>空内容</S>}</div>}
         </div>
     }
-    renderView() {
-        return <FieldView block={this.block} className={'visible-hover'}>
-            {this.renderList()}
-        </FieldView>
+    renderField() {
+        var rs = this.block.relationSchema;
+        if (!rs) return <></>
+        var f = rs?.fields?.find(g => g.type == FieldType.title);
+        var icon = rs?.fields.find(g => g.type == FieldType.icon);
+        if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
+        var textStyle: CSSProperties = {
+
+        }
+        textStyle.textDecoration = 'underline';
+        textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
+        return <div>
+            {this.block.relationList?.length > 0 && <div className="gap-b-5 ">
+                {this.block.relationList?.map(r => {
+                    return <div className={"h-30  round  cursor flex  visible-hover " + (this.block.fromType != 'doc-add' && this.block.fromType != 'doc-detail' ? " padding-w-10 item-hover-light" : " item-hover-light")}
+                        onClick={e => e.preventDefault()}
+                        key={r.id}
+                    >
+                        <span className="flex-fixed size-20  text-1 flex-center flex-inline cursor">
+                            <Icon size={18} icon={getPageIcon({ icon: r[icon.name] })}></Icon>
+                        </span>
+
+                        <span className={"f-14 gap-l-3 text-overflow " + (this.block.fromType == 'doc-add' ? " gap-r-10 flex-auto" : "flex-auto ")}>
+                            <span className="b-500" style={textStyle}>{getPageText({ text: r[f?.name] })}</span>
+                        </span>
+                        {this.block.fromType != 'doc-detail' && <Tip text='移除记录'><span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed visible size-20 round cursor flex-center border shadow-s bg-hover gap-r-5">
+                            <Icon size={12} icon={CloseSvg}></Icon>
+                        </span></Tip>}
+                        <ToolTip overlay={<S>添加记录</S>}><span
+                            onClick={e => this.block.onSelectData(e)}
+                            className="flex-fixed visible size-20 round cursor flex-center border shadow-s bg-hover  "><Icon size={16} icon={PlusSvg}></Icon>
+                        </span></ToolTip>
+                    </div>
+                })}
+            </div>}
+            {this.block.relationList.length == 0 && <div
+                onClick={e => this.block.onSelectData(e)}
+                className={"f-14 min-h-30 cursor f-14 flex  remark" + (this.block.fromType == 'doc' ? " item-hover-light padding-w-10" : (this.block.fromType == 'doc-add' ? " round item-hover inline-flex padding-w-5 cursor" : ""))}>{this.block.fromType == 'doc-add' ? <S>添加记录</S> : <S>空内容</S>}</div>}
+        </div>
     }
 }

@@ -403,6 +403,7 @@ export var SupportStatFieldTypes: FieldType[] = [
     FieldType.modifyDate,
     FieldType.modifyer
 ]
+
 export var DisabledTrggerFilterFieldTypes: FieldType[] = [
     FieldType.formula,
     FieldType.rollup,

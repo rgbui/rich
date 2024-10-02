@@ -8,11 +8,14 @@ import { Rect } from "../../../../src/common/vector/point";
 import { FieldView, OriginFormField } from "./origin.field";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
-import { lst } from "../../../../i18n/store";
+import { ls, lst } from "../../../../i18n/store";
 import { Block } from "../../../../src/block";
 import { DateInput } from "../../../../extensions/date/input";
 import lodash from "lodash";
 import { S } from "../../../../i18n/view";
+import { BackgroundColorList, FontColorList, GetTextCacheFontColor } from "../../../../extensions/color/data";
+import { UA } from "../../../../util/ua";
+import { BlockcolorSvg } from "../../../../component/svgs";
 
 @url('/form/date')
 class FieldText extends OriginFormField {
@@ -68,6 +71,72 @@ class FieldText extends OriginFormField {
                 childs: dateItems,
                 icon: { name: 'bytedance-icon', code: 'calendar-thirty' }
             }, { type: MenuItemType.divide })
+        if (this.fromType == 'doc-detail') {
+            var lastFontItems: any[] = [];
+            var lastColor = await GetTextCacheFontColor();
+            if (lastColor) {
+                lastFontItems.push({
+                    text: lst('上次颜色'),
+                    type: MenuItemType.text,
+                    label: UA.isMacOs ? "⌘+Shift+H" : "Ctrl+Shift+H"
+                });
+                lastFontItems.push({
+                    type: MenuItemType.color,
+                    name: lastColor.name == 'font' ? 'fontColor' : 'fillColor',
+                    block: ls.isCn ? false : true,
+                    options: [
+                        {
+                            text: '',
+                            value: lastColor.color
+                        }
+                    ]
+                });
+            }
+            items.splice(at+4, 0,{
+                text: lst('颜色'),
+                icon: BlockcolorSvg,
+                name: 'color',
+                childs: [
+                    ...lastFontItems,
+                    {
+                        text: lst('文字颜色'),
+                        type: MenuItemType.text
+                    },
+                    {
+                        name: 'fontColor',
+                        type: MenuItemType.color,
+                        block: ls.isCn ? false : true,
+                        options: FontColorList().map(f => {
+                            return {
+                                text: f.text,
+                                overlay: f.text,
+                                value: f.color,
+                                checked: lodash.isEqual(this.pattern?.getFontStyle()?.color, f.color) ? true : false
+                            }
+                        })
+                    },
+                    {
+                        type: MenuItemType.divide
+                    },
+                    {
+                        text: lst('背景颜色'),
+                        type: MenuItemType.text
+                    },
+                    {
+                        type: MenuItemType.color,
+                        name: 'fillColor',
+                        block: ls.isCn ? false : true,
+                        options: BackgroundColorList().map(f => {
+                            return {
+                                text: f.text,
+                                value: f.color,
+                                checked: this.pattern?.getFillStyle()?.color == f.color ? true : false
+                            }
+                        })
+                    },
+                ]
+            });
+        }
         return items;
     }
     async onClickContextMenu(this: Block, item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
@@ -79,6 +148,15 @@ class FieldText extends OriginFormField {
 }
 @view('/form/date')
 class FieldTextView extends BlockView<FieldText> {
+    renderDetail() {
+        return <div style={this.block.contentStyle} className={" " + (this.block.dateString ? "" : 'f-14 remark')}>{this.block.dateString || <S>空内容</S>}</div>
+    }
+    renderForm() {
+        return <DateInput value={this.block.value} onChange={e => { this.block.onChange(e) }}></DateInput>
+    }
+    renderField() {
+        return <div className="min-h-30 item-hover-light padding-w-10 round  flex  text" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>
+    }
     async mousedown(event: React.MouseEvent) {
         event.stopPropagation();
         if (this.block.checkEdit() === false) return;
@@ -101,9 +179,9 @@ class FieldTextView extends BlockView<FieldText> {
     }
     renderView() {
         return <FieldView block={this.block}>
-            {this.block.fromType == 'doc-detail' && <div className={"min-h-30 " + (this.block.dateString ? "" : 'f-14 remark')}>{this.block.dateString||<S>空内容</S>}</div>}
-            {this.block.fromType == 'doc-add' && <DateInput value={this.block.value} onChange={e => { this.block.onChange(e) }}></DateInput>}
-            {this.block.fromType != 'doc-add'&&this.block.fromType != 'doc-detail' && <div className="min-h-30 item-hover-light padding-w-10 round  flex  text" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>}
+            {this.block.fromType == 'doc-detail' && this.renderDetail()}
+            {this.block.fromType == 'doc-add' && this.renderForm()}
+            {this.block.fromType == 'doc' && this.renderField()}
         </FieldView>
     }
 }

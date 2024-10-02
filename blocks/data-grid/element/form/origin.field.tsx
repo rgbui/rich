@@ -184,10 +184,10 @@ export class OriginFormField extends Block {
             point = point.move(0, 3);
         }
         else if (this.fromType == 'doc-add') {
-            point = point.move(0, 20);
+            point = point.move(0, 15);
         }
         else {
-            point = point.move(0, 3);
+            point = point.move(0, -3);
         }
         return point;
     }
@@ -203,15 +203,41 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
         <span className="f-14"><S>该字段不存在</S></span>
         <span className="gap-l-5 size-20 flex-center"><Icon icon={TrashSvg} size={16}></Icon></span>
     </div>
-    if (block.fromType !== 'doc-add') {
+    if (block.fromType == 'doc-detail') {
         return <div className={"sy-form-field-detail " + classList.join(' ')} style={block.visibleStyle}>
-            <div className="gap-h-5 flex flex-top">
-                {props.block.hidePropTitle !== true && <div onMouseDown={e => {
+            {
+                props.block.hidePropTitle == true && <div className="sy-form-field-detail-flag flex flex-inline  border-light  h-20 l-20 remark round bg-white">
+                    <span className="size-20 flex-center gap-l-5"><Icon size={16} icon={GetFieldTypeSvg(block.field)}></Icon></span>
+                    <span className="l-20 h-20 f-14 gap-r-5" >{block.field.text}</span>
+                </div>
+            }
+            {props.block.hidePropTitle == true && <div>
+                {props.children}
+            </div>}
+            {props.block.hidePropTitle !== true && <div className="gap-h-5 flex flex-top">
+                <div onMouseDown={e => {
                     if (block.isCanEdit()) block.onContextmenu(e.nativeEvent)
                 }} className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">
                     <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={16} icon={GetFieldTypeSvg(block.field)}></Icon></span>
                     <span className="flex-auto l-30 h-30 text-overflow">{block.field.text}</span>
-                </div>}
+                </div>
+                <div className="flex-auto">
+                    {props.children}
+                </div>
+            </div>}
+            {block.view.renderComment()}
+        </div>
+    }
+    if (block.fromType == 'doc') {
+        return <div className={"sy-form-field-detail " + classList.join(' ')}
+            style={block.visibleStyle}>
+            <div className="gap-h-5 flex flex-top">
+                <div onMouseDown={e => {
+                    if (block.isCanEdit()) block.onContextmenu(e.nativeEvent)
+                }} className="flex-fixed  h-30 w-120 flex text-1 f-14 item-hover round gap-r-10 cursor">
+                    <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={16} icon={GetFieldTypeSvg(block.field)}></Icon></span>
+                    <span className="flex-auto l-30 h-30 text-overflow">{block.field.text}</span>
+                </div>
                 <div className="flex-auto">
                     {props.children}
                 </div>

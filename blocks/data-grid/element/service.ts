@@ -43,6 +43,11 @@ export function GetFieldFormBlockInfo(field: Field) {
                 fieldId: field.id
             }
             break;
+        case FieldType.formula:
+            return{
+                url:'/form/formula',
+                fieldId: field.id
+            }
         case FieldType.audio:
         case FieldType.file:
         case FieldType.video:

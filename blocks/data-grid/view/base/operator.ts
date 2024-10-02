@@ -283,10 +283,17 @@ export class DataGridViewOperator {
     }
     async onTurnField(this: DataGridView, field: Field, type: FieldType, options: { text?: string, config?: Record<string, any> }) {
 
+       // debugger
         var r = await this.schema.turnField({ fieldId: field.id, data: { text: options.text, type: type, config: options.config } }, this.id);
 
         if (r.ok) {
-            await this.onReloadData()
+            this.fields.forEach(f=>{
+                f.schema=this.schema;
+            })
+            await this.onReloadData();
+            // console.log(this.schema.fields.find(g => g.id == field.id),this.fields);
+            // await this.createItem(true);
+            this.forceManualUpdate(true, true);
         }
     }
     /**
@@ -542,7 +549,6 @@ export class DataGridViewOperator {
             return
         }
         await this.page.onAction(ActionDirective.onDataGridShowRowNum, async () => {
-            // this.page.notifyActionBlockSync(this);
             if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', colWidth: 80, text: "No." }, this.schema), at: 0 })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
             await this.updateProps({ showRowNum: visible });
@@ -552,9 +558,6 @@ export class DataGridViewOperator {
     }
     async onBreakRow(this: DataGridView, visible: boolean) {
         await this.page.onAction(ActionDirective.onDataGridShowRowNum, async () => {
-            // this.page.notifyActionBlockSync(this);
-            // if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', colWidth: 80, text: "No." }, this.schema), at: 0 })
-            // else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
             await this.updateProps({ breakRow: visible }, BlockRenderRange.self);
             await this.createItem();
             this.forceManualUpdate();
@@ -565,7 +568,6 @@ export class DataGridViewOperator {
         if (value == 'checkbox' && newFields.some(s => s.type == 'check')) return
         else if (value == 'none' && !newFields.some(s => s.type == 'check')) return
         await this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
-            // this.page.notifyActionBlockSync(this);
             await this.updateProps({ checkRow: value }, BlockRenderRange.self);
             if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ colWidth: 80, type: 'check', text: lst('选择') }, this.schema) })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
@@ -580,8 +582,6 @@ export class DataGridViewOperator {
     async onChangeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
         await this.page.onAction(ActionDirective.onDataGridChangeFields, async () => {
             await this.changeFields(oldFields, newFields);
-            // await this.manualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.self, { isOnlyRecord: true });
-            // this.fields = newFields;
             await this.createItem();
             this.forceManualUpdate();
         })
@@ -720,7 +720,8 @@ export class DataGridViewOperator {
                 console.error(ex);
             }
             await this.loadDataGridData();
-            await this.createItem();
+            await this.createItem(true);
+
             this.referenceBlockers.forEach(b => {
                 b.forceManualUpdate();
             })

@@ -316,6 +316,11 @@ export class DataGridViewConfig {
         var s = schema ? (typeof schema == 'string' ? schema : schema.id) : this.schema.id;
         await channel.act('/page/open', { elementUrl: getElementUrl(ElementType.Schema, s) });
     }
+    async onOpenSchemaViewPage(this: DataGridView, schema?: TableSchema | string, view?: string) {
+        var s = typeof schema == 'string' ? schema : schema.id;
+        var url = getElementUrl(ElementType.SchemaRecordView, s, view);
+        await channel.act('/page/open', { elementUrl: url, config: { createItemForm:this.page?._pageItem?.id||true } });
+    }
     async onOpenViewTemplates(this: DataGridView, rect: Rect) {
         await this.onDataGridTool(async () => {
             await useTabelSchemaFormDrop({ roundArea: rect, direction: 'bottom', align: 'end' }, { block: this });

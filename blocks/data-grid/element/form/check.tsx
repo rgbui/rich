@@ -13,22 +13,42 @@ class FieldText extends OriginFormField {
 }
 
 @view('/form/check')
-class FieldTextView extends BlockView<FieldText>{
+class FieldTextView extends BlockView<FieldText> {
+    renderDetail() {
+        return <div className="flex min-h-30">
+            <CheckBox readOnly checked={this.block.value}>{this.block.checkLabel}</CheckBox>
+        </div>
+    }
+    renderForm() {
+        return <div className={this.block.fromType == 'doc-add' ? "" : "min-h-30 item-hover-light padding-w-10 round  "}><div className="flex min-h-30">
+            <div className="flex-fixed" onMouseDown={e => { e.stopPropagation() }}><CheckBox
+                checked={this.block.value}
+                onChange={e => {
+                    this.block.onChange(e);
+                }}></CheckBox></div>
+            <div className="flex-auto f-14 gap-l-5">
+                <TextArea plain placeholder={lst("输入...")} prop="checkLabel" block={this.block} ></TextArea>
+            </div>
+        </div>
+        </div>
+    }
+    renderField() {
+        return <div className={this.block.fromType == 'doc-add' ? "" : "min-h-30 item-hover-light padding-w-10 round  "}><div className="flex min-h-30">
+            <div className="flex-fixed" onMouseDown={e => { e.stopPropagation() }}><CheckBox
+                checked={this.block.value}
+                onChange={e => {
+                    this.block.onChange(e);
+                }}></CheckBox></div>
+            <div className="flex-auto f-14 gap-l-5">
+                <TextArea plain placeholder={lst("输入...")} prop="checkLabel" block={this.block} ></TextArea>
+            </div>
+        </div></div>
+    }
     renderView() {
         return <FieldView block={this.block}>
-            {this.block.fromType == 'doc-detail' && <div className="flex min-h-30">
-                <CheckBox readOnly checked={this.block.value}>{this.block.checkLabel}</CheckBox>
-            </div>}
-            {this.block.fromType != 'doc-detail' && <div className={this.block.fromType == 'doc-add' ? "" : "min-h-30 item-hover-light padding-w-10 round  "}><div className="flex min-h-30">
-                <div className="flex-fixed" onMouseDown={e => { e.stopPropagation() }}><CheckBox
-                    checked={this.block.value}
-                    onChange={e => {
-                        this.block.onChange(e);
-                    }}></CheckBox></div>
-                <div className="flex-auto f-14 gap-l-5">
-                    <TextArea plain  placeholder={lst("输入...")} prop="checkLabel" block={this.block} ></TextArea>
-                </div>
-            </div></div>}
+            {this.block.fromType == 'doc-detail' && this.renderDetail()}
+            {this.block.fromType == 'doc-add' && this.renderForm()}
+            {this.block.fromType == 'doc' && this.renderField()}
         </FieldView>
     }
 }

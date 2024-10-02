@@ -1,6 +1,4 @@
 .sy-form-field {
-    // margin: 10px 0px;
-
     &-control {
         display: block;
 
@@ -51,5 +49,20 @@
         font-weight : normal;
         font-family : inherit;
         // font-size: 12px;
+    }
+}
+
+.sy-form-field-detail {
+    &-flag {
+        visibility: hidden;
+        position  : absolute;
+        top       : -20px;
+        left      : 0;
+    }
+    &:hover {
+        .sy-form-field-detail-flag {
+            visibility: visible;
+            z-index   : 1000;
+        }
     }
 }

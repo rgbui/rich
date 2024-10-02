@@ -107,11 +107,11 @@ export interface TableSchemaView {
      * local 本地存储
     */
     share: 'net' | 'nas' | 'local';
-
     /**
      * 互联网是否公开，如果公开的权限是什么
      */
     netPermissions: AtomPermission[];
+    netCopy?: boolean;
     /**
      * 外部邀请的用户权限
      */
@@ -249,8 +249,10 @@ export class TableSchema {
             else return 1;
         })
         fs.splice(1, 0, ...ns);
-        if (!isTemplate) {
+        if (formType != 'doc-add')
             lodash.remove(fs, g => g.type == FieldType.title)
+        if (formType == 'doc-add') {
+            lodash.remove(fs, g => SysFieldTypes.includes(g.type) && g.type !== FieldType.title);
         }
         return fs;
     }
@@ -499,7 +501,8 @@ export class TableSchema {
                 actions
             }
         }, { locationId: locationId || PageLocation.schemaOperate });
-        actions.forEach((action, i) => {
+        for (let i = 0; i < actions.length; i++) {
+            var action = actions[i] as any;
             var re = result.data.actions[i];
             switch (action.name) {
                 case 'createSchemaView':
@@ -516,6 +519,7 @@ export class TableSchema {
                     var view = this.views.find(g => g.id == action.id);
                     if (view) {
                         Object.assign(view, action.data);
+
                     }
                     break;
                 case 'changeSchemaView':
@@ -562,7 +566,7 @@ export class TableSchema {
                     // if (options.config) Object.assign(field.config, options.config);
                     break;
             }
-        })
+        }
         return result;
     }
     async createSchemaView(text: string, url: string, locationId: string | PageLocation) {
@@ -652,7 +656,7 @@ export class TableSchema {
         return schList;
     }
     static async loadListSchema(schemaIds: string[], page: Page) {
-        schemaIds=lodash.cloneDeep(schemaIds);
+        schemaIds = lodash.cloneDeep(schemaIds);
         for (let i = schemaIds.length - 1; i >= 0; i--) {
             var r = this.schemas.get(schemaIds[i]);
             if (r) {
@@ -662,7 +666,7 @@ export class TableSchema {
         if (schemaIds.length > 0) {
             await this.batchSchema.get<TableSchema>(schemaIds, [page.ws])
         }
-       
+
     }
     static async onCreate(data: { text: string, url: string, id?: string }) {
         var r = await channel.put('/schema/create', { id: data.id, text: data.text, url: data.url });
@@ -744,6 +748,7 @@ export class TableSchema {
     static isOnlyFieldTypes(field: Field) {
         return OnlyFieldTypes.includes(field.type)
     }
+    
 }
 
 

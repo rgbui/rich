@@ -548,7 +548,7 @@ export class DataGridView extends Block {
                 })
             }
             else if (dg.source == 'dataView') {
-                var view = await onCreateDataGridTemplate(dg.text, this, dg.url)
+                var {view} = await onCreateDataGridTemplate(dg.text, this, dg.url)
                 viewUrl = view.url;
             }
             else if (dg.source == 'createView') {

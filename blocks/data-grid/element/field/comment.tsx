@@ -38,6 +38,7 @@ export class FieldComment extends OriginField {
         else await fn()
     }
 }
+
 @view('/field/comment')
 export class FieldCommentView extends OriginFileView<FieldComment> {
     renderFieldValue() {

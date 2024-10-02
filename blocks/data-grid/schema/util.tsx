@@ -5,6 +5,7 @@ import {
     CollectionGallerySvg,
     CollectionListSvg,
     EmojiSvg,
+    FormSvg,
     LikeSvg,
     LoveSvg,
     OpposeSvg,
@@ -118,6 +119,11 @@ export function GetFieldTypeSvg(field: Field): IconValueType {
 
 export function getSchemaViewIcon(view: TableSchemaView): IconValueType {
     if (view?.icon) return lodash.cloneDeep(view.icon);
+    if (view?.formType) {
+        if (view.formType == 'doc-add') return FormSvg;
+        else if (view.formType == 'doc-detail') return { name: 'bytedance-icon', code: 'doc-detail' }
+        else if (view.formType == 'doc') return { name: 'bytedance-icon', code: 'editor' }
+    }
     var url = view?.url;
     if (!url) return { name: 'byte', code: 'table' }
     if (url.indexOf('?') > 0) url = url.substring(0, url.indexOf('?'))
