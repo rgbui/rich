@@ -158,7 +158,7 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
                                 }}
                                 className={"relative visible-hover round padding-10 item-hover " + (this.block.border == 'border' ? "border-light" : "border-light-hover")}
                                 key={i}>
-                                <img src={autoImageUrl(img.url, 120)} className={"cursor  obj-center size-100 round "} />
+                                <img src={autoImageUrl(img.url, 120)} style={{ width: 120, height: 60 }}  className={"obj-center  round " + (this.block.border == 'border' ? "border-light" : "border-light-hover")} />
                             </div>
                         })}
                     </div>

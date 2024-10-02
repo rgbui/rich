@@ -85,7 +85,7 @@ class FormFieldFileView extends BlockView<FormFieldFile> {
                 {files.length > 0 && <div className="gap-b-5 ">
                     {files.map((img, i) => {
                         return <div className={"h-30   round  cursor flex  visible-hover "} key={i}>
-                            <a style={{ color: 'inherit' }} className="link f-14 flex-fixed flex  round " download={img.url} href={img.url}>
+                            <a style={{ color: 'inherit' }} className="link item-hover f-14 flex-fixed flex  round " download={img.url} href={img.url}>
                                 <span className="flex-fixed round  text-1 flex-center"><Icon size={16} icon={FileSvg}></Icon></span>
                                 <span className="flex-fixed auto gap-w-5">{img.filename}</span>
                                 <span className="flex-fixed f-14 remark">{util.byteToString(img.size)}</span>
@@ -105,7 +105,7 @@ class FormFieldFileView extends BlockView<FormFieldFile> {
         }
         else if (this.block?.field?.type == FieldType.audio) {
             return <div>
-                <audio draggable={false} controls  src={files[0].url}></audio>
+                <audio draggable={false} controls src={files[0].url}></audio>
             </div>
         }
     }

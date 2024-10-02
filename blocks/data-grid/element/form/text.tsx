@@ -52,7 +52,7 @@ class FieldText extends OriginFormField {
                     ]
                 });
             }
-            items.splice(at+4, 0,{
+            items.splice(at + 4, 0, {
                 text: lst('颜色'),
                 icon: BlockcolorSvg,
                 name: 'color',
@@ -121,8 +121,17 @@ class FieldTextView extends BlockView<FieldText> {
         </FieldView>
     }
     renderDetail() {
-        if (!this.block.isCanEdit()) return '';
-        return <div className={'min-h-30 flex ' + (this.block.value ? "" : "remark f-14")}>{this.block.value || <S>空内容</S>}</div>
+        if (!this.block.isCanEdit() && !this.block.value) return '';
+        if (this.block.field?.type == FieldType.link) {
+            return <a className="link cursor" href={this.block.value} target="_blank">{this.block.value}</a>
+        }
+        else if (this.block.field?.type == FieldType.phone) {
+            return <a className="link cursor" href={`tel:` + this.block.value}>{this.block.value}</a>
+        }
+        else if (this.block.field?.type == FieldType.email) {
+            return <a className="link cursor" href={`mailto:` + this.block.value}>{this.block.value}</a>
+        }
+        return <div style={this.block.contentStyle} className={'min-h-30 flex ' + (this.block.value ? "" : "remark f-14")}>{this.block.value || <S>空内容</S>}</div>
     }
     renderForm() {
         var self = this;

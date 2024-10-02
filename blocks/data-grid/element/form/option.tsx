@@ -9,20 +9,18 @@ import { SelectBox } from "../../../../component/view/select/box";
 import { util } from "../../../../util/util";
 import lodash from "lodash";
 import { MenuItemType, MenuItem } from "../../../../component/view/menu/declare";
-import { ls, lst } from "../../../../i18n/store";
+import { lst } from "../../../../i18n/store";
 import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 import { S } from "../../../../i18n/view";
-import { BlockcolorSvg, TypesMultipleSelectSvg, TypesSelectSvg } from "../../../../component/svgs";
+import { TypesMultipleSelectSvg, TypesSelectSvg } from "../../../../component/svgs";
 import { FieldType } from "../../schema/type";
-import { GetTextCacheFontColor, FontColorList, BackgroundColorList } from "../../../../extensions/color/data";
-import { UA } from "../../../../util/ua";
+
 
 @url('/form/option')
 class FieldText extends OriginFormField {
     @prop()
     optionType: 'default' | 'select' | 'checkList' = 'default';
-    async onGetContextMenus()
-    {
+    async onGetContextMenus() {
         var items = await super.onGetContextMenus();
         if (this.fromType == 'doc-add') {
             var index = items.findIndex(g => g.name == 'required');
@@ -37,73 +35,6 @@ class FieldText extends OriginFormField {
                     { text: lst('多选框'), value: 'checkList', icon: { name: 'byte', code: 'list-checkbox' } }
                 ],
                 icon: { name: 'bytedance-icon', code: 'more-two' }
-            });
-        }
-        var at = items.findIndex(c => c.name == 'hidePropTitle' || c.name == 'required');
-        if (this.fromType == 'doc-detail') {
-            var lastFontItems: any[] = [];
-            var lastColor = await GetTextCacheFontColor();
-            if (lastColor) {
-                lastFontItems.push({
-                    text: lst('上次颜色'),
-                    type: MenuItemType.text,
-                    label: UA.isMacOs ? "⌘+Shift+H" : "Ctrl+Shift+H"
-                });
-                lastFontItems.push({
-                    type: MenuItemType.color,
-                    name: lastColor.name == 'font' ? 'fontColor' : 'fillColor',
-                    block: ls.isCn ? false : true,
-                    options: [
-                        {
-                            text: '',
-                            value: lastColor.color
-                        }
-                    ]
-                });
-            }
-            items.splice(at + 4, 0, {
-                text: lst('颜色'),
-                icon: BlockcolorSvg,
-                name: 'color',
-                childs: [
-                    ...lastFontItems,
-                    {
-                        text: lst('文字颜色'),
-                        type: MenuItemType.text
-                    },
-                    {
-                        name: 'fontColor',
-                        type: MenuItemType.color,
-                        block: ls.isCn ? false : true,
-                        options: FontColorList().map(f => {
-                            return {
-                                text: f.text,
-                                overlay: f.text,
-                                value: f.color,
-                                checked: lodash.isEqual(this.pattern?.getFontStyle()?.color, f.color) ? true : false
-                            }
-                        })
-                    },
-                    {
-                        type: MenuItemType.divide
-                    },
-                    {
-                        text: lst('背景颜色'),
-                        type: MenuItemType.text
-                    },
-                    {
-                        type: MenuItemType.color,
-                        name: 'fillColor',
-                        block: ls.isCn ? false : true,
-                        options: BackgroundColorList().map(f => {
-                            return {
-                                text: f.text,
-                                value: f.color,
-                                checked: this.pattern?.getFillStyle()?.color == f.color ? true : false
-                            }
-                        })
-                    },
-                ]
             });
         }
         return items;
@@ -176,9 +107,9 @@ class FieldTextView extends BlockView<FieldText> {
         }
         if (!Array.isArray(ops)) ops = [];
         return <div className="flex">
-            {ops.map(op => {
-                return <span key={op.value} className="gap-r-10 padding-w-5 f-14  h-24  l-24  round cursor"
-                    style={this.block.contentStyle}>{op.text}</span>
+            {ops.map(op=>{
+                return <span key={op.value} className="gap-r-10 item-hover  padding-w-10 border-light text-1 f-14  h-30 l-30 round cursor"
+                >{op.text}</span>
             })}
             {ops.length == 0 && <span className="f-14 remark min-h-30 flex "><S>空内容</S></span>}
         </div>

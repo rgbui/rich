@@ -13,6 +13,8 @@ import { FieldView, OriginFormField } from "./origin.field";
 import { S } from "../../../../i18n/view";
 import { Tip } from "../../../../component/view/tooltip/tip";
 import { ToolTip } from "../../../../component/view/tooltip";
+import { getElementUrl, ElementType } from "../../../../net/element.type";
+import { channel } from "../../../../net/channel";
 
 @url('/form/relation')
 class FormFieldRelation extends OriginFormField {
@@ -80,10 +82,14 @@ class FormFieldRelationView extends BlockView<FormFieldRelation> {
         textStyle.textDecoration = 'underline';
         textStyle.textDecorationColor = 'rgba(22, 22, 22, 0.2)';
         return <div>
-            {this.block.relationList?.length > 0 && <div className="gap-b-5 ">
+            {this.block.relationList?.length > 0 && <div className="gap-b-5 item-hover-light-focus round ">
                 {this.block.relationList?.map(r => {
-                    return <div className={"h-30  round  cursor flex  visible-hover  item-hover-light"}
-                        onClick={e => e.preventDefault()}
+                    return <div className={"h-30 item-hover padding-w-5 round gap-w-5 cursor flex  visible-hover  "}
+                        onClick={e => {
+                            e.preventDefault();
+                            var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
+                            channel.act('/page/dialog', { elementUrl: url, config: { force: true } })
+                        }}
                         key={r.id}
                     >
                         <span className="flex-fixed size-20  remark flex-center flex-inline cursor">
@@ -95,7 +101,7 @@ class FormFieldRelationView extends BlockView<FormFieldRelation> {
                     </div>
                 })}
             </div>}
-            {this.block.relationList.length == 0 && <div
+            {this.block.relationList.length == 0 && this.block.isCanEdit() && <div
                 className={"f-14 min-h-30 cursor f-14 flex  remark"}><S>空内容</S></div>
             }
         </div>
