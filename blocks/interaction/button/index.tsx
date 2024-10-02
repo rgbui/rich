@@ -232,8 +232,7 @@ export class BlockButton extends Block {
                 return;
             if (assyDivPanel().contains(ele)) return;
         }
-        if ((this.view as any).boxTip)
-            await (this.view as any).boxTip.close();
+        if ((this.view as any).boxTip) await (this.view as any).boxTip.close();
     }
 }
 
@@ -261,6 +260,25 @@ export class BlockButtonView extends BlockView<BlockButton> {
         if (this.boxTip) {
             this.boxTip.toggle();
         }
+    }
+    getButtonText() {
+        if (this.block.buttonText && this.block.buttonText.indexOf('{') > -1) {
+            if (this.block.page.schema) {
+                var text = this.block.buttonText.replace(/(\{[^\}]+\})/g, (a, b) => {
+                    if (b) {
+                        var fe = this.block.page.schema.fields.find(c => c.text == b.slice(1, -1));
+                        if (fe) {
+                            if (this.block.page.formRowData && this.block.page.formRowData[fe.name]) {
+                                return this.block.page.formRowData[fe.name]
+                            }
+                        }
+                    }
+                    return a;
+                });
+                return text;
+            }
+        }
+        return this.block.buttonText
     }
     renderView() {
         var classList: string[] = ['sy-button'];
@@ -311,10 +329,10 @@ export class BlockButtonView extends BlockView<BlockButton> {
                             }}
                         >
                             {this.block.iconAlign == 'left' && <> {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-r-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
-                                {this.block.buttonText && <span className="text-overflow">{this.block.buttonText}</span>}
+                                {this.block.buttonText && <span className="text-overflow">{this.getButtonText()}</span>}
                             </>}
                             {this.block.iconAlign == 'right' && <>
-                                {this.block.buttonText && <span className="text-overflow">{this.block.buttonText}</span>}
+                                {this.block.buttonText && <span className="text-overflow">{this.getButtonText()}</span>}
                                 {this.block.buttonIcon && <Icon size={18} className={this.block.buttonText ? 'gap-l-5' : ""} icon={{ ...this.block.buttonIcon, color: 'inherit' }}></Icon>}
                             </>}
                             {!this.block.buttonText && !this.block.buttonIcon && <span><S>按钮</S></span>}
@@ -342,7 +360,6 @@ export class BlockButtonView extends BlockView<BlockButton> {
         if (!lodash.isEqual(od, nf)) isUpdate = true;
         if (this.oldText != this.block.buttonText) isUpdate = true;
         if (!lodash.isEqual(this.oldIcon, this.block.buttonIcon)) isUpdate = true;
-        console.log(isUpdate, od, nf);
         if (!isUpdate) return;
         await this.block.page.onAction('updateBlock', async () => {
             if (!lodash.isEqual(od, nf))
