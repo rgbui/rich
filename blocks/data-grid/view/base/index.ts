@@ -87,12 +87,12 @@ export class DataGridView extends Block {
     createRecordSource: Page['openSource'] = 'dialog';
     @prop()
     cardSettings: Record<string, any> = {};
-    get schema(){
+    get schema() {
         return TableSchema.getTableSchema(this.schemaId)
     }
-    relationSchemaIds:string[]=[];
-    get relationSchemas(){
-        return this.relationSchemaIds.map(id=>TableSchema.getTableSchema(id))
+    relationSchemaIds: string[] = [];
+    get relationSchemas() {
+        return this.relationSchemaIds.map(id => TableSchema.getTableSchema(id))
     }
     relationDatas: Map<string, any[]> = new Map();
     isOver: boolean = false;
@@ -536,6 +536,8 @@ export class DataGridView extends Block {
             var viewUrl: string = '';
             if (dg.schemaId) {
                 viewUrl = dg.url;
+                var sch = await TableSchema.loadTableSchema(dg.schemaId, this.page.ws);
+                await sch.cacPermissions();
                 await this.page.onReplace(this, {
                     url: dg.url,
                     schemaId: dg.schemaId,
@@ -548,7 +550,7 @@ export class DataGridView extends Block {
                 })
             }
             else if (dg.source == 'dataView') {
-                var {view} = await onCreateDataGridTemplate(dg.text, this, dg.url)
+                var { view } = await onCreateDataGridTemplate(dg.text, this, dg.url)
                 viewUrl = view.url;
             }
             else if (dg.source == 'createView') {
@@ -685,8 +687,7 @@ export class DataGridView extends Block {
     }) => {
         console.log('syncDataSchema', r, options);
         if (this.dataGridIsCanEdit() == false) return;
-        if (r?.operate?.schemaId)
-        {
+        if (r?.operate?.schemaId) {
             if (options?.locationId == this.id) return;
             var act: SchemaAction = r.operate.actions[0];
             if (act) {
@@ -701,11 +702,11 @@ export class DataGridView extends Block {
                 ].includes(act.name)) {
                     if (r?.operate?.schemaId == this.schemaId) {
                         var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, { force: options?.sockId ? true : false })
-                        await tc.cacPermissions(); 
+                        await tc.cacPermissions();
                     }
-                    else if (r?.operate?.schemaId && this.relationSchemaIds.some(s => s== r.operate.schemaId)) {
-                        var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, { force: options?.sockId ? true : false})
-                        await tc.cacPermissions(); 
+                    else if (r?.operate?.schemaId && this.relationSchemaIds.some(s => s == r.operate.schemaId)) {
+                        var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, { force: options?.sockId ? true : false })
+                        await tc.cacPermissions();
                     }
                 }
                 else if (['addField', 'updateField', 'turnField', 'removeField'].includes(act.name)) {
@@ -713,7 +714,7 @@ export class DataGridView extends Block {
                         var tc = await TableSchema.loadTableSchema(this.schemaId, this.page.ws, { force: options?.sockId ? true : false })
                         await tc.cacPermissions();
                     }
-                    else if (r?.operate?.schemaId && this.relationSchemaIds.some(s => s== r.operate.schemaId)) {
+                    else if (r?.operate?.schemaId && this.relationSchemaIds.some(s => s == r.operate.schemaId)) {
                         var tc = await TableSchema.loadTableSchema(r.operate.schemaId, this.page.ws, { force: options?.sockId ? true : false })
                         await tc.cacPermissions();
                     }
