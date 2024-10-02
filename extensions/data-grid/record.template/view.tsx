@@ -10,16 +10,18 @@ import { Point } from "../../../src/common/vector/point";
 import { PopoverSingleton } from "../../../component/popover/popover";
 import { PopoverPosition } from "../../../component/popover/position";
 import { Divider } from "../../../component/view/grid";
+
 import {
-    DetailSvg,
     DotsSvg,
     DragHandleSvg,
     DuplicateSvg,
     Edit1Svg,
-    OrderSvg,
+    FormSvg,
+    MaximizeSvg,
     PlusSvg,
     TrashSvg
 } from "../../../component/svgs";
+
 import { getElementUrl, ElementType } from "../../../net/element.type";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { BlockUrlConstant } from "../../../src/block/constant";
@@ -29,6 +31,8 @@ import { S } from "../../../i18n/view";
 import { TableSchemaView } from "../../../blocks/data-grid/schema/meta";
 import { HelpText } from "../../../component/view/text";
 import lodash from "lodash";
+import { ToolTip } from "../../../component/view/tooltip";
+import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 
 class TabelSchemaFormDrop extends EventsComponent {
     block: DataGridView;
@@ -66,7 +70,7 @@ class TabelSchemaFormDrop extends EventsComponent {
                     {
                         text: lst('表单'),
                         value: 'doc-add',
-                        icon: { name: 'bytedance-icon', code: 'doc-add' },
+                        icon: FormSvg,
                         overlay: lst('收集数据')
                     },
                     {
@@ -105,12 +109,25 @@ class TabelSchemaFormDrop extends EventsComponent {
             }
         }
     }
-    async onOpenTemplate(view, isTemplate: boolean = false) {
+    async onOpenTemplate(view: TableSchemaView, isTemplate: boolean = false) {
         this.emit('save', view);
+        if (view?.formType == 'doc-add') isTemplate = false;
+        if (view?.formType == 'doc-detail') {
+            var row = this.block.data[0];
+            if (row) {
+                await channel.act('/page/dialog', {
+                    elementUrl: getElementUrl(ElementType.SchemaRecordViewData, this.schema.id, view.id, row.id),
+                    config: isTemplate ? { isTemplate: true, force: true } : { force: true }
+                })
+                return;
+            }
+            isTemplate = true;
+        }
         await channel.act('/page/dialog', {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, view.id),
             config: isTemplate ? { isTemplate: true, force: true } : { force: true }
         })
+
     }
     async onProperty(view: TableSchemaView, event: React.MouseEvent) {
         event.stopPropagation();
@@ -119,14 +136,13 @@ class TabelSchemaFormDrop extends EventsComponent {
                 type: MenuItemType.inputTitleAndIcon,
                 text: lst('重命名数据模板'),
                 value: view.text,
-                icon: view.icon || DetailSvg,
+                icon: getSchemaViewIcon(view),
                 name: 'rename'
             },
             { type: MenuItemType.divide },
             { text: lst('编辑'), name: 'edit', icon: Edit1Svg },
             { text: lst('复制数据模板'), name: 'clone', icon: DuplicateSvg },
-            { type: MenuItemType.divide },
-            { text: lst('设为新增数据时打开'), name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: OrderSvg },
+            { text: lst('设为新增数据时打开'), visible: view.formType != 'doc-detail' ? true : false, name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: FormSvg },
             { type: MenuItemType.divide },
             { text: lst('删除'), name: 'delete', icon: TrashSvg, disabled: this.schema.views.findAll(g => [BlockUrlConstant.RecordPageView].includes(g.url as any)).length == 1 ? true : false }
         ]
@@ -161,19 +177,29 @@ class TabelSchemaFormDrop extends EventsComponent {
         if (it.value != view.text && it.value) {
             data['text'] = it.value;
         }
-        if (!lodash.isEqual(it.icon, view.icon) && it.icon&&typeof it.icon!='function') {
+        if (!lodash.isEqual(it.icon, view.icon) && it.icon && typeof it.icon != 'function') {
             data['icon'] = it.icon;
         }
         if (Object.keys(data).length > 0) {
-            this.schema.onSchemaOperate([{
+            await this.schema.onSchemaOperate([{
                 name: 'updateSchemaView',
                 id: view.id,
                 data: data
             }], this.block.id)
+            var props = lodash.pick(data, ['text', 'icon']);
+            if (Object.keys(props).length > 0) {
+                await channel.air('/page/update/info', {
+                    elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, view.id),
+                    pageInfo: props
+                }, { locationId: 'TabelSchemaFormDrop.onProperty' })
+            }
             Object.assign(view, data);
             this.forceUpdate();
             return;
         }
+    }
+    async onMaximize(view: TableSchemaView, event: React.MouseEvent) {
+        this.block.onOpenSchemaViewPage(this.block.schema?.id, view.id);
     }
     render() {
         if (!this.schema) return <div></div>
@@ -186,9 +212,15 @@ class TabelSchemaFormDrop extends EventsComponent {
                 return <div className="item-hover padding-w-5 gap-w-5 h-30 round flex cursor f-14" key={v.id} onClick={e => this.onOpenTemplate(v)}>
                     <span className="size-24 flex-center flex-fixed round item-hover text-1"><Icon size={14} className={'drag'} icon={DragHandleSvg}></Icon></span>
                     <span className="flex-fixed size-24 flex-center item-hover round">
-                        <Icon size={16} icon={v.icon || (DetailSvg)}></Icon>
+                        <Icon size={16} icon={getSchemaViewIcon(v)}></Icon>
                     </span>
                     <span className="flex-auto text-overflow">{v.text}</span>
+                    {v.formType == 'doc-add' && <ToolTip overlay={<S>页面方式打开</S>}><span className="size-24 flex-center flex-fixed  item-hover round gap-r-5">
+                        <Icon size={16} className={'property'} icon={MaximizeSvg} onClick={e => {
+                            e.stopPropagation();
+                            this.onMaximize(v, e);
+                        }}></Icon>
+                    </span></ToolTip>}
                     <span className="size-24 flex-center flex-fixed  item-hover round">
                         <Icon size={16} className={'property'} icon={DotsSvg} onClick={e => this.onProperty(v, e)}></Icon>
                     </span>

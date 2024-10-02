@@ -79,7 +79,8 @@ export class DataGridCreate extends EventsComponent {
                         self.forceUpdate()
                     }} className="flex-full relative item-hover round padding-w-10 padding-h-5">
                         <div className="flex-fixed">
-                            <img src={c.model.image} className="obj-center h-40 w-80 round border" />
+                            {c.model.renderCover && <div className="obj-center round h-40 w-80 border" >{c.model.renderCover()}</div>}
+                            {!c.model.renderCover && <img src={c.model.image} className="obj-center round h-40 w-80 border" />}
                         </div>
                         <div className="flex-auto gap-l-10 f-14">
                             <div>{c.model.title}</div>
@@ -95,7 +96,7 @@ export class DataGridCreate extends EventsComponent {
     }
     rsSpreads: { [key: string]: boolean } = {};
     renderTables() {
-        var list =!this.page?.ws?[]: TableSchema.getSchemas(this.page.ws?. id);
+        var list = !this.page?.ws ? [] : TableSchema.getSchemas(this.page.ws?.id);
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         var self = this;
         var srs = getSchemaViews()

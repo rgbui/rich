@@ -94,7 +94,8 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                             render(item, view) {
                                 return <div className="flex-full relative item-hover round padding-w-10 padding-h-5">
                                     <div className="flex-fixed">
-                                        <img src={c.model.image} className="obj-center round h-40 w-80 border" />
+                                        {c.model.renderCover && <div className="obj-center round h-40 w-80 border" >{c.model.renderCover()}</div>}
+                                        {!c.model.renderCover && <img src={c.model.image} className="obj-center round h-40 w-80 border" />}
                                     </div>
                                     <div className="flex-auto gap-l-10 f-14">
                                         <div>{c.model.title}</div>
@@ -450,7 +451,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             }
             else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
                 await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self }, undefined, async () => {
-                    self.block.forceUpdateAllViews() 
+                    self.block.forceUpdateAllViews()
                 });
                 self.forceUpdate()
             }

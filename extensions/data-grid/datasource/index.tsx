@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
+import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 import { Confirm } from "../../../component/lib/confirm";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
@@ -33,7 +33,7 @@ export class DataSourceView extends EventsComponent {
                 var cs: MenuItem[] = [];
                 if (Array.isArray(rd.views) && rd.views.length > 0) {
                     cs.push({ type: MenuItemType.text, text: lst('视图') })
-                    var srs = getSchemaViews();
+                    // var srs = getSchemaViews();
                     cs.push(...rd.listViews.map(rv => {
                         return {
                             text: rv.text,
