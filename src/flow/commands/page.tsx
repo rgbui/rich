@@ -14,6 +14,9 @@ import { lst } from "../../../i18n/store";
 import { GridPageDialougSvg, GridPagePageSvg, GridPageSlideSvg, LinkSvg } from "../../../component/svgs";
 import { Input } from "../../../component/view/input";
 import { PageLayoutType, getPageIcon, getPageText } from "../../page/declare";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { util } from "../../../util/util";
+import { ShyAlert } from "../../../component/lib/alert";
 
 @flow('/openPage')
 export class OpenPageCommand extends FlowCommand {
@@ -69,7 +72,6 @@ export class OpenPageCommandView extends FlowCommandView<OpenPageCommand> {
     }
     async openSelectPage(event: React.MouseEvent) {
         event.stopPropagation();
-        console.log('openSelectPage', event);
         var r = await useSelectWorkspacePage({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
         });
@@ -125,8 +127,40 @@ export class OpenPageUrlCommand extends FlowCommand {
     }
     async excute() {
         if (this.pageUrl) {
-            if (this.target == '_blank') window.open(this.pageUrl, '_blank')
-            else window.location.href = this.pageUrl;
+            if (this.pageUrl.startsWith('{')) {
+                var name = this.pageUrl.substring(1, this.pageUrl.length - 1);
+                var fe = this.page.schema.fields.find(g => g.text == name);
+                if (fe) {
+                    if (fe.type == FieldType.link) {
+                        var url = this.page.formRowData[fe.name];
+                        if (url) this.pageUrl = url;
+                    }
+                    else if (fe.type == FieldType.phone) {
+                        var phone = this.page.formRowData[fe.name];
+                        if (phone) this.pageUrl = 'tel:' + phone;
+                    }
+                    else if (fe.type == FieldType.email) {
+                        var email = this.page.formRowData[fe.name];
+                        if (email) this.pageUrl = 'mailto:' + email;
+                    }
+                    else if (fe.type == FieldType.file) {
+                        var files = this.page.formRowData[fe.name];
+                        if (files) {
+                            var file = Array.isArray(files) ? files[0] : files;
+                            if (file.url) {
+                                this.pageUrl = file.url;
+                                util.downloadFile(file.url, file.name);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            if (this.pageUrl) {
+                if (this.target == '_blank') window.open(this.pageUrl, '_blank')
+                else window.location.href = this.pageUrl;
+            }
+            else ShyAlert(lst('网址为空')); 
         }
     }
 }

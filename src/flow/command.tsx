@@ -36,6 +36,9 @@ export class FlowCommand {
     url: string;
     flow: Flow;
     parent?: FlowCommand;
+    get page(){
+        return this.flow?.buttonBlock?.page
+    }
     async load(data) {
         for (let n in data) {
             this[n] = data[n]
