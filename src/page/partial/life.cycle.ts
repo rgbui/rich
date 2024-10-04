@@ -825,6 +825,9 @@ export class Page$Cycle {
         var rs: (Block[])[] = [];
         blocks.forEach(c => {
             if (c.parentBlocks && !rs.includes(c.parentBlocks)) rs.push(c.parentBlocks)
+            if (c.isLayout || c.isPanel) {
+                rs.push(c.childs);
+            }
         })
         rs.forEach(c => {
             var ls = c.filter(g => g.url == BlockUrlConstant.List && (g as List).listType == ListType.number && !blocks.includes(g)) as List[];
