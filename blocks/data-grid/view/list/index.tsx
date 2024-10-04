@@ -40,6 +40,9 @@ export class TableStoreList extends DataGridView {
 export class TableStoreListView extends BlockView<TableStoreList> {
     renderCreateTable() {
         if (this.block.isLoading) return <Spin block></Spin>
+        if (this.block.childs.length == 0) return <div className="flex-center w100">
+            <span className="remark f-14">没有数据</span>
+        </div>
         return !this.block.schema && this.block.page.isCanEdit && <div className="item-hover item-hover-focus padding-5 cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={{ name: 'byte', code: 'table' }}></Icon></span>
             <span className="remark"><S>添加或创建数据表</S></span>
@@ -53,7 +56,7 @@ export class TableStoreListView extends BlockView<TableStoreList> {
                     onMouseEnter={e => this.block.onOver(true)}
                     onMouseLeave={e => this.block.onOver(false)}
                 ><DataGridTool block={this.block}></DataGridTool>
-                    {!this.block.noTitle && <Divider hidden={this.block.dataGridTab ? true : false}></Divider>}
+                    {!this.block.noTitle && <Divider hidden={this.block.dataGridTab && this.block.childs.length > 0 ? true : false}></Divider>}
                     {this.renderCreateTable()}
                     <SpinBox spin={this.block.isLoadingData}>
                         <DataGridGroup block={this.block} renderRowContent={(b, cs, g) => {

@@ -15,6 +15,9 @@ export class GalleryContent extends React.Component<{
     }
     renderRows() {
         var childs = this.props.childs || this.block.childs;
+        if (childs.length == 0) return <div className="flex-center w100">
+            <span className="remark f-14">没有数据</span>
+        </div>
         var eles: JSX.Element[] = [];
         var size = this.block.gallerySize || 3;
         if (size == -1) {
