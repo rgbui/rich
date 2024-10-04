@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import { InputChatTool } from "./plugins/tool";
 
-import { InsertSelectionText, getChatHtml } from "./util";
+import { HtmlToText, InsertSelectionText, getChatHtml } from "./util";
 import { ChatInputPop } from "./plugins/pop";
 import { RobotInfo, RobotTask, UserBasic } from "../../../types/user";
 import { Rect } from "../../../src/common/vector/point";
@@ -18,14 +18,12 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         event.stopPropagation();
         var key = event.key.toLowerCase();
-        var isShift = event.shiftKey; 
+        var isShift = event.shiftKey;
         if (this.currentCommand) {
             //回车提交
             //左右移动
             //回退移动或回退删除command
-            if (!isShift && key == 'enter')
-            {
-              
+            if (!isShift && key == 'enter') {
                 if (typeof this.box.onEnter == 'function') {
                     this.box.onEnter();
                 }
@@ -249,13 +247,15 @@ export class ChatInput extends React.Component<{ box?: InputChatBox, }> {
             this.tool.hide()
         }
         event.preventDefault();
-        var files: File[] = Array.from(event.clipboardData.files);
-        var text = event.clipboardData.getData('text/plain');
+        var files: File[] = Array.from(event.clipboardData.files); 
+        var html = event.clipboardData.getData('text/html');
+        var text = html ? HtmlToText(html) : event.clipboardData.getData('text/plain');
         if (files.length > 0 && this.box.props.disabledUploadFiles !== true) {
             this.box.onUploadFiles(files);
         }
         else if (text) {
             event.preventDefault();
+            console.log('paste', text, html);
             InsertSelectionText(text)
         }
     }

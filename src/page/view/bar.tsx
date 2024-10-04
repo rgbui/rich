@@ -256,9 +256,10 @@ export class PageBar extends React.Component<{ page: Page }> {
         if (this.props.page.openSource == 'slide' || this.props.page.openSource == 'dialog') {
             isSearch = false;
         }
-        if (this.props.page.pe.type == ElementType.SchemaData) {
+        if (this.props.page.pe.type == ElementType.SchemaData || this.props.page.pe.type == ElementType.SchemaRecordViewData) {
             if (this.props.page.isSchemaRecordViewTemplate) isPublish = true;
             else isPublish = false;
+            isField = true;
             if (!isCanEdit) { isField = false; isPublish = false; }
         }
         if (this.props.page.schemaView?.formType == 'doc-detail') {

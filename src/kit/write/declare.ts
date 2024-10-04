@@ -31,10 +31,20 @@ export function isUrl(url: string) {
 //export var URL_END_REGEX = new RegExp(strRegex + "$");
 
 
-export function getTextLink(text) {
-    const reg = /^(https?:\/\/)([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w\.-]*)*\/?$/g;
-    return text.replace(reg, function (m, p) {
-        // console.log(m, p);
-        return '<a href="' + m + '" target="_blank">' + m + '</a>'
-    })
+export function getTextLink(texts) {
+    const urlRegex = /^((https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])( |$)/i;
+    var str = '';
+    for (let i = 0; i < texts.length; i++) {
+        var text = texts.slice(i);
+        var m = text.match(urlRegex);
+        if (m) {
+            var mc = m[0];
+          
+            str += `<a href="${mc.trim()}" target="_blank">${mc.trim()}</a>`;
+            if (mc.endsWith(' ')) str += ' ';
+            i += mc.length;
+        }
+        else str += texts[i];
+    }
+    return str;
 }

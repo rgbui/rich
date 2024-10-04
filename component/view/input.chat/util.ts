@@ -62,7 +62,8 @@ export function InsertSelectionText(text: string) {
 
 
 export function getChatHtml(html, isQuote) {
-    html = getTextLink(html);
+    var old=html;
+   
     html = html.replace(/(\*\*[^\*]+\*\*)/g, (_, $1) => {
         return '<b>' + $1.slice(2, -2) + '</b>'
     })
@@ -79,32 +80,85 @@ export function getChatHtml(html, isQuote) {
         pc = pc.replace(/(\<br\/?\>)+$/g, '');
         return '<pre><code>' + pc + '</code></pre>'
     })
-    var urlRegex = /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    html=html.replace(/&nbsp;/g,' ');
 
-
-    html = html.replace(urlRegex, (url) => {
-        return `<a href="${url}" target="_blank">${url}</a>`
-    });
-    // console.log('after', html);
+   html = getTextLink(html);
     html = html.replace(/(\`[^\`]+\`)/g, (_, $1) => {
         return '<code>' + $1.slice(1, -1) + '</code>'
     })
     if (isQuote) {
         html = '<blockquote>' + html + '</blockquote>'
     }
+    console.log('dddd',old,html);
     return html;
 }
 
 export function getChatText(html) {
     if (!html) return '';
-    html = html.replace(/<br\/?>/g, '\n');
+    // html = html.replace(/<br\/?>/g, '\n');
     html = html.replace(/<b>([^<]+)<\/b>/g, '**$1**');
     html = html.replace(/<i>([^<]+)<\/i>/g, '*$1*');
     html = html.replace(/<del>([^<]+)<\/del>/g, '~~$1~~');
     html = html.replace(/<pre><code>([^<]+)<\/code><\/pre>/g, '```$1```');
     html = html.replace(/<code>([^<]+)<\/code>/g, '`$1`');
     html = html.replace(/<blockquote>([^<]+)<\/blockquote>/g, '$1');
-    html = html.replace(/<a[^>]+>([^<]+)<\/a>/g, '$1 ');
+    html = html.replace(/<a[^>]+>([^<]+)<\/a>( |$)?/g, '$1 ');
     return html;
 }
 
+
+export function HtmlToText(htmlString) {
+    // 创建一个新的DOMParser实例
+    const parser = new DOMParser();
+    // 解析HTML字符串
+    const doc = parser.parseFromString(htmlString, 'text/html');
+    // 获取文档的body
+    const body = doc.body;
+    // 初始化文本数组
+    const textArray = [];
+  
+    // 递归函数来处理所有节点
+    function walkNode(node) {
+      switch (node.nodeType) {
+        case Node.TEXT_NODE:
+          // 如果是文本节点，直接添加到文本数组
+          textArray.push(node.nodeValue);
+          break;
+        case Node.ELEMENT_NODE:
+          // 如果是元素节点，并且是div或p，添加换行
+          var brTags=['div','br','blockquote','p','ol','li','ul','h1','h2','h3','h4','h5','h6'];
+          if (brTags.includes(node.tagName.toLowerCase())) {
+            textArray.push('\n');
+          }
+          // 遍历子节点
+          node.childNodes.forEach(walkNode);
+          // 如果是元素节点，并且是div或p，添加换行
+          if (brTags.includes(node.tagName.toLowerCase()))
+            {
+            textArray.push('\n');
+          }
+          break;
+        default:
+          // 其他类型的节点，比如注释，不处理
+          break;
+      }
+    }
+  
+    // 从body开始遍历所有节点
+    walkNode(body);
+  
+    // 将文本数组合并成一个字符串，并去除多余的换行符
+    return textArray.join('').replace(/\n+/g, '\n').trim();
+  }
+  
+//   // 示例HTML
+//   const htmlExample = `
+//   <div>Hello, world!</div>
+//   <p>This is a paragraph.</p>
+//   <div>Another div.</div>
+//   `;
+  
+//   // 将HTML转换为文本
+//   const text = htmlToText(htmlExample);
+//   console.log(text);
+  

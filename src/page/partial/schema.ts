@@ -518,8 +518,8 @@ export class Page$Schema {
     async onOpenFormMenu(this: Page, event: React.MouseEvent) {
         var self = this;
         var view = this.schema.recordViews.find(g => g.id == this.pe.id1)
-        var viewType = this.getPageSchemaRecordType();
-        if (!view.formType) view.formType = 'doc';
+        // var viewType = this.getPageSchemaRecordType();
+        if (view && !view?.formType) view.formType = 'doc';
         var r = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [
@@ -542,7 +542,7 @@ export class Page$Schema {
                     visible: view?.formType == 'doc-add' || view?.formType == 'doc' && !this.isSchemaRecordViewTemplate ? true : false
                 },
                 { text: lst('显示字段'), type: MenuItemType.text },
-                ...this.schema.getFormFields(viewType == 'template' ? true : false, view?.formType || 'doc').toArray(uf => {
+                ...this.schema.getFormFields(this.isSchemaRecordViewTemplate ? true : false, view?.formType || 'doc').toArray(uf => {
                     return {
                         icon: GetFieldTypeSvg(uf),
                         name: uf.id,
@@ -560,6 +560,7 @@ export class Page$Schema {
                     icon: { name: 'bytedance-icon', code: 'tag-one' },
                     text: lst('隐藏字段文本')
                 },
+                { type: MenuItemType.divide },
                 {
                     name: 'hideAllFields',
                     icon: { name: 'byte', code: 'clear-format' },
