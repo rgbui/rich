@@ -35,21 +35,28 @@ export class Page$Schema {
     formUserEmojis: Record<string, string[]> = {};
     formPreRow: Record<string, any>;
     formNextRow: Record<string, any>;
-
-    public isSchemaRecordViewTemplate: boolean
+    public isSchemaRecordViewTemplate: boolean;
+    /**
+     * 基于表单字段的表达式，获取实际的值
+     * @param this 
+     * @param express 
+     * @returns 
+     */
     getFormExpress(this: Page, express: string) {
-        if (typeof express=='string'&& express.indexOf('{') > -1) {
-            return express.replace(/(\{[^\}]+\})/g, (a, b) => {
-                if (b) {
-                    var fe = this.schema.fields.find(c => c.text == b.slice(1, -1));
-                    if (fe) {
-                        if (this.formRowData && this.formRowData[fe.name]) {
-                            return this.formRowData[fe.name]
+        if (typeof express == 'string' && express.indexOf('{') > -1) {
+            if (this.schema && this.formRowData) {
+                return express.replace(/(\{[^\}]+\})/g, (a, b) => {
+                    if (b) {
+                        var fe = this.schema.fields.find(c => c.text == b.slice(1, -1));
+                        if (fe) {
+                            if (this.formRowData && this.formRowData[fe.name]) {
+                                return this.formRowData[fe.name]
+                            }
                         }
                     }
-                }
-                return a;
-            });
+                    return a;
+                });
+            }
         }
         return express;
     }

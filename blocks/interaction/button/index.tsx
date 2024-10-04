@@ -262,23 +262,8 @@ export class BlockButtonView extends BlockView<BlockButton> {
         }
     }
     getButtonText() {
-        if (this.block.buttonText && this.block.buttonText.indexOf('{') > -1) {
-            if (this.block.page.schema) {
-                var text = this.block.buttonText.replace(/(\{[^\}]+\})/g, (a, b) => {
-                    if (b) {
-                        var fe = this.block.page.schema.fields.find(c => c.text == b.slice(1, -1));
-                        if (fe) {
-                            if (this.block.page.formRowData && this.block.page.formRowData[fe.name]) {
-                                return this.block.page.formRowData[fe.name]
-                            }
-                        }
-                    }
-                    return a;
-                });
-                return text;
-            }
-        }
-        return this.block.buttonText
+        var text = this.block.page.getFormExpress(this.block.buttonText);
+        return text
     }
     renderView() {
         var classList: string[] = ['sy-button'];
@@ -291,6 +276,7 @@ export class BlockButtonView extends BlockView<BlockButton> {
         return <div className="visible-hover" style={this.block.visibleStyle}>
             <FixBoxTip
                 cacPanel={() => {
+                    console.log('toolEl', this.block.page.kit.view.toolEl)
                     return this.block.page.kit.view.toolEl;
                 }}
                 panelId={this.block.page.id}
