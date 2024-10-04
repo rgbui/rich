@@ -18,6 +18,12 @@ export class KitView extends React.Component<{ kit: Kit }> {
     get kit() {
         return this.props.kit;
     }
+    componentDidMount(): void {
+        this.kit.view = this;
+    }
+    componentDidUpdate(prevProps: Readonly<{ kit: Kit; }>, prevState: Readonly<{}>, snapshot?: any): void {
+        this.kit.view = this;
+    }
     el: HTMLElement;
     render() {
         return <div className='shy-kit' ref={e => this.el = e}>

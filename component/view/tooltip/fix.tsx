@@ -18,15 +18,20 @@ async function openOverlay(el: HTMLElement,
     }) {
     var toolTipOverlay = await new Promise((resolve: (e: ToolTipOverlay) => void, reject) => {
         var t = ms.get(options.panelId);
-        if (t) return resolve(t)
-        else {
-            ReactDOM.render(<ToolTipOverlay ref={e => {
-                ms.set(options.panelId, e);
-                resolve(e)
-            }}></ToolTipOverlay>,
-                options.panel.appendChild(document.createElement('div'))
-            );
+        if (t) {
+            if (t.panel == options.panel)
+                return resolve(t)
+            else {
+                ms.delete(options.panelId);
+            }
         }
+        ReactDOM.render(<ToolTipOverlay ref={e => {
+            ms.set(options.panelId, e);
+            resolve(e)
+        }}></ToolTipOverlay>,
+            options.panel.appendChild(document.createElement('div'))
+        );
+
     })
     toolTipOverlay.open(el, options);
     return toolTipOverlay
@@ -128,7 +133,6 @@ export class FixBoxTip extends React.Component<{
         return this.props.children;
     }
     updateToolTipOverlay() {
-        console.log('update tool tip overlay');
         if (this.toolTipOverlay) this.toolTipOverlay.forceUpdate()
     }
     /**
@@ -165,6 +169,7 @@ export class FixBoxTip extends React.Component<{
     }
     toolTipOverlay: ToolTipOverlay;
     async toggle() {
+        console.log(this.toolTipOverlay, 'toolTipOverlay');
         if (this.toolTipOverlay?.visible) {
             this.close()
         }

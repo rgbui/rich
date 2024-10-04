@@ -17,7 +17,6 @@ export class ToolTipOverlay extends React.Component {
         })
     }
     render() {
-
         if (this.visible !== true) return <div ref={e => this.el = e} className="shy-box-tip" style={{ display: 'none', ...this.boxStyle }}></div>
         var ov = typeof this.overlay == 'function' ? this.overlay() : this.overlay;
         return <div className="shy-box-tip" ref={e => this.el = e} style={{
@@ -45,12 +44,12 @@ export class ToolTipOverlay extends React.Component {
     close: () => void;
     zindex: number;
     panel?: HTMLElement;
-    panelId?:string;
+    panelId?: string;
     open(el: HTMLElement,
         options: {
             overlay: React.ReactNode | (() => React.ReactNode),
             panel?: HTMLElement,
-            panelId?:string,
+            panelId?: string,
             placement?: OverlayPlacement,
             mouseLeaveDelay?: number,
             disabledAutoClose?: boolean,
@@ -97,9 +96,10 @@ export class ToolTipOverlay extends React.Component {
                 if (r) {
                     var rt = Rect.fromEle(r as HTMLElement);
                     rt.move(0, 0 - (r as HTMLElement).scrollTop);
-                    // console.log(rt, tipRect, r);
                     tipRect.moveTo(tipRect.x - rt.x, tipRect.y - rt.y);
                     windowRect.moveTo(windowRect.x - rt.x, windowRect.y - rt.y);
+                    windowRect.width = rt.width;
+                    windowRect.height = rt.height;
                     overlayRect.moveTo(overlayRect.x - rt.x, overlayRect.y - rt.y);
                 }
             }
