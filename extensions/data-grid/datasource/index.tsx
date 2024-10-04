@@ -126,12 +126,15 @@ export class DataSourceView extends EventsComponent {
 
         var ss = rs.filter(g => this.currentTableId && g.value == this.currentTableId || Array.isArray(this.tableIds) && this.tableIds.includes(g.value));
         var rest = rs.filter(g => !ss.includes(g))
-        if (ss.length > 0 && rest.length > 0) {
-            rs = [...ss,
-            { type: MenuItemType.divide },
-            { type: MenuItemType.text, text: this.selectView ? lst('选择其它数据表视图') : lst('选择其它表格') },
-            ...rest
+        if (ss.length > 0) {
+            rs = [
+                ...ss,
             ]
+            if (rest.length > 0) {
+                rs.push({ type: MenuItemType.divide })
+                rs.push({ type: MenuItemType.text, text: this.selectView ? lst('选择其它数据表视图') : lst('选择其它表格') })
+                rs.push(...rest)
+            }
         }
         else rs = [...rest]
 
@@ -282,7 +285,7 @@ export async function useDataSourceView(pos: PopoverPosition,
     let popover = await PopoverSingleton(DataSourceView, { mask: true });
     let fv = await popover.open(pos);
     fv.open(option, pos);
-    return new Promise((resolve: (data: string | { tableId: string, viewId: string, type: 'view' | 'form',props?:Record<string,any>, viewUrl?: string }) => void, reject) => {
+    return new Promise((resolve: (data: string | { tableId: string, viewId: string, type: 'view' | 'form', props?: Record<string, any>, viewUrl?: string }) => void, reject) => {
         fv.only('close', () => {
             popover.close();
             resolve(undefined);
