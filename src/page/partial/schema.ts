@@ -37,6 +37,22 @@ export class Page$Schema {
     formNextRow: Record<string, any>;
 
     public isSchemaRecordViewTemplate: boolean
+    getFormExpress(this: Page, express: string) {
+        if (typeof express=='string'&& express.indexOf('{') > -1) {
+            return express.replace(/(\{[^\}]+\})/g, (a, b) => {
+                if (b) {
+                    var fe = this.schema.fields.find(c => c.text == b.slice(1, -1));
+                    if (fe) {
+                        if (this.formRowData && this.formRowData[fe.name]) {
+                            return this.formRowData[fe.name]
+                        }
+                    }
+                }
+                return a;
+            });
+        }
+        return express;
+    }
     async loadPageSchema(this: Page) {
         if (!this.schema) {
             var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);

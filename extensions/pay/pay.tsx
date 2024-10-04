@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
-import { channel } from "../net/channel";
-import { EventsComponent } from "./lib/events.component";
-import { PopoverPosition } from "./popover/position";
-import { PopoverSingleton } from "./popover/popover";
+import { channel } from "../../net/channel";
+import { EventsComponent } from "../../component/lib/events.component";
+import { PopoverPosition } from "../../component/popover/position";
+import { PopoverSingleton } from "../../component/popover/popover";
 import React from "react";
-import { Avatar } from "./view/avator/face";
-import { Button } from "./view/button";
-import { S } from "../i18n/view";
-import { LinkWs } from "../src/page/declare";
+import { Avatar } from "../../component/view/avator/face";
+import { Button } from "../../component/view/button";
+import { S } from "../../i18n/view";
+import { LinkWs } from "../../src/page/declare";
 
 export enum PayFeatureCheck {
     cheapAI = 'cheapAI',

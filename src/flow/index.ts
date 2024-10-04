@@ -5,7 +5,7 @@ import { FlowCommandFactory } from "./factory/block.factory";
 import { LinkWs } from "../page/declare";
 import { Block } from "../block";
 import { FlowView } from "./view";
-import { DuplicateSvg,  Edit1Svg, LinkSvg } from "../../component/svgs";
+import { DuplicateSvg, Edit1Svg, LinkSvg } from "../../component/svgs";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { Rect } from "../common/vector/point";
@@ -73,7 +73,9 @@ export class Flow {
             { type: MenuItemType.divide },
             { text: lst('打开页面'), value: '/openPage', icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
             { text: lst('页面跳转'), value: '/openPage/url', icon: LinkSvg },
-            { text: lst('表单提交'), value: '/form/submit', icon: { name: 'bytedance-icon', code: 'form-one' }, visible: [ElementType.SchemaRecordView].includes(this.buttonBlock.page.pe.type)&&this.buttonBlock.page.isForm('doc-add') ? true : false },
+            { text: lst('表单提交'), value: '/form/submit', icon: { name: 'bytedance-icon', code: 'form-one' }, visible: [ElementType.SchemaRecordView].includes(this.buttonBlock.page.pe.type) && this.buttonBlock.page.isForm('doc-add') ? true : false },
+            { type: MenuItemType.divide },
+            { text: lst('支付'), value: '/pay', icon: { name: 'bytedance-icon', code: 'paper-money' } },
         ]);
         if (r) {
             var data: Record<string, any> = {};

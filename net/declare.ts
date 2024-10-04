@@ -6,7 +6,7 @@ import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { RobotInfo, UserBasic, UserStatus, WorkspaceMember } from "../types/user";
 import { ResourceArguments } from "../extensions/icon/declare";
-import { PayFeatureCheck } from "../component/pay";
+import { PayFeatureCheck } from "../extensions/pay/pay";
 import { AtomPermission, PageSourcePermission } from "../src/page/permission";
 import { WsConsumeType } from "./ai/cost";
 export type SockResponse<T, U = string> = {

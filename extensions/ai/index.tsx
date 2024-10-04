@@ -36,7 +36,7 @@ import { parseMarkdownContent } from "../Import-export/mime/markdown/parse";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { List, ListType } from "../../blocks/present/list/list";
 import { onBlockPickLine, onMergeListBlocks } from "./util";
-import { CanSupportFeature, PayFeatureCheck } from "../../component/pay";
+import { CanSupportFeature, PayFeatureCheck } from "../pay/pay";
 import { lst } from "../../i18n/store";
 import { S } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";

@@ -1,4 +1,4 @@
-import { CanSupportFeature, PayFeatureCheck } from "../../component/pay";
+import { CanSupportFeature, PayFeatureCheck } from "../../extensions/pay/pay";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { lst } from "../../i18n/store";
 import { LinkWs } from "../../src/page/declare";
