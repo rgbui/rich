@@ -259,7 +259,7 @@ export function FieldView(props: { block: OriginFormField, className?: string | 
                 {block.allowRemark && <div className="sy-form-field-remark remark f-12">
                     <TextArea plain placeholderEmptyVisible={true} placeholder={lst("输入说明介绍")} prop="fieldRemark" block={block} ></TextArea>
                 </div>}
-                <div className="sy-form-field-control gap-t-5">{props.children}</div>
+                <div className="sy-form-field-control gap-t-5" onMouseDown={e => { e.stopPropagation() }}>{props.children}</div>
             </div>}
             {!block.field && <div onClick={e => props.block.onDelete()} className="sy-form-field-tip round padding-w-10 min-h-30 f-14 item-hover-focus flex">
                 <span className="remark"><S>表单字段不存在</S></span>
