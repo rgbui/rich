@@ -17,20 +17,30 @@ export class InputNumber extends React.Component<{
     onDeep?: (increase: number) => void,
     name?: string,
     size?: 'small' | 'default' | 'larger', className?: string | (string[]),
-
+    /**
+     * 增加特殊的过滤器
+     * 有些可能需要输入环境变量，这里就不对输入的非数字进行过滤
+     * @param value 
+     * @returns 
+     */
+    filterValue?: (value: any) => any
 }> {
     private inputEl: HTMLInputElement;
     render() {
         var self = this;
         var props = this.props;
         function filterValue(value: string) {
+            if (self.props.filterValue) {
+                var rc = self.props.filterValue(value);
+                if (!lodash.isUndefined(rc)) return rc;
+            }
             var r = parseFloat(value.trim());
             if (isNaN(r)) return undefined;
             else return r;
         }
         function onInput(e: React.FormEvent<HTMLInputElement>) {
             var v = filterValue((e.target as HTMLInputElement).value);
-            if (typeof v == 'number')
+            if (v)
                 props.onChange(v, e);
             else if (lodash.isUndefined(v))
                 props.onChange(null, e);
@@ -50,14 +60,14 @@ export class InputNumber extends React.Component<{
         function keydown(e: React.KeyboardEvent<HTMLInputElement>) {
             if (e.key == 'Enter' && props.onEnter) {
                 var v = filterValue((e.target as HTMLInputElement).value);
-                if (typeof v == 'number') props.onEnter(v, e);
+                if (v) props.onEnter(v, e);
                 else if (lodash.isUndefined(v)) { props.onChange(null); }
             }
         }
         function paste(e: React.ClipboardEvent<HTMLInputElement>) {
             e.stopPropagation();
             var v = filterValue(e.clipboardData.getData('text/plain'));
-            if (typeof v == 'number') { self.inputEl.value = v.toString(); props.onChange(v); }
+            if (v) { self.inputEl.value = v.toString(); props.onChange(v); }
             else if (lodash.isUndefined(v)) { self.inputEl.value = ''; props.onChange(null); }
         }
         var classList: string[] = ['shy-input', 'relative', 'visible-hover'];
