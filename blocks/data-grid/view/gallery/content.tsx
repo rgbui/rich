@@ -32,8 +32,7 @@ export class GalleryContent extends React.Component<{
         var wd = `calc((100% - ${(size - 1) * gap}px ) / ${size})`
         // n*w + (n-1)*gap = 100%
         //w=(100%-(n-1)* gap)/n
-
-        console.log('cc',this.block.isCardAuto, this.block.cardConfig.auto, this.block.cardConfig);
+        // console.log('cc',this.block.isCardAuto, this.block.cardConfig.auto, this.block.cardConfig);
 
         if (this.block.isCardAuto) {
             var rss = [];

@@ -83,6 +83,10 @@ export class CardView extends React.Component<{
         }
         return { field: null, value: undefined };
     }
+    exists(name:string){
+        var fs = this.getFields(name);
+        return fs?.length>0?true:false;
+    }
     getValue<T = string>(name: string, safeType?: FieldType): T {
         var { value, field } = this.getFieldRowValue(name)
         if (typeof value != 'undefined') {

@@ -51,16 +51,18 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     })
                 })
             }
-            newAddItems.push({
-                text: '子数据',
-                name: 'allowSubs',
-                type: MenuItemType.select,
-                value: this.block.schema.allowSubs,
-                options: [
-                    { text: lst('关闭'), value: false },
-                    { text: lst('启用'), value: true }
-                ]
-            })
+            if (this.block.url == BlockUrlConstant.DataGridTable) {
+                newAddItems.push({
+                    text: '子数据',
+                    name: 'allowSubs',
+                    type: MenuItemType.select,
+                    value: this.block.schema.allowSubs,
+                    options: [
+                        { text: lst('关闭'), value: false },
+                        { text: lst('启用'), value: true }
+                    ]
+                })
+            }
         }
         var baseItems: MenuItem[] = [
             {
@@ -383,14 +385,14 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 }
             ])
         }
-        // if (!(this.block as DataGridView).dataGridTab)
-        //     baseItems.push({
-        //         text: lst('显示数据表视图标题'),
-        //         name: 'noTitle',
-        //         type: MenuItemType.switch,
-        //         checked: (this.block as TableStore).noTitle ? false : true,
-        //         helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#89hYGiP93L9HA319pJXRsa" : "https://help.shy.live/page/288#bkz71T3eQwAGH3q4s71hCo"
-        //     })
+        if (!(this.block as DataGridView).dataGridTab)
+            baseItems.push({
+                text: lst('显示数据表视图标题'),
+                name: 'noTitle',
+                type: MenuItemType.switch,
+                checked: (this.block as TableStore).noTitle ? false : true,
+                helpUrl: window.shyConfig?.isUS ? "https://help.shy.red/page/44#89hYGiP93L9HA319pJXRsa" : "https://help.shy.live/page/288#bkz71T3eQwAGH3q4s71hCo"
+            })
         baseItems.push({ type: MenuItemType.divide });
         baseItems.push({
             type: MenuItemType.help,
