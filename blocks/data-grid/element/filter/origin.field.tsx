@@ -82,12 +82,10 @@ export class OriginFilterField extends Block {
             var pos = rs.findIndex(g => g == rg);
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({
-                text: lst('显示'),
-                childs: [
-                    { name: 'fieldTextDisplay', icon: { name: "byte", code: 'align-left' }, value: 'x', text: lst('横向'), checkLabel: this.fieldTextDisplay == 'x' },
-                    { name: 'fieldTextDisplay', icon: { name: "byte", code: "align-left-one" }, value: 'y', text: lst('纵向'), checkLabel: this.fieldTextDisplay == 'y' },
-                    { name: 'fieldTextDisplay', icon: { name: "byte", code: "rectangle-small" }, value: 'none', text: lst('仅显示组件'), checkLabel: this.fieldTextDisplay == 'none' },
-                ],
+                text: lst('显示字段名'),
+                name: 'fieldTextDisplay',
+                type: MenuItemType.switch,
+                checked: this.fieldTextDisplay == 'x',
                 icon: { name: 'bytedance-icon', code: 'layout-two' }
             }, { type: MenuItemType.divide })
             rs.splice(pos, 0, ...ns)
@@ -98,7 +96,8 @@ export class OriginFilterField extends Block {
     async onContextMenuInput(this: Block, item: MenuItem<string | BlockDirective>): Promise<void> {
         switch (item.name) {
             case 'fieldTextDisplay':
-                await this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
+
+                await this.onUpdateProps({ [item.name]: item.value ? "x" : "none" }, { range: BlockRenderRange.self })
                 return;
         }
         super.onContextMenuInput(item)
@@ -134,31 +133,19 @@ export class OriginFilterFieldView extends React.Component<{
     top?: boolean
 }> {
     boxTip: BoxTip;
-    render(): React.ReactNode {
+    render() {
         if (!this.props.filterField.refBlock) return <div className="bg-error text-white flex">
             <span>没有找到关联的数据表</span>
             <ToolTip overlay={lst('删除')}><span onMouseDown={e => this.props.filterField.onDelete()} className="flex-fixed"><Icon icon={TrashSvg}></Icon></span> </ToolTip>
         </div>
         if (this.props.filterField.fieldTextDisplay == 'x') {
-            return <div className={"text-1 flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
-                <label className="gap-r-5 flex-fixed">{this.props.filterField.fieldText}:</label>
+            return <div className={"flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
+                <label className="gap-r-5 f-14 flex-fixed">{this.props.filterField.fieldText}:</label>
                 <div onMouseDown={e => { e.stopPropagation() }} className="flex-auto">{this.props.children}</div>
             </div>
         }
-        else if (this.props.filterField.fieldTextDisplay == 'y') {
-            return <div className="text-1">
-                <div data-field>{this.props.filterField.fieldText}</div>
-                <div className="gap-t-5">{this.props.children}</div>
-            </div>
-        }
-        else if (this.props.filterField.fieldTextDisplay == 'none') {
-            return <div className="text-1" style={this.props.style || {}} onMouseDown={e => { e.stopPropagation() }}>
-                {this.props.children}
-            </div>
-        }
-        return <div className={"text-1 flex" + (this.props.top ? " flex-top" : '')} style={this.props.style || {}}>
-            {this.props.filterField.fieldTextDisplay && <label className="gap-r-5 flex-fixed">{this.props.filterField.fieldText}:</label>}
-            <div onMouseDown={e => { e.stopPropagation() }} className="flex-auto">{this.props.children}</div>
+        return <div className="text-1" style={this.props.style || {}} onMouseDown={e => { e.stopPropagation() }}>
+            <div>{this.props.children}</div>
         </div>
     }
 }

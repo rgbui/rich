@@ -100,7 +100,7 @@ export class FilterFieldOption extends OriginFilterField {
                 await this.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self })
                 return;
         }
-        super.onContextMenuInput(item)
+        await super.onContextMenuInput(item)
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
         return await super.onClickContextMenu(item, e);
@@ -121,8 +121,7 @@ export class FilterFieldOption extends OriginFilterField {
                                 count: c.count
                             }
                         });
-                        if (force)
-                            this.forceManualUpdate()
+                        if (force) this.forceManualUpdate()
                         return;
                     }
                 }
@@ -158,7 +157,7 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption> {
         }
         if (this.block.format == 'select') {
             return <div className="flex">
-                <SelectBox inline multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
+                <SelectBox className={'f-14'} inline multiple={this.block.isMultiple} value={this.block.isMultiple ? this.block.values : (this.block.values.length == 0 ? "" : this.block.values[0] || "")} border
                     options={[{ text: lst('全部') + gs(''), value: '' }, ...this.block.field.config.options.map(c => {
                         return {
                             text: c.text + gs(c.value),

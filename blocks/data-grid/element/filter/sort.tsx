@@ -22,16 +22,16 @@ export class FilterSort extends OriginFilterField {
 }
 
 @view('/field/filter/sort')
-export class SearchTextView extends BlockView<FilterSort>{
+export class SearchTextView extends BlockView<FilterSort> {
     renderView() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView
             style={this.block.contentStyle}
             filterField={this.block}>
             <div className="flex">
-                <SelectBox
-                    small
+                <SelectBox 
+                    className={'f-14'} inline
                     border
-                    inline
+
                     value={this.block.sortRule}
                     onChange={e => this.block.onFilter(e as number)}
                     options={[
@@ -41,7 +41,7 @@ export class SearchTextView extends BlockView<FilterSort>{
                     ]}></SelectBox>
             </div>
         </OriginFilterFieldView >
-        {this.renderComment()}
+            {this.renderComment()}
         </div>
     }
 }
