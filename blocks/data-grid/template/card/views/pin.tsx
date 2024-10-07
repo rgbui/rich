@@ -25,13 +25,13 @@ CardModel('/card/pinterest', () => ({
     title: lst('图片库'),
     image: Card1.default,
     renderCover() {
-        return <div className="col-3-g5 flex-top overflow-hidden h-40 gap-l-10" style={{ color: 'var(--bg)' }}>
+        return <div className="col-3-g5 flex-top overflow-hidden h-40 gap-l-10" style={{ color: 'var(--bg-1)' }}>
 
             <div >
-                <div className="bg flex-center round h-30 gap-t-5">
+                <div className="bg flex-center round h-15 gap-t-5">
                     <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
                 </div>
-                <div className="bg flex-center round h-30 gap-t-5">
+                <div className="bg flex-center round h-20 gap-t-5">
                     <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
                 </div>
             </div>
@@ -44,8 +44,10 @@ CardModel('/card/pinterest', () => ({
                     <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
                 </div>
             </div>
-
             <div >
+                <div className="bg flex-center round h-15 gap-t-5">
+                    <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
+                </div>
                 <div className="bg flex-center round h-40 gap-t-5">
                     <Icon size={12} icon={{ name: "byte", code: 'picture' }}></Icon>
                 </div>
@@ -85,12 +87,17 @@ export class CardPin extends CardView {
         var rs = await super.onGetMenus();
         var at = rs.findIndex(x => x.name == 'openSlide');
         if (at > -1) {
-            var cs = this.cardSettings<{ cardDisplay: string, size: number }>({ cardDisplay: 'card-1', size: 40 });
-            rs.splice(at + 1,
+            var cs = this.cardSettings<{ cardDisplay: string, border: boolean, size: number }>({ cardDisplay: 'card-1', border: false, size: 40 });
+            rs.splice(at + 1, 0,
+                { type: MenuItemType.divide },
+                { name: 'replace', icon: UploadSvg, text: lst('替换') },
+                { type: MenuItemType.divide }
+            );
+            rs.splice(at + 2,
                 0,
                 { type: MenuItemType.divide },
                 {
-                    icon: { name: 'byte', code: 'rectangle-one' },
+                    icon: { name: 'byte', code: 'display' },
                     text: lst('展示'),
                     childs: [
                         { name: 'cardDisplay', text: '卡片1', checkLabel: cs.cardDisplay == 'card-1' ? true : false, value: 'card-1' },
@@ -99,15 +106,24 @@ export class CardPin extends CardView {
                         // { name: 'cardDisplay', text: '卡片4', checkLabel: cs.cardDisplay == 'card-4' ? true : false, value: 'card-4' }
                     ]
                 },
-                { type: MenuItemType.divide }
-            )
-            rs.splice(at + 2, 0,
-                { type: MenuItemType.divide },
-                { name: 'replace', icon: UploadSvg, text: lst('替换') },
+                {
+                    icon: { name: 'byte', code: 'rectangle-one' },
+                    text: lst('边框'),
+                    type: MenuItemType.switch,
+                    value: cs.border,
+                    name: 'border'
+                },
                 { type: MenuItemType.divide }
             )
         }
         return rs;
+    }
+    async onContextMenuInput(item: MenuItem<BlockDirective | string>, options?: { merge?: boolean; }): Promise<void> {
+        if (item.name == 'border') {
+            await this.dataGrid.onUpdateProps({ 'cardSettings.border': item.value }, { range: BlockRenderRange.self })
+            this.dataGrid.forceUpdateAllViews();
+        }
+        else await super.onContextMenuInput(item, options);
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
         var self = this;
@@ -133,7 +149,7 @@ export class CardPin extends CardView {
         var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
         var isLike = this.isEmoji('like')
         var tags = this.getValue<{ text: string, color: string }[]>('tags', FieldType.options);
-        var cs = this.cardSettings<{ cardDisplay: string }>({ cardDisplay: 'card-1' });
+        var cs = this.cardSettings<{ cardDisplay: string, border: boolean }>({ cardDisplay: 'card-1', border: false });
         if (cs.cardDisplay == 'card-1') {
             return <div className="w100 relative visible-hover" onMouseDown={e => self.openEdit(e)}>
                 {pics && pics[0] && <div style={{
@@ -141,7 +157,7 @@ export class CardPin extends CardView {
                     height: 0, /* 高度为0 */
                     paddingBottom: '100%', /* 通过padding控制高度，这里设置为与宽度相同，实现正方形 */
                     position: 'relative'/* 相对定位 */
-                }}><img className="round" src={autoImageUrl(pics[0].url, 500)} style={{
+                }}><img className={"round  box-border " + (cs.border ? " card-border" : "")} src={autoImageUrl(pics[0].url, 500)} style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
@@ -151,9 +167,9 @@ export class CardPin extends CardView {
                     backgroundColor: BackgroundColorList().randomOf().color
                 }} />
                 </div>}
-                {title && <div className="f-16 padding-w-10  gap-h-5 bold break-all">{title}</div>}
-                {remark && <div className="remark padding-w-10 f-14 gap-h-5 break-all">{remark}</div>}
-                {author && <div className="padding-w-10 gap-h-5">
+                {title && <div className="text-1 f-14 b-500   gap-h-5  break-all">{title}</div>}
+                {remark && <div className="remark  f-14 gap-h-5 break-all">{remark}</div>}
+                {author && <div className=" gap-h-5">
                     <UserBox userid={author}>{(user) => {
                         return <div onMouseDown={e => {
                             e.stopPropagation();
@@ -172,7 +188,7 @@ export class CardPin extends CardView {
         }
         else if (cs.cardDisplay == 'card-2') {
             return <div className="w100 relative visible-hover" onMouseDown={e => self.openEdit(e)}>
-                {author && <div className="text-1 padding-w-10  f-14 gap-h-5 flex">
+                {author && <div className="text-1    f-14 gap-h-5 flex">
                     <UserBox userid={author}>{(user) => {
                         return <div onMouseDown={e => {
                             e.stopPropagation();
@@ -183,11 +199,11 @@ export class CardPin extends CardView {
                         </div>
                     }}</UserBox>
                 </div>}
-                <div className="visible-hover gap-h-5 padding-w-10 max-h-300 overflow-hidden round-bottom-8 relative">
-                    {hasPic && <img className="w100 block round-8 object-center" src={autoImageUrl(pics[0].url, 500)} style={{ backgroundColor: BackgroundColorList().randomOf().color }} />}
+                <div className="visible-hover gap-h-5  max-h-300 overflow-hidden round-bottom-8 relative">
+                    {hasPic && <img className={"w100 block round-8 object-center box-border " + (cs.border ? " card-border" : "")} src={autoImageUrl(pics[0].url, 500)} style={{ backgroundColor: BackgroundColorList().randomOf().color }} />}
                 </div>
-                {title && <div className="text-1 f-16 bold padding-w-10  gap-h-5 bold break-all">{title}</div>}
-                {remark && <div className="remark padding-w-10 f-14 gap-h-5 break-all">{remark}</div>}
+                {title && <div className="text-1 f-14 b-500   gap-h-5  break-all">{title}</div>}
+                {remark && <div className="remark  f-14 gap-h-5 break-all">{remark}</div>}
                 <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
                     {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
@@ -198,7 +214,7 @@ export class CardPin extends CardView {
         else {
             return <div className="w100" onMouseDown={e => self.openEdit(e)}>
                 <div className="visible-hover max-h-600 overflow-hidden round-bottom-8 relative">
-                    {hasPic && <img className="w100 block round-8 object-center " src={autoImageUrl(pics[0].url, 500)} style={{
+                    {hasPic && <img className={"w100 block round-8 object-center box-border " + (cs.border ? " card-border " : "")} src={autoImageUrl(pics[0].url, 500)} style={{
                     }} />}
                     {!hasPic && <div className={'round-8 bg-2'} style={{
                         height: util.getRandom(150, 300),
@@ -221,19 +237,19 @@ export class CardPin extends CardView {
                         return <span className="round-16 padding-w-10 item-light-hover-focus h-24 flex-center f-12 gap-r-10" key={i}>{t.text}</span>
                     })}
                 </div>}
-                {title && <div className="text  gap-h-5 f-14 break-all">{title}</div>}
-                {remark && <div className="remark padding-w-10 f-12 gap-h-5 break-all">{remark}</div>}
-                <div className="text-1  f-14 gap-h-5 flex">
+                {title && <div className="text b-500 gap-h-5 f-14 break-all">{title}</div>}
+                {remark && <div className="remark  l-20  f-14 gap-h-5 break-all">{remark}</div>}
+                <div className="text-1  f-14 gap-h-5 flex" onMouseDown={e => { e.stopPropagation() }}>
                     <div className="flex-fixed flex">
                         <UserBox userid={author}>{(user) => {
                             return <div onMouseDown={e => {
                                 e.stopPropagation();
                                 useUserCard({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) }, { user, ws: this.dataGrid.page.ws })
                             }} className="flex" >
-                                <Avatar className="flex-fixed" size={28} user={user}></Avatar>
+                                <Avatar className="flex-fixed" size={32} user={user}></Avatar>
                                 <div className="flex-auto">
-                                    <div className="cursor gap-l-5 underline-hover text-1 ">{user.name}</div>
-                                    {createDate && <div className="f-12 remark">{util.showTime(createDate)}</div>}
+                                    <div className="cursor gap-l-5 l-20 underline-hover text-1 ">{user.name}</div>
+                                    {createDate && <div className="f-12  l-20 gap-l-5 remark">{util.showTime(createDate)}</div>}
                                 </div>
                             </div>
                         }}</UserBox>

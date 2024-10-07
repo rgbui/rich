@@ -39,7 +39,7 @@ export class AISearchBox extends EventsComponent {
     }[] = [];
     isNet: boolean = false;
     renderMessages() {
-        return this.messages.map((msg, i) => {
+        return this.messages.map((msg,i)=>{
             return <div className="visible-hover" data-ai-message={msg.id} key={msg.id}>
 
                 {msg.userid && <div className="flex-end">
@@ -61,7 +61,7 @@ export class AISearchBox extends EventsComponent {
                         {msg.asking == false && msg.net !== true && (msg as any).noAnswer != true && <div className="gap-b-10"> {msg.refs && msg.refs.length > 0 && <div className="f-12 remark gap-b-3"><S>引用页面</S></div>}
                             {msg.refs?.map(rf => {
                                 return <div className="flex gap-b-5" key={rf.page?.id}>
-                                    <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 l-20 cursor "><Icon size={18} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
+                                    <span onMouseDown={e => this.openPage(rf)} className="flex item-hover round gap-r-5 padding-w-3 l-20 cursor "><Icon className={'remark'} size={18} icon={getPageIcon(rf.page)}></Icon><span className="gap-l-5">{getPageText(rf.page)}</span></span>
                                     {rf.blockIds.length > 1 && <span className="flex flex-fixed ">{rf.blockIds.map((b, i) => {
                                         return <em onMouseDown={e => this.openPage(rf, b)} className="bg-hover bg-p-light text-p  padding-w-3 round gap-w-5 cursor" key={i}>{i}</em>
                                     })}</span>}

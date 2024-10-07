@@ -138,7 +138,7 @@ export class CardPin extends CardView {
                 0,
                 { type: MenuItemType.divide },
                 {
-                    icon: { name: 'byte', code: 'rectangle-one' },
+                    icon: { name: 'byte', code: 'display' },
                     text: lst('展示'),
                     childs: [
                         { name: 'cardDisplay', text: '卡片1', checkLabel: cs.cardDisplay == 'card-1' ? true : false, value: 'card-1' },

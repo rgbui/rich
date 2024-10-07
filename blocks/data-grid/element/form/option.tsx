@@ -107,7 +107,7 @@ class FieldTextView extends BlockView<FieldText> {
         }
         if (!Array.isArray(ops)) ops = [];
         return <div className="flex">
-            {ops.map(op=>{
+            {ops.map(op => {
                 return <span key={op.value} className="gap-r-10 item-hover  padding-w-10 border-light text-1 f-14  h-30 l-30 round cursor"
                 >{op.text}</span>
             })}
@@ -115,11 +115,11 @@ class FieldTextView extends BlockView<FieldText> {
         </div>
     }
     renderForm() {
-        var fc: FieldConfig = this.block.field.config;
-        var options = this.block.field.config?.options || []
+        var fc: FieldConfig = this.block.field?.config;
+        var options = this.block.field?.config?.options || []
         var ops: DataGridOptionType[] = [];
         if (fc?.isMultiple) {
-            ops = this.block.field.config?.options?.filter(g => (this.block.value || [])?.includes(g.value))
+            ops = this.block.field?.config?.options?.filter(g => (this.block.value || [])?.includes(g.value))
         }
         else {
             ops = fc?.options?.filter(g => g.value == this.block.value);
