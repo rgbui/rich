@@ -158,7 +158,7 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
                                 }}
                                 className={"relative visible-hover round padding-10 item-hover " + (this.block.border == 'border' ? "border-light" : "border-light-hover")}
                                 key={i}>
-                                <img src={autoImageUrl(img.url, 120)} style={{ width: 100, height: 60 }}  className={"obj-center  round " + (this.block.border == 'border' ? "border-light" : "border-light-hover")} />
+                                <img src={autoImageUrl(img.url, 120)} style={{ width: 100, height: 60 }} className={"obj-center  round " + (this.block.border == 'border' ? "border-light" : "border-light-hover")} />
                             </div>
                         })}
                     </div>
@@ -204,27 +204,21 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
         </div>
     }
     renderFormField(images: { url: string }[]) {
-        var settings = {
-            arrows: true,
-            dots: false,
-            infinite: true,
-            speed: 500,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-        };
-        return <div className={this.block.fromType == 'doc-add' ? "" : "gap-w-10"}>
-            {images.map((img, i) => {
-                return <div
-                    className={"relative visible-hover   gap-b-10 " + (images.length > 1 || this.isCanPlus() ? "gap-r-10 " : "")}
-                    key={i}>
-                    {this.block.fromType != 'doc-detail' && <Tip text='属性'><span
-                        onClick={e => this.openProperty(img, e)}
-                        className="pos-top-right flex-center size-20  bg-dark-1 text-white round cursor visible">
-                        <Icon size={16} icon={DotsSvg}></Icon>
-                    </span></Tip>}
-                    <img src={img.url} className={"obj-center " + (" size-120 round")} />
-                </div>
-            })}
+        return <div>
+            <div className="flex">
+                {images.map((img, i) => {
+                    return <div
+                        className={"relative w-120 visible-hover   gap-b-10 " + (images.length > 1 || this.isCanPlus() ? "gap-r-10 " : "")}
+                        key={i}>
+                        {this.block.fromType != 'doc-detail' && <Tip text='属性'><span
+                            onClick={e => this.openProperty(img, e)}
+                            className="pos-top-right flex-center size-20  bg-dark-1 text-white round cursor visible">
+                            <Icon size={16} icon={DotsSvg}></Icon>
+                        </span></Tip>}
+                        <img src={img.url} className={"obj-center border-light " + (" size-120 round")} />
+                    </div>
+                })}
+            </div>
             {this.isCanPlus() && <div className={"flex " + (images.length == 0 ? "" : "visible")}><span className="item-hover-light-focus item-hover round padding-w-5 f-12   cursor flex text-1" onClick={e => this.block.uploadFile({ roundArea: Rect.fromEvent(e) })}><Icon icon={PlusSvg}></Icon><span ><S>添加图片</S></span></span></div>}
         </div>
     }
@@ -239,10 +233,11 @@ class FormFieldImageView extends BlockView<FormFieldImage> {
                         className="pos-top-right flex-center size-20  bg-dark-1 text-white round cursor visible">
                         <Icon size={16} icon={DotsSvg}></Icon>
                     </span></Tip>}
-                    <img src={img.url} className={"obj-center " + (" size-120 round")} />
+                    <img src={img.url} className={"obj-center border-light " + (" size-80 round")} />
                 </div>
             })}
-            {this.isCanPlus() && <Tip text='添加图片'><div onClick={e => this.block.uploadFile({ roundArea: Rect.fromEvent(e) })} className={" dashed cursor round flex-center size-80 item-hover-light-focus item-hover " + (images.length == 0 ? " " : "visible")}>
+            {this.isCanPlus() && <Tip text='添加图片'><div onClick={e => this.block.uploadFile({ roundArea: Rect.fromEvent(e) })}
+                className={" dashed cursor round flex-center size-80 item-hover-light-focus item-hover " + (images.length == 0 ? " " : "visible")}>
                 <span className="item-hover size-24 circle flex-center cursor"> <Icon className={'text-1'} size={18} icon={PlusSvg}></Icon></span>
             </div></Tip>}
         </div>
