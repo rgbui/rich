@@ -88,12 +88,24 @@ export class Avatar extends React.Component<{
         var size = this.props.size ? this.props.size : 20;
         var renderIcon = () => {
             if (user) {
-                if (user?.avatar && !this.imgIsError) return <img onError={e => {
+                if (user?.avatar && !this.imgIsError) return <img className='bg-white' onError={e => {
                     this.imgIsError = true;
                     this.forceUpdate();
-                }} style={{ width: size, height: size }} src={autoImageUrl(user.avatar.url, 120)} />
-                if (user?.name) return <span style={{ width: size, height: size, fontSize: size * 0.6, lineHeight: size + 'px' }}
-                    className='shy-avatar-name'>{user.name.slice(0, 1)}</span>
+                }} style={{
+                    width: size,
+                    height: size,
+                    outline:'rgba(227, 226, 224, 0.5) solid 1px',
+                    outlineOffset:-1
+                }} src={autoImageUrl(user.avatar.url, 120)} />
+                if (user?.name) return <span style={{
+                    width: size,
+                    height: size,
+                    fontSize: size * 0.6,
+                    lineHeight: size + 'px',
+                    outline:'rgba(227, 226, 224, 0.5) solid 1px',
+                    outlineOffset:-1
+                }}
+                    className='shy-avatar-name bg-white'>{user.name.slice(0, 1)}</span>
             }
         }
         var renderStatus = () => {
