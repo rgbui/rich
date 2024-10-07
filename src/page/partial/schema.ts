@@ -274,6 +274,10 @@ export class Page$Schema {
                     }
                     g.forceManualUpdate();
                     this.formRowData[f.name] = g.value;
+                    if (g.url == '/form/text') {
+                        if ((g.el.querySelector('input textarea') as HTMLTextAreaElement))
+                            (g.el.querySelector('input textarea') as HTMLTextAreaElement).value = g.value;
+                    }
                 }
             }
         })
