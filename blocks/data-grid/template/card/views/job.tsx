@@ -110,7 +110,8 @@ CardModel('/job', () => ({
                     { text: lst('20-50K'), value: '6', ...OptionColorRandom() },
                     { text: lst('50K以上'), value: '7', ...OptionColorRandom() },
                 ]
-            }, required: true
+            },
+            required: true
         },
         { name: 'companyLogo', text: lst('公司logo'), types: [FieldType.image] },
         {

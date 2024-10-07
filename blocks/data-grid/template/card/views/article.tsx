@@ -132,7 +132,7 @@ export class CardPin extends CardView {
     async onGetMenus(): Promise<MenuItem<string | BlockDirective>[]> {
         var rs = await super.onGetMenus();
         var at = rs.findIndex(x => x.name == 'openSlide');
-        var cs = this.cardSettings<{ cardDisplay: string, rank: boolean, align: 'left' | 'right' }>({ cardDisplay: 'card-1', rank: false, align: 'left' });
+        var cs = this.cardSettings<{ cardDisplay: string, border: boolean, rank: boolean, align: 'left' | 'right' }>({ cardDisplay: 'card-1', border: true, rank: false, align: 'left' });
         if (at > -1) {
             rs.splice(at + 1,
                 0,
@@ -146,6 +146,13 @@ export class CardPin extends CardView {
                         { name: 'cardDisplay', text: '卡片3', checkLabel: cs.cardDisplay == 'card-3' ? true : false, value: 'card-3' },
                         { name: 'cardDisplay', text: '卡片4', checkLabel: cs.cardDisplay == 'card-4' ? true : false, value: 'card-4' }
                     ]
+                },
+                {
+                    icon: { name: 'byte', code: 'rectangle-one' },
+                    text: lst('边框'),
+                    type: MenuItemType.switch,
+                    value: cs.border,
+                    name: 'border'
                 },
                 { type: MenuItemType.divide },
                 {
@@ -180,6 +187,10 @@ export class CardPin extends CardView {
             await self.dataGrid.onUpdateProps({ 'cardSettings.rank': item.value }, { range: BlockRenderRange.self })
             self.dataGrid.forceUpdateAllViews();
         }
+        else if (item.name == 'border') {
+            await this.dataGrid.onUpdateProps({ 'cardSettings.border': item.value }, { range: BlockRenderRange.self })
+            this.dataGrid.forceUpdateAllViews();
+        }
         else await super.onContextMenuInput(item, options);
     }
     async onProperty(event: React.MouseEvent, options?: { elementUrl?: string, content?: string }) {
@@ -210,7 +221,7 @@ export class CardPin extends CardView {
         var comment = this.getValue<{ count: number, users: string[] }>('comment', FieldType.comment);
         var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
         var isLike = this.isEmoji('like');
-        var cs = this.cardSettings<{ cardDisplay: string, rank: boolean, }>({ rank: false, cardDisplay: 'card-1' });
+        var cs = this.cardSettings<{ cardDisplay: string, border: boolean, rank: boolean, }>({ rank: false, border: true, cardDisplay: 'card-1' });
         var browse = this.getValue<{ count: number, users: string[] }>('browse', FieldType.browse);
         var index = this.getRowIndex() + 1;
         if (cs.cardDisplay == 'card-1') {
@@ -222,28 +233,34 @@ export class CardPin extends CardView {
                         {index}
                     </div>}
                     {hasPic && <div className="flex-fixed">
-                        <img style={{ height: 140 }} className="w-200 h-150 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
+                        <img style={{ height: 140 }} className={"w-200 h-150 block round  object-center " + (cs.border ? "card-border" : "")} src={autoImageUrl(pics[0].url, 250)} />
                     </div>}
                     <div className={"flex flex-col flex-full " + (hasPic ? "flex-auto gap-l-10" : "")}>
-                        <div className="f-16 bold flex-fixed">
+                        <div className="f-16 b-500 flex-fixed">
                             <a href={this.props.item.dataLink} onClick={e => {
                                 e.preventDefault()
-                            }} style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a>
+                            }} className="underline-hover" style={{ color: 'inherit' }}>{title}</a>
                         </div>
                         <div className="flex-auto">
-                            {remark && <div className="f-14 remark rows-3">{remark}</div>}
-                            {tags.length > 0 && <div className="flex gap-h-5">{tags.map((tag, i) => {
-                                return <span className="item-light-hover-focus f-12 remark flex-center round padding-w-5 h-20" key={i}>#{tag.text}</span>
+                            {remark && <div className="f-14 gap-h-5 remark rows-3">{remark}</div>}
+                            {tags.length > 0 && <div className="flex gap-h-10">{tags.map((tag, i) => {
+                                return <span className="item-light-hover-focus f-12 remark flex-center round padding-w-5 h-20 gap-r-10" key={i}>#{tag.text}</span>
                             })}</div>}
                         </div>
                         <div className="flex flex-fixed">
                             {author && <div className="flex-fixed flex">
                                 <UserBox userid={author}>{(user) => {
                                     return <div className="flex gap-r-10">
-                                        <Avatar size={24} user={user}></Avatar>
-                                        <a className="cursor gap-l-5 underline-hover text-1">{user.name}</a>
+                                        <Avatar
+                                            size={28}
+                                            user={user}></Avatar>
+                                        <div className="flex-auto">
+                                            <a className="cursor gap-l-5 underline-hover text-1">{user.name}</a>
+                                        </div>
                                     </div>
-                                }}</UserBox><span className="remark f-12">{util.showTime(date)}</span>
+                                }}</UserBox><span className="remark f-12" style={{
+                                    lineHeight: "12px"
+                                }}>{util.showTime(date)}</span>
                             </div>}
                             <div className="flex-auto flex flex-end remark">
                                 <span className="flex gap-r-15"><Icon size={16} icon={EyeSvg}></Icon><span className="gap-l-5 f-14">{browse.count}</span></span>
@@ -269,12 +286,12 @@ export class CardPin extends CardView {
                     {index}
                 </div>}
                 <div className={" " + (hasPic ? "flex-auto gap-r-10" : "")}>
-                    <div className="f-16 bold"> <a href={this.props.item.dataLink} onClick={e => {
+                    <div className="f-16 b-500"> <a href={this.props.item.dataLink} onClick={e => {
                         e.preventDefault()
-                    }} style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a></div>
+                    }} className="underline-hover" style={{ color: 'inherit' }}>{title}</a></div>
                     <div className="f-14 remark min-h-60 rows-3">{remark}</div>
                     {tags.length > 0 && <div className="flex gap-h-5">{tags.map((tag, i) => {
-                        return <span className="item-light-hover-focus f-12 remark flex-center round padding-w-5 h-20" key={i}>#{tag.text}</span>
+                        return <span className="item-light-hover-focus f-12 gap-r-10 remark flex-center round padding-w-5 h-20" key={i}>#{tag.text}</span>
                     })}</div>}
                     <div className="f-12 remark flex r-gap-r-10">
                         <UserBox userid={author}>{(user) => {
@@ -286,7 +303,7 @@ export class CardPin extends CardView {
                     </div>
                 </div>
                 {hasPic && <div className="flex-fixed ">
-                    <img draggable={false} style={{ height: 140 }} className="w-200 h-150 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
+                    <img draggable={false} style={{ height: 140 }} className={"w-200 h-150 block round  object-center " + (cs.border ? "card-border" : "")} src={autoImageUrl(pics[0].url, 250)} />
                 </div>}
                 <div className="pos-t-r  z-2   r-size-24  r-round r-cursor">
                     {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="bg-dark-1 visible text-white   flex-center">
@@ -302,21 +319,21 @@ export class CardPin extends CardView {
                 <div onMouseDown={e => this.openEdit()} className={"relative gap-h-10 visible-hover "}>
 
                     <div className="gap-h-10">
-                        <div className="f-16 bold">
+                        <div className="f-16 b-500">
                             <a href={this.props.item.dataLink} onClick={e => {
                                 e.preventDefault()
-                            }} style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a>
+                            }} className="underline-hover" style={{ color: 'inherit' }}>{title}</a>
                         </div>
                     </div>
 
                     <div className="flex flex-top flex-full">
                         {hasPic && <div className="flex-fixed gap-r-10">
-                            <img style={{ height: 140 }} className="w-180 h-120 block round  object-center" src={autoImageUrl(pics[0].url, 250)} />
+                            <img style={{ height: 140 }} className={"w-180 h-120 block round  object-center " + (cs.border ? "card-border" : "")} src={autoImageUrl(pics[0].url, 250)} />
                         </div>}
                         <div className="flex-auto">
                             {remark && <div className="f-14 remark rows-3">{remark}</div>}
                             {tags.length > 0 && <div className="flex gap-h-5">{tags.map((tag, i) => {
-                                return <span className="item-light-hover-focus f-12 remark flex-center round padding-w-5 h-20" key={i}>#{tag.text}</span>
+                                return <span className="item-light-hover-focus f-12 remark flex-center round padding-w-5 h-20 gap-r-10" key={i}>#{tag.text}</span>
                             })}</div>}
                         </div>
                     </div>
@@ -345,32 +362,33 @@ export class CardPin extends CardView {
             </div>
         }
         else if (cs.cardDisplay == 'card-4') {
-            return <div><div onMouseDown={e => this.openEdit()} className={"relative gap-h-10 visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
-                {cs.rank && <div
-                    className={"flex-fixed flex-center gap-r-10 " + ("w-40") + " " + (index <= 3 ? "text-p" : "text")}
-                    style={{ fontSize: '40px', fontStyle: 'italic' }}>
-                    {index}
-                </div>}
-                {hasPic && <div className="flex-fixed">
-                    <img className="size-60 block round-8  object-center" src={autoImageUrl(pics[0].url, 250)} />
-                </div>}
-                <div className={" " + (hasPic ? "flex-auto gap-l-10" : "")}>
-                    <div >
-                        <a className="f-14 bold" href={this.props.item.dataLink} onClick={e => {
-                            e.preventDefault()
-                        }} style={{ color: 'inherit', textDecoration: 'none' }}>{title}</a>
+            return <div>
+                <div onMouseDown={e => this.openEdit()} className={"relative gap-h-10 visible-hover " + (hasPic ? "flex  flex-full  " : "")}>
+                    {cs.rank && <div
+                        className={"flex-fixed flex-center gap-r-10 " + ("w-40") + " " + (index <= 3 ? "text-p" : "text")}
+                        style={{ fontSize: '40px', fontStyle: 'italic' }}>
+                        {index}
+                    </div>}
+                    {hasPic && <div className="flex-fixed">
+                        <img className={"size-60 block round-8  object-center " + (cs.border ? "card-border" : "")} src={autoImageUrl(pics[0].url, 250)} />
+                    </div>}
+                    <div className={" " + (hasPic ? "flex-auto gap-l-10" : "")}>
+                        <div >
+                            <a className="f-14 b-500 underline-hover" href={this.props.item.dataLink} onClick={e => {
+                                e.preventDefault()
+                            }} style={{ color: 'inherit' }}>{title}</a>
+                        </div>
+                        {remark && <div className="f-14 remark rows-2">{remark}</div>}
+                        {tags.length > 0 && <div className="flex gap-h-5">{tags.map((tag, i) => {
+                            return <span className="item-light-hover-focus f-12 remark flex-center round padding-w-5 h-20 gap-r-10" key={i}>#{tag.text}</span>
+                        })}</div>}
                     </div>
-                    {remark && <div className="f-14 remark rows-2">{remark}</div>}
-                    {tags.length > 0 && <div className="flex gap-h-5">{tags.map((tag, i) => {
-                        return <span className="item-light-hover-focus f-12 remark flex-center round padding-w-5 h-20" key={i}>#{tag.text}</span>
-                    })}</div>}
+                    <div className="pos-t-r z-2   r-size-24  r-round r-cursor">
+                        {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="visible item-hover   flex-center">
+                            <Icon size={18} icon={DotsSvg}></Icon>
+                        </span>}
+                    </div>
                 </div>
-                <div className="pos-t-r z-2   r-size-24  r-round r-cursor">
-                    {this.isCanEdit && <span onMouseDown={e => self.openMenu(e)} className="visible item-hover   flex-center">
-                        <Icon size={18} icon={DotsSvg}></Icon>
-                    </span>}
-                </div>
-            </div>
             </div>
         }
     }

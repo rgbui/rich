@@ -133,12 +133,12 @@ export class CardPin extends CardView {
     async onGetMenus() {
         var rs = await super.onGetMenus();
         var at = rs.findIndex(x => x.name == 'openSlide');
-        var cs = this.cardSettings<{ autoSize: boolean, cardDisplay: string }>({ autoSize: true, cardDisplay: 'card-1' });
+        var cs = this.cardSettings<{ autoSize: boolean, border: boolean, cardDisplay: string }>({ autoSize: true, border: true, cardDisplay: 'card-1' });
         if (at > -1) {
             rs.splice(at + 1,
                 0,
                 {
-                    icon: { name: 'byte', code: 'display'},
+                    icon: { name: 'byte', code: 'display' },
                     text: lst('展示'),
                     childs: [
                         { name: 'cardDisplay', text: '卡片1', checkLabel: cs.cardDisplay == 'card-1' ? true : false, value: 'card-1' },
@@ -146,6 +146,13 @@ export class CardPin extends CardView {
                         { name: 'cardDisplay', text: '卡片3', checkLabel: cs.cardDisplay == 'card-3' ? true : false, value: 'card-3' },
                         { name: 'cardDisplay', text: '卡片4', checkLabel: cs.cardDisplay == 'card-4' ? true : false, value: 'card-4' }
                     ]
+                },
+                {
+                    icon: { name: 'byte', code: 'rectangle-one' },
+                    text: lst('边框'),
+                    type: MenuItemType.switch,
+                    value: cs.border,
+                    name: 'border'
                 },
                 { type: MenuItemType.divide },
             );
@@ -162,6 +169,11 @@ export class CardPin extends CardView {
         if (item.name == 'autoSize') {
             await this.dataGrid.onUpdateProps({ 'cardSettings.autoSize': item.checked }, { range: BlockRenderRange.self })
         }
+        else if (item.name == 'border') {
+            await this.dataGrid.onUpdateProps({ 'cardSettings.border': item.value }, { range: BlockRenderRange.self })
+            this.dataGrid.forceUpdateAllViews();
+        }
+        else await super.onContextMenuInput(item, options);
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent, options?: { merge?: boolean; }): Promise<void> {
         var self = this;
@@ -186,7 +198,7 @@ export class CardPin extends CardView {
         var tags = this.getValue<{ text: string, color: string }[]>('tags', FieldType.option);
         var hasPic = Array.isArray(pics) && pics.length > 0;
         var author = this.getValue<string[]>('author', FieldType.user)[0];
-        var cs = this.cardSettings<{ autoSize: boolean, cardDisplay: string }>({ autoSize: true, cardDisplay: 'card-1' });
+        var cs = this.cardSettings<{ autoSize: boolean, border: boolean, cardDisplay: string }>({ autoSize: true, border: true, cardDisplay: 'card-1' });
         if (cs.cardDisplay == 'card-1') {
             return <div onMouseDown={e => self.openEdit(e)} className="relative visible-hover">
                 <div className="pos-top pos-right  flex-end z-2  gap-t-5 r-size-24 r-gap-r-5 r-round r-cursor">
@@ -199,7 +211,7 @@ export class CardPin extends CardView {
                     height: 0, /* 高度为0 */
                     paddingBottom: '100%', /* 通过padding控制高度，这里设置为与宽度相同，实现正方形 */
                     position: 'relative'/* 相对定位 */
-                }}><img className="round" src={autoImageUrl(pics[0].url, 500)} style={{
+                }}><img className={"round " + (cs.border ? "box-border card-border" : "")} src={autoImageUrl(pics[0].url, 500)} style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
@@ -209,8 +221,8 @@ export class CardPin extends CardView {
                     backgroundColor: 'var(--bg-1)'
                 }} />
                 </div>}
-                <div className="f-16 bold rows-1   gap-h-5 f-14 break-all">{title}</div>
-                <div className="f-16 bold gap-h-10 ">
+                <div className="f-16 b-500 rows-1   gap-h-5 f-14 break-all">{title}</div>
+                <div className="f-16 b-500 gap-h-10 ">
                     ￥<em>{util.showPrice(price)}</em>
                 </div>
             </div>
@@ -227,7 +239,7 @@ export class CardPin extends CardView {
                     height: 0, /* 高度为0 */
                     paddingBottom: '100%', /* 通过padding控制高度，这里设置为与宽度相同，实现正方形 */
                     position: 'relative'/* 相对定位 */
-                }}><img className="round" src={autoImageUrl(pics[0].url, 500)} style={{
+                }}><img className={"round " + (cs.border ? "box-border card-border" : "")} src={autoImageUrl(pics[0].url, 500)} style={{
                     position: 'absolute',
                     top: 0,
                     left: 0,
@@ -253,10 +265,10 @@ export class CardPin extends CardView {
                     </span>}
                 </div>
                 {hasPic && <div className="flex-center" >
-                    <img className={"w100 block round  object-center " + (" max-h-600 overflow-hidden")} src={autoImageUrl(pics[0].url || (pics[0] as any).src, 250)} />
+                    <img className={"w100 block round  object-center " + (" max-h-600 overflow-hidden") + (cs.border ? "box-border card-border" : "")} src={autoImageUrl(pics[0].url || (pics[0] as any).src, 250)} />
                 </div>}
-                <div className="f-16 flex-center bold rows-1   gap-h-5 f-14 break-all">{title}</div>
-                <div className="f-16 flex-center bold gap-h-10 ">
+                <div className="f-16 flex-center b-500 rows-1   gap-h-5 f-14 break-all">{title}</div>
+                <div className="f-16 flex-center b-500 gap-h-10 ">
                     ￥<em>{util.showPrice(price)}</em>
                 </div>
             </div>
@@ -271,13 +283,13 @@ export class CardPin extends CardView {
                 {hasPic && <div className="flex-fixed flex-center" >
                     <img className={"w100 block round  object-center" + (cs.autoSize ? " max-h-600 overflow-hidden" : " h-200 ")} src={autoImageUrl(pics[0].url || (pics[0] as any).src, 250)} />
                 </div>}
-                <div className="text-1 rows-2 padding-w-10  gap-h-5 bold break-all">{title}</div>
-                <div className="flex padding-w-10 gap-h-10 ">
+                <div className="text-1 rows-2   gap-h-5 b-500 break-all">{title}</div>
+                <div className="flex  gap-h-10 ">
                     <span className="flex-auto text-p">￥<em style={{ fontSize: '30px' }}>{util.showPrice(price)}</em></span>
                     <span className="flex-fixed f-14 remark gap-w-10"><Sp text="{count}人付款" data={{ count: soldCount }}>{soldCount}人付款</Sp></span>
                     <span className="flex-fixed f-14 remark">{address}</span>
                 </div>
-                {tags.length > 0 && <div className="padding-w-10 gap-h-10 flex flex-wrap">
+                {tags.length > 0 && <div className=" gap-h-10 flex flex-wrap">
                     {tags.map((t, i) => {
                         return <span className="round-16 padding-w-5 border-p h-20 text-p flex-center f-12 gap-r-10" key={i}>{t.text}</span>
                     })}
