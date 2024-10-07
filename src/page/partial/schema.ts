@@ -357,7 +357,7 @@ export class Page$Schema {
                             this.views[0].forceManualUpdate();
                         }
                         var sv = this.schema.views.find(g => g.id == this.pe.id1);
-                        if (this.isCanEdit && sv.formType == 'doc')
+                        if (this.isCanEdit && (sv.formType == 'doc' || !sv.formType))
                             await channel.act('/view/snap/store',
                                 {
                                     elementUrl: getElementUrl(ElementType.SchemaData,

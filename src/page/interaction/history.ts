@@ -23,6 +23,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             page.pageModifiedOrNot = true;
             page.emit(PageDirective.change);
         }
+        if (window.shyConfig?.isDev)
+            console.log('histor...');
         /**
         * 如果是数据模板，只是添加数据，那么就不应该保存快照 ，
         *  如果是表单就正常保存，但注意权限控制
@@ -30,7 +32,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (page.pe.type == ElementType.SchemaRecordView && page.isForm('doc') && !page.isSchemaRecordViewTemplate) {
             return
         }
-        console.log('action', action);
+        if (window.shyConfig?.isDev)
+            console.log('action', action);
         if (action.isCursorOperatorOrPicker()) page.onLazyHistory(action)
         else page.emit(PageDirective.history, action);
     });
