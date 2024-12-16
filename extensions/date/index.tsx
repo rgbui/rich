@@ -46,15 +46,25 @@ export class DatePicker extends EventsComponent {
                     this.inputDate.setSelectionRange(this.inputDate.value.length, this.inputDate.value.length)
                 }
             }, 50);
-
         })
     }
     private renderDays(): JSX.Element {
         var dj = dayjs(this.date);
         var startDay = dj.startOf('M');
         var startWeek = startDay.startOf("w");
+        if (!window.shyConfig?.isUS) {
+            if (startWeek.date() == 1) {
+                startWeek = startDay.subtract(1, 'day').startOf('w');
+                startWeek = startWeek.add(1, 'day');
+            }
+            else {
+                startWeek = startWeek.add(1, 'day');
+            }
+        }
         var endDay = dj.endOf('M');
         var lastWeek = endDay.endOf('w');
+        if (!window.shyConfig?.isUS)
+            lastWeek = lastWeek.add(1, 'day');
         var days: Dayjs[] = [];
         var i = 0;
         while (true) {
@@ -119,7 +129,7 @@ export class DatePicker extends EventsComponent {
         this.forceUpdate();
     }
     onAdd(event: React.MouseEvent) {
-        if (event) event.preventDefault()
+        if (event) { event.stopPropagation(); event.preventDefault() }
         this.date = dayjs(this.date).add(1, 'M').toDate();
         this.updateInput();
         this.onChange();
@@ -128,12 +138,13 @@ export class DatePicker extends EventsComponent {
         this.emit('clear');
     }
     onReduce(event: React.MouseEvent) {
-        if (event) event.preventDefault()
+        if (event) { event.stopPropagation(); event.preventDefault() }
         this.date = dayjs(this.date).subtract(1, 'M').toDate();
         this.updateInput();
         this.onChange();
     }
-    onToday() {
+    onToday(event: React.MouseEvent) {
+        if (event) { event.stopPropagation(); event.preventDefault() }
         this.date = dayjs().toDate();
         this.updateInput();
         this.onChange();
@@ -221,9 +232,9 @@ export class DatePicker extends EventsComponent {
                     <span>{dj.year()}<S>年</S>{dj.month() + 1}<S>月</S>{dj.date()}<S>日</S></span>
                 </div>
                 <div className='shy-date-picker-head-operators'>
-                    <a className="padding-w-5 f-14 gap-r-3" style={{ width: 30 }} onClick={e => this.onToday()}><S>今天</S></a>
-                    <ToolTip overlay={lst('上个月')}><a onClick={e => this.onReduce(e)}><Icon size={14} icon={chevronLeft}></Icon></a></ToolTip>
-                    <ToolTip overlay={lst('下个月')}><a onClick={e => this.onAdd(e)}><Icon size={14} icon={chevronRight}></Icon></a></ToolTip>
+                    <a className="padding-w-5 f-14 gap-r-3" style={{ width: 30 }} onMouseDown={e => this.onToday(e)}><S>今天</S></a>
+                    <ToolTip overlay={lst('上个月')}><a onMouseDown={e => this.onReduce(e)}><Icon size={14} icon={chevronLeft}></Icon></a></ToolTip>
+                    <ToolTip overlay={lst('下个月')}><a onMouseDown={e => this.onAdd(e)}><Icon size={14} icon={chevronRight}></Icon></a></ToolTip>
                 </div>
             </div>
             {this.renderDays()}
